@@ -2,6 +2,7 @@
 #include <drivers/Terminal.h>
 #include <drivers/Apic.h>
 #include <drivers/Hpet.h>
+#include <drivers/ApicTimer.h>
 
 #include <mm/Pmm.h>
 #include <mm/Paging.h>
@@ -31,13 +32,14 @@ extern "C" void _start()
     MADT::Init();
 
     APIC::Init();
-    
+
     HPET::Init();
 
-    irq::subscribe(0, [](InterruptFrame*){
-        Terminal::Print("hello");
+    timer::subscribe([](){
+        Terminal::Print("timer\n");
     });
 
+    timer::Init();
 
     asm volatile("sti; 1: hlt; jmp 1b");
 }

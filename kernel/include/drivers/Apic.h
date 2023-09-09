@@ -32,6 +32,8 @@ namespace APIC
     void AddRedirEntry(int vector, int lapicVector, int cpu);
 
     void Init();
+
+    void SendEOI();
 }
 
 #endif // VIPER_OS_DRIVERS_APIC_H

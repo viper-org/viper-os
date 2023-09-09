@@ -47,4 +47,9 @@ namespace APIC
     {
         WriteRegister(0xF0, 0x1FF);
     }
+
+    void SendEOI()
+    {
+        WriteRegister(0xB0, 0);
+    }
 }

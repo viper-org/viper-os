@@ -3,6 +3,7 @@
 
 #include <drivers/Terminal.h>
 
+#include <container/lazy.h>
 #include <container/list.h>
 #include <container/function.h>
 
@@ -12,23 +13,22 @@ namespace exception
 {
     [[noreturn]] void ExceptionPanic(InterruptFrame* frame);
 
-    vpr::list<Handler>* handlers;
+    vpr::lazy<vpr::list<Handler>> handlers[32];
 
     void Init()
     {
-        handlers = new vpr::list<Handler>[32];
     }
     
     void subscribe(int vector, Handler callback)
     {
-        handlers[vector].push_back(std::move(callback));
+        handlers[vector]->push_back(std::move(callback));
     }
 
     extern "C" void CommonExceptionHandler(InterruptFrame* frame)
     {
-        if (handlers[frame->baseFrame.vector].size())
+        if (handlers[frame->baseFrame.vector]->size())
         {
-            for (const auto& handler : handlers[frame->baseFrame.vector])
+            for (const auto& handler : *handlers[frame->baseFrame.vector])
             {
                 if (handler(frame)) // Nonzero return value means failure
                 {
