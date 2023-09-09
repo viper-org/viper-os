@@ -11,6 +11,11 @@
 #include <container/function.h>
 #include <container/list.h>
 
+const char* test()
+{
+    return "hello";
+}
+
 extern "C" void _start()
 {
     GlobalDescriptorTable::Init();
@@ -30,9 +35,11 @@ extern "C" void _start()
         return "hi";
     };
 
+    vpr::function<const char*()> fn2 = test;
+
     [&](){
         vpr::unique_ptr<int> b = vpr::make_unique<int>(0xff0000);
-        Terminal::Print(fn(), 0x00ffff, *b);
+        Terminal::Print(fn2(), 0x00ffff, *b);
     }();
 
     for (auto i : ints)

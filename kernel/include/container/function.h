@@ -18,12 +18,19 @@ namespace vpr
         {
         }
 
+        function(RetType(*ptr)(Args...))
+            : innerPtr(ptr)
+        {
+        }
+
         function(function const& rhs) 
             : inner(rhs.inner->copy())
+            , innerPtr(rhs.innerPtr)
         {
         }
         function(function&& rhs) 
             : inner(std::move(rhs.inner))
+            , innerPtr(std::move(rhs.innerPtr))
         {
         }
 
@@ -31,19 +38,25 @@ namespace vpr
         {
             if (this != &rhs)
             {
-                this->inner = rhs.inner->copy();
+                inner = rhs.inner->copy();
+                innerPtr = rhs.innerPtr;
             }
             return *this;
         }
         function& operator=(function&& rhs)
         {
-            this->inner = std::move(rhs.inner);
+            inner = std::move(rhs.inner);
+            innerPtr = std::move(rhs.innerPtr);
             return *this;
         }
 
         RetType operator()(Args... args) const
         {
-            return inner->call(static_cast<Args&&>(args)...);
+            if (inner.get())
+            {
+                return inner->call(static_cast<Args&&>(args)...);
+            }
+            return innerPtr(args...);
         }
 
     private:
@@ -58,7 +71,10 @@ namespace vpr
         template <typename F>
         struct ConcreteFunction : VirtualFunction
         {
-            ConcreteFunction(F f) : func{std::move(f)} {}
+            ConcreteFunction(F f) 
+                : func{std::move(f)}
+            {
+            }
 
             virtual RetType call(Args... args)
             {
@@ -66,6 +82,10 @@ namespace vpr
             }
             virtual vpr::unique_ptr<VirtualFunction> copy() const
             {
+                if (!this) // In case we only store a function ptr
+                {
+                    return nullptr;
+                }
                 return vpr::make_unique<ConcreteFunction<F>>(func);
             }
 
@@ -73,6 +93,7 @@ namespace vpr
         };
 
         vpr::unique_ptr<VirtualFunction> inner;
+        RetType(*innerPtr)(Args...);
     };
 }
 
