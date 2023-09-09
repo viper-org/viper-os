@@ -1,0 +1,12 @@
+ovmf/
+.cache/
+limine/
+
+*.o
+*.d
+*.elf
+*.hdd
+*.iso
+*.log
+
+limine.h
