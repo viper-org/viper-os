@@ -32,6 +32,7 @@ $(eval $(call DEFAULT_VAR,LDFLAGS,$(DEFAULT_LDFLAGS)))
 override CFLAGS += \
 	-Wall \
 	-Wextra \
+	-Wpedantic \
 	-std=c++20 \
 	-ffreestanding \
 	-fno-stack-protector \

@@ -38,12 +38,25 @@ namespace Terminal
 
     void PutChar(char c, Framebuffer::Color fg, Framebuffer::Color bg)
     {
-        PutChar(c, col, row, fg, bg);
-        if (++col == maxCol)
+        switch(c)
         {
-            col = 0;
-            row++;
-            // TODO: Scroll
+            case '\n':
+            {
+                col = 0;
+                row++;
+                break;
+            }
+            default:
+            {
+                PutChar(c, col, row, fg, bg);
+                if (++col == maxCol)
+                {
+                    col = 0;
+                    row++;
+                    // TODO: Scroll
+                }
+                break;
+            }
         }
     }
 

@@ -7,7 +7,7 @@
 
 #include <cpu/Gdt/Gdt.h>
 
-#include <memory.h>
+#include <container/ptr.h>
 
 extern "C" void _start()
 {
@@ -15,14 +15,13 @@ extern "C" void _start()
     PMM::Init();
     Paging::Init();
     mm::Init();
-
-    int* a = new int(0xff0000);
-
     Framebuffer::Init();
     Terminal::Init();
-    Terminal::Print("Hello World", 0x00ffff, *a);
-    
-    delete a;
+
+    [](){
+        vpr::unique_ptr<int> b = vpr::make_unique<int>(0xff0000);
+        Terminal::Print("Hello World", 0x00ffff, *b);
+    }();
 
     asm volatile("1: cli; hlt; jmp 1b");
 }
