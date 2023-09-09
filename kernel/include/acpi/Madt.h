@@ -1,5 +1,6 @@
 #ifndef VIPER_OS_ACPI_MADT_H
 #define VIPER_OS_ACPI_MADT_H 1
+
 #include <acpi/Acpi.h>
 
 namespace MADT

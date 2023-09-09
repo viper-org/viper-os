@@ -1,6 +1,7 @@
 #include <drivers/Framebuffer.h>
 #include <drivers/Terminal.h>
 #include <drivers/Apic.h>
+#include <drivers/Hpet.h>
 
 #include <mm/Pmm.h>
 #include <mm/Paging.h>
@@ -9,6 +10,7 @@
 #include <cpu/Gdt/Gdt.h>
 #include <cpu/interrupt/Idt.h>
 #include <cpu/interrupt/Exception.h>
+#include <cpu/interrupt/Irq.h>
 
 #include <acpi/Acpi.h>
 #include <acpi/Madt.h>
@@ -29,8 +31,13 @@ extern "C" void _start()
     MADT::Init();
 
     APIC::Init();
+    
+    HPET::Init();
 
-    Terminal::Print("test");
+    irq::subscribe(0, [](InterruptFrame*){
+        Terminal::Print("hello");
+    });
 
-    asm volatile("1: cli; hlt; jmp 1b");
+
+    asm volatile("sti; 1: hlt; jmp 1b");
 }

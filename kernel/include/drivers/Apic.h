@@ -1,5 +1,6 @@
-#ifndef VIPER_DRIVERS_APIC_HPP
-#define VIPER_DRIVERS_APIC_HPP
+#ifndef VIPER_OS_DRIVERS_APIC_H
+#define VIPER_OS_DRIVERS_APIC_H 1
+
 #include <stdint.h>
 
 namespace APIC
@@ -33,4 +34,4 @@ namespace APIC
     void Init();
 }
 
-#endif // VIPER_DRIVERS_APIC_HPP
+#endif // VIPER_OS_DRIVERS_APIC_H

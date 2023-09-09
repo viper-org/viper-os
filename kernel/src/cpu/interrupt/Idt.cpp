@@ -12,7 +12,6 @@ namespace idt
 
     extern "C" uint64_t ExceptionStubTable[];
     extern "C" uint64_t IRQStubTable[];
-    extern "C" uint64_t SyscallHandler;
 
     IDTEntry::IDTEntry(uint64_t isr, uint8_t flags, uint8_t ist)
     {
@@ -28,7 +27,7 @@ namespace idt
         :OffsetLow(0), KernelCS(0), IST(0), Attributes(0), OffsetMid(0), OffsetHigh(0), Reserved(0)
     {}
 
-    constexpr uint8_t DEFUALT_FLAGS = 0x8E;
+    constexpr uint8_t DEFAULT_FLAGS = 0x8E;
 
     void Init()
     {
@@ -37,8 +36,13 @@ namespace idt
 
         for(uint8_t vector = 0; vector < 32; vector++)
         {
-            idt[vector] = IDTEntry(ExceptionStubTable[vector], DEFUALT_FLAGS, 0);
+            idt[vector] = IDTEntry(ExceptionStubTable[vector], DEFAULT_FLAGS, 0);
             vectors[vector] = true;
+        }
+        for(uint8_t vector = 0; vector < 16; vector++)
+        {
+            idt[vector + 32] = IDTEntry(IRQStubTable[vector], DEFAULT_FLAGS, 0);
+            vectors[vector + 32] = true;
         }
 
         exception::Init();
