@@ -17,7 +17,7 @@ $(eval $(call DEFAULT_VAR,CXX,$(DEFAULT_CXX)))
 override DEFAULT_LD := ld
 $(eval $(call DEFAULT_VAR,LD,$(DEFAULT_LD)))
 
-override DEFAULT_CFLAGS := -g -O2 -pipe
+override DEFAULT_CFLAGS := -g -O0 -pipe
 $(eval $(call DEFAULT_VAR,CFLAGS,$(DEFAULT_CFLAGS)))
 
 override DEFAULT_CPPFLAGS :=
