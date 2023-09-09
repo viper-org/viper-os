@@ -1,5 +1,6 @@
 #ifndef VIPER_OS_DRIVERS_FRAMEBUFFER_H
 #define VIPER_OS_DRIVERS_FRAMEBUFFER_H 1
+
 #include <stdint.h>
 
 namespace Framebuffer

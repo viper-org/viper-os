@@ -1,7 +1,7 @@
 #ifndef VIPER_OS_DRIVERS_TERMINAL_H
 #define VIPER_OS_DRIVERS_TERMINAL_H 1
+
 #include <drivers/Framebuffer.h>
-#include <stdarg.h>
 
 namespace Terminal
 {

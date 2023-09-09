@@ -15,17 +15,16 @@ namespace PMM
         .response = nullptr,
     };
 
-    constexpr int PAGE_SIZE = 0x1000;
-    [[gnu::always_inline]] constexpr inline uint32_t NPAGES(uint64_t n)
+    uint32_t NPAGES(uint64_t n)
     {
         return (n + PAGE_SIZE - 1) / PAGE_SIZE;
     }
 
-    [[gnu::always_inline]] inline uint64_t VirtToPhys(uint64_t addr)
+    uint64_t VirtToPhys(uint64_t addr)
     {
         return addr - hhdmRequest.response->offset;
     }
-    [[gnu::always_inline]] inline uint64_t PhysToVirt(uint64_t addr)
+    uint64_t PhysToVirt(uint64_t addr)
     {
         return addr + hhdmRequest.response->offset;
     }
@@ -73,9 +72,11 @@ namespace PMM
     };
 
     static MemoryRegion* regions = nullptr;
+    limine_memmap_response* MemMap;
 
     void Init()
     {
+        MemMap = memmapRequest.response;
         for(size_t i = 0; i < memmapRequest.response->entry_count; i++)
         {
             limine_memmap_entry* entry = memmapRequest.response->entries[i];
@@ -107,7 +108,7 @@ namespace PMM
         }
     }
 
-    void* GetPage()
+    PhysicalAddress GetPage()
     {
         return GetPages(1);
     }
@@ -128,10 +129,10 @@ namespace PMM
         return true;
     }
 
-    void* GetPages(uint32_t npages)
+    PhysicalAddress GetPages(uint32_t npages)
     {
         if(npages == 0)
-            return nullptr;
+            return 0;
         
         MemoryRegion* region = regions;
         while(region != nullptr)
@@ -141,17 +142,17 @@ namespace PMM
                 for(uint8_t* addr = region->lastPage; addr < region->base + region->totalSize; addr += PAGE_SIZE)
                 {
                     if(Alloc(region, addr, npages))
-                        return addr;
+                        return (PhysicalAddress)addr;
                 }
             }
             for(uint8_t* addr = region->base; addr < region->base + region->totalSize; addr += PAGE_SIZE)
             {
                 if(Alloc(region, addr, npages))
-                    return addr;
+                    return (PhysicalAddress)addr;
             }
             region = region->next;
         }
-        return nullptr;
+        return 0;
     }
 
     void FreePages(void* address, uint32_t npages)
