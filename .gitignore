@@ -10,3 +10,4 @@ limine/
 *.log
 
 limine.h
+compile_commands.json
