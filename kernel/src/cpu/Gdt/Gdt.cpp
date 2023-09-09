@@ -1,18 +1,17 @@
 #include <cpu/Gdt/Gdt.h>
-#include <stdint.h>
-
+#include <cstdint>
 
 namespace GlobalDescriptorTable
 {
     struct [[gnu::packed]] GDTPointer
     {
-        uint16_t limit;
-        uint64_t base;
+        std::uint16_t limit;
+        std::uint64_t base;
     };
 
     extern "C" void install_gdt(GDTPointer* gdtr);
 
-    uint64_t descriptors[3];
+    std::uint64_t descriptors[3];
 
     void Init()
     {
