@@ -5,4 +5,6 @@
 
 void* memset(void* dest, int ch, size_t count);
 
+int strcmp(const char* s1, const char* s2);
+
 #endif // VIPER_OS_STRING_H

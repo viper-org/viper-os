@@ -24,6 +24,10 @@ all-hdd: $(IMAGE_NAME).hdd
 run: ovmf $(IMAGE_NAME).hdd
 	qemu-system-x86_64 -M q35 -m 2G -d int -D qemu.log -bios ovmf/OVMF.fd -hda $(IMAGE_NAME).hdd
 
+.PHONY: debug
+debug: ovmf $(IMAGE_NAME).hdd
+	qemu-system-x86_64 -s -S -M q35 -m 2G -d int -D qemu.log -bios ovmf/OVMF.fd -hda $(IMAGE_NAME).hdd
+
 ovmf:
 	mkdir -p ovmf
 	cd ovmf && curl -Lo OVMF.fd https://retrage.github.io/edk2-nightly/bin/RELEASEX64_OVMF.fd
@@ -40,7 +44,7 @@ $(IMAGE_NAME).iso: limine kernel
 	rm -rf iso_root
 	mkdir -p iso_root
 	cp -v kernel/kernel.elf \
-		limine.cfg limine/limine-bios.sys limine/limine-bios-cd.bin limine/limine-uefi-cd.bin iso_root/
+		limine.cfg limine/limine-bios.sys limine/limine-bios-cd.bin limine/limine-uefi-cd.bin modules/* iso_root/
 	mkdir -p iso_root/EFI/BOOT
 	cp -v limine/BOOTX64.EFI iso_root/EFI/BOOT/
 	cp -v limine/BOOTIA32.EFI iso_root/EFI/BOOT/
@@ -59,7 +63,7 @@ $(IMAGE_NAME).hdd: limine kernel
 	./limine/limine bios-install $(IMAGE_NAME).hdd
 	mformat -i $(IMAGE_NAME).hdd@@1M
 	mmd -i $(IMAGE_NAME).hdd@@1M ::/EFI ::/EFI/BOOT
-	mcopy -i $(IMAGE_NAME).hdd@@1M kernel/kernel.elf limine.cfg limine/limine-bios.sys ::/
+	mcopy -i $(IMAGE_NAME).hdd@@1M kernel/kernel.elf modules/* limine.cfg limine/limine-bios.sys ::/
 	mcopy -i $(IMAGE_NAME).hdd@@1M limine/BOOTX64.EFI ::/EFI/BOOT
 	mcopy -i $(IMAGE_NAME).hdd@@1M limine/BOOTIA32.EFI ::/EFI/BOOT
 
