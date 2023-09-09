@@ -6,15 +6,8 @@
 #include <mm/Heap.h>
 
 #include <cpu/Gdt/Gdt.h>
-
-#include <container/ptr.h>
-#include <container/function.h>
-#include <container/list.h>
-
-const char* test()
-{
-    return "hello";
-}
+#include <cpu/interrupt/Idt.h>
+#include <cpu/interrupt/Exception.h>
 
 extern "C" void _start()
 {
@@ -24,28 +17,20 @@ extern "C" void _start()
     mm::Init();
     Framebuffer::Init();
     Terminal::Init();
+    idt::Init();
 
-    vpr::list<int> ints;
-    ints.push_back(65);
-    ints.push_back(66);
-    ints.push_back(67);
-    ints.push_back(68);
+    exception::subscribe(0, [](InterruptFrame*){
+        Terminal::Print("test\n");
+        return false;
+    });
 
-    vpr::function<const char*()> fn = []() {
-        return "hi";
-    };
+    exception::subscribe(0, [](InterruptFrame*){
+        Terminal::Print("test2\n");
+        return true; // Failure
+    });
 
-    vpr::function<const char*()> fn2 = test;
-
-    [&](){
-        vpr::unique_ptr<int> b = vpr::make_unique<int>(0xff0000);
-        Terminal::Print(fn2(), 0x00ffff, *b);
-    }();
-
-    for (auto i : ints)
-    {
-        Terminal::PutChar(i, 0xFFFFFF, 0);
-    }
+    int a = 4;
+    int b = a / 0;
 
     asm volatile("1: cli; hlt; jmp 1b");
 }

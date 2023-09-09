@@ -1,9 +1,19 @@
 #include <memory.h>
 #include <mm/Heap.h>
 
-void* operator new(size_t bytes)
+void* NewObject(size_t bytes)
 {
     return mm::Alloc(bytes);
+}
+
+void* operator new(size_t bytes)
+{
+    return NewObject(bytes);
+}
+
+void* operator new[](size_t bytes)
+{
+    return NewObject(bytes);
 }
 
 

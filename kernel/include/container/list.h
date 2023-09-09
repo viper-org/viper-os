@@ -96,10 +96,18 @@ namespace vpr
         {
             node* newNode = new node(data, mRoot);
             mRoot = newNode;
+
+            mSize++;
+        }
+
+        size_t size() const
+        {
+            return mSize;
         }
         
     private:
         node* mRoot;
+        size_t mSize;
     };
 }
 
