@@ -26,6 +26,12 @@ namespace vpr
         {
         }
 
+        template<typename U>
+        unique_ptr(unique_ptr<U>&& other)
+            : mData(other.release())
+        {
+        }
+
         
         ~unique_ptr()
         {
@@ -36,7 +42,7 @@ namespace vpr
         }
 
 
-        T* get()
+        T* get() const
         {
             return mData;
         }
@@ -48,12 +54,12 @@ namespace vpr
         }
 
 
-        T operator*()
+        T operator*() const
         {
             return *mData;
         }
 
-        T* operator->()
+        T* operator->() const
         {
             return mData;
         }
