@@ -1,5 +1,6 @@
 #include <drivers/Framebuffer.h>
 #include <drivers/Terminal.h>
+#include <drivers/Apic.h>
 
 #include <mm/Pmm.h>
 #include <mm/Paging.h>
@@ -9,28 +10,27 @@
 #include <cpu/interrupt/Idt.h>
 #include <cpu/interrupt/Exception.h>
 
+#include <acpi/Acpi.h>
+#include <acpi/Madt.h>
+
 extern "C" void _start()
 {
-    GlobalDescriptorTable::Init();
     PMM::Init();
     Paging::Init();
     mm::Init();
-    Framebuffer::Init();
-    Terminal::Init();
+
+    GlobalDescriptorTable::Init();
     idt::Init();
 
-    exception::subscribe(0, [](InterruptFrame*){
-        Terminal::Print("test\n");
-        return false;
-    });
+    Framebuffer::Init();
+    Terminal::Init();
 
-    exception::subscribe(0, [](InterruptFrame*){
-        Terminal::Print("test2\n");
-        return true; // Failure
-    });
+    ACPI::Init();
+    MADT::Init();
 
-    int a = 4;
-    int b = a / 0;
+    APIC::Init();
+
+    Terminal::Print("test");
 
     asm volatile("1: cli; hlt; jmp 1b");
 }

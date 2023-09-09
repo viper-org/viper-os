@@ -4,6 +4,8 @@
 #include <cstddef>
 
 void* memset(void* dest, int ch, size_t count);
+int memcmp(const void* p1, const void* p2, size_t count);
+void memcpy(void* dest, const void* src, size_t count);
 
 int strcmp(const char* s1, const char* s2);
 
