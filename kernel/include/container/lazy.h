@@ -1,6 +1,8 @@
 #ifndef VIPER_OS_CONTAINER_LAZY_H
 #define VIPER_OS_CONTAINER_LAZY_H 1
 
+#include <new>
+
 namespace vpr
 {
     template <class T>

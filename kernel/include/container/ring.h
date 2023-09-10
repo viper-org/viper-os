@@ -16,6 +16,7 @@ namespace vpr
         };
     public:
         ring()
+            : mPointer(nullptr)
         {
         }
 
@@ -68,6 +69,30 @@ namespace vpr
 
             previous->next     = newNode;
             mPointer->previous = newNode;
+        }
+
+        void removeCurrent()
+        {
+            if (mPointer->next == mPointer)
+            {
+                delete mPointer;
+                mPointer = nullptr;
+                return;
+            }
+
+            node* previous = mPointer->previous;
+            node* next = mPointer->next;
+
+            previous->next = next;
+            next->previous = previous;
+
+            delete mPointer;
+            mPointer = next;
+        }
+
+        bool empty()
+        {
+            return mPointer == nullptr;
         }
 
     private:

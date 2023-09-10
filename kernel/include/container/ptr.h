@@ -1,6 +1,8 @@
 #ifndef VIPER_OS_CONTAINER_PTR_H
 #define VIPER_OS_CONTAINER_PTR_H 1
 
+#include <drivers//Terminal.h>
+
 #include <memory.h>
 
 #include <cstddef>

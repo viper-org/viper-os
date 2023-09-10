@@ -47,12 +47,12 @@ namespace vpr
         {
         friend class list;
         public:
-            T operator*()
+            T& operator*()
             {
                 return mNode->data;
             }
 
-            T operator->()
+            T& operator->()
             {
                 return mNode->data;
             }

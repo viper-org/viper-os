@@ -9,6 +9,8 @@ namespace sched
 
     void AddProcess(Process p);
 
+    void EndCurrentProcess();
+
     Process* CurrentProcess();
 }
 

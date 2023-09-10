@@ -21,50 +21,14 @@
 
 void test()
 {
-    while(1)
-    {
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        Terminal::PutChar('A', 0xff0000, 0);
-    }
+    Terminal::PutChar('A', 0xff0000, 0);
+    sched::EndCurrentProcess();
 }
 
 void test2()
 {
-    while(1)
-    {
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        Terminal::PutChar('B', 0x0000ff, 0);
-    }
+    Terminal::PutChar('B', 0x0000ff, 0);
+    sched::EndCurrentProcess();
 }
 
 extern "C" void _start()
