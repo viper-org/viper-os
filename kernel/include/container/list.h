@@ -92,7 +92,7 @@ namespace vpr
             return iterator(nullptr);
         }
 
-        void push_back(T data)
+        void push_front(T data)
         {
             node* newNode = new node(data, mRoot);
             mRoot = newNode;

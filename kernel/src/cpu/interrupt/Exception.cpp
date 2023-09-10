@@ -21,7 +21,7 @@ namespace exception
     
     void subscribe(int vector, Handler callback)
     {
-        handlers[vector]->push_back(std::move(callback));
+        handlers[vector]->push_front(std::move(callback));
     }
 
     extern "C" void CommonExceptionHandler(InterruptFrame* frame)

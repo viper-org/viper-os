@@ -45,6 +45,6 @@ namespace timer
 
     void subscribe(Handler handler)
     {
-        handlers->push_back(handler);
+        handlers->push_front(handler);
     }
 }

@@ -16,6 +16,8 @@
 #include <acpi/Acpi.h>
 #include <acpi/Madt.h>
 
+#include <container/ring.h>
+
 extern "C" void _start()
 {
     PMM::Init();
