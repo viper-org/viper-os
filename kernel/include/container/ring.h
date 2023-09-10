@@ -1,4 +1,3 @@
-#include "drivers/Terminal.h"
 #ifndef VIPER_OS_CONTAINER_RING_H
 #define VIPER_OS_CONTAINER_RING_H 1
 
@@ -28,7 +27,7 @@ namespace vpr
             do
             {
                 node* next = current->next;
-                
+
                 delete current;
 
                 current = next;
@@ -37,14 +36,14 @@ namespace vpr
         }
 
 
-        T& current()
+        T* current()
         {
-            return mPointer->data;
+            return &mPointer->data;
         }
 
-        T& next()
+        T* next()
         {
-            T ret = mPointer->data;
+            T* ret = &mPointer->data;
             mPointer = mPointer->next;
             return ret;
         }

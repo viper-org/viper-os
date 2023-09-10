@@ -1,5 +1,8 @@
 #include <cpu/interrupt/Irq.h>
 #include <cpu/interrupt/Interrupt.h>
+#include <cpu/Context.h>
+
+#include <sched/Scheduler.h>
 
 #include <container/list.h>
 #include <container/function.h>
@@ -17,6 +20,7 @@ namespace irq
 
     extern "C" void CommonIRQHandler(InterruptFrame* frame)
     {
+        cpu::SaveContext(sched::CurrentProcess()->getContext(), frame);
         if (handlers[frame->baseFrame.vector - 32])
         {
             handlers[frame->baseFrame.vector - 32](frame);

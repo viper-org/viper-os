@@ -96,4 +96,9 @@ namespace Paging
         for(uint64_t i = 0; i < Npages * PMM::PAGE_SIZE; i += PMM::PAGE_SIZE)
             MapPage(addrspace, PhysAddr + i, VirtAddr + i, Flags);
     }
+
+    AddressSpace* KernelAddrSpace()
+    {
+        return &kernelAddrSpace;
+    }
 }

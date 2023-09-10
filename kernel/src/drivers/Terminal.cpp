@@ -20,8 +20,8 @@ namespace Terminal
 
     void Init()
     {
-        maxCol = Framebuffer::framebuffer.horiz;
-        maxRow = Framebuffer::framebuffer.vert;
+        maxCol = Framebuffer::framebuffer.horiz / 8;
+        maxRow = Framebuffer::framebuffer.vert / 8;
 
         font = fs::Module::Get("/font.bmp");
     }
@@ -38,6 +38,10 @@ namespace Terminal
 
     void PutChar(char c, Framebuffer::Color fg, Framebuffer::Color bg)
     {
+        if (row >= maxRow)
+        {
+            asm("1: hlt; jmp 1b"); // TODO: Scroll or panic
+        }
         switch(c)
         {
             case '\n':
@@ -53,7 +57,6 @@ namespace Terminal
                 {
                     col = 0;
                     row++;
-                    // TODO: Scroll
                 }
                 break;
             }

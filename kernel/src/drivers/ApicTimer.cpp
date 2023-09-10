@@ -13,11 +13,11 @@ namespace timer
 
     void TimerHandler(InterruptFrame*)
     {
+        APIC::SendEOI();
         for (const auto& handler : *handlers)
         {
             handler();
         }
-        APIC::SendEOI();
     }
 
     constexpr int DIV_CONFIG = 0x3E0;

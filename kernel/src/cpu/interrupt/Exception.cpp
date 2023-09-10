@@ -1,5 +1,8 @@
 #include <cpu/interrupt/Exception.h>
 #include <cpu/interrupt/Interrupt.h>
+#include <cpu/Context.h>
+
+#include <sched/Scheduler.h>
 
 #include <drivers/Terminal.h>
 
@@ -26,6 +29,8 @@ namespace exception
 
     extern "C" void CommonExceptionHandler(InterruptFrame* frame)
     {
+        cpu::SaveContext(sched::CurrentProcess()->getContext(), frame);
+        
         if (handlers[frame->baseFrame.vector]->size())
         {
             for (const auto& handler : *handlers[frame->baseFrame.vector])
@@ -35,6 +40,10 @@ namespace exception
                     ExceptionPanic(frame);
                 }
             }
+        }
+        else
+        {
+            ExceptionPanic(frame);
         }
     }
 

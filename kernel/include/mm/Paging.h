@@ -13,6 +13,8 @@ namespace Paging
 
     void MapPage(AddressSpace* addrspace, uint64_t PhysAddr, uint64_t VirtAddr, uint16_t Flags);
     void MapPages(AddressSpace* addrspace, uint64_t PhysAddr, uint64_t VirtAddr, uint16_t Flags, uint64_t Npages);
+
+    AddressSpace* KernelAddrSpace();
 }
 
 #endif
