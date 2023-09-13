@@ -19,7 +19,7 @@ namespace vpr
         }
 
 
-        void operator=(T object)
+        void operator=(const T& object)
         {
             new(mBuffer)T(object);
         }

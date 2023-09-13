@@ -48,3 +48,23 @@ int strcmp(const char* s1, const char* s2)
     }
     return *s1 - *s2;
 }
+
+void strcpy(char* s1, const char* s2)
+{
+    while(*s2)
+    {
+        *s1 = *s2;
+        s1++;
+        s2++;
+    }
+}
+
+size_t strlen(const char* str)
+{
+    size_t ret = 0;
+    while(str[ret])
+    {
+        ret++;
+    }
+    return ret;
+}

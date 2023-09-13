@@ -26,6 +26,10 @@ void operator delete(void* address)
 {
     DeleteObject(address);
 }
+void operator delete[](void* address)
+{
+    DeleteObject(address);
+}
 void operator delete(void* address, size_t)
 {
     DeleteObject(address);

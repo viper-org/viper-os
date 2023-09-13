@@ -19,13 +19,13 @@ namespace mm
         constexpr int HEAP_SIZE = 32;
 
         constexpr uint64_t maxMemory = 0xffffffffffffffff;
-        uint64_t virtualAddress = maxMemory - PMM::NPAGES(HEAP_SIZE + 1);
+        uint64_t virtualAddress = maxMemory - (HEAP_SIZE + 1) * PMM::PAGE_SIZE;
 
         PMM::PhysicalAddress physicalAddress = PMM::GetPages(HEAP_SIZE);
         Paging::MapPages(nullptr, physicalAddress, virtualAddress, 0x3, HEAP_SIZE);
 
         void* fl = (void*)virtualAddress;
-        freeList = new((char*)fl) Header;
+        freeList = new(fl) Header;
         freeList->size = HEAP_SIZE * PMM::PAGE_SIZE;
         freeList->next = nullptr;
     }
@@ -34,30 +34,32 @@ namespace mm
     {
         if(!count)
             return nullptr;
+
         
         count += sizeof(Header);
         Header* current = freeList;
         Header* previous = nullptr;
+
+        const auto removeFromFreeList = [&current, &previous]() {
+            if(previous)
+                previous->next = current->next;
+            else
+                freeList = current->next;
+        };
         while(current)
         {
             if(current->size >= count)
             {
                 if(current->size == count)
                 {
-                    if(previous)
-                        previous->next = current->next;
-                    else
-                        freeList = current->next;
+                    removeFromFreeList();
                     
                     return current + 1;
                 }
                 size_t newSize = current->size - count;
                 Header* newHeader = new((char*)current + count + sizeof(Header)) Header;
                 newHeader->size = newSize;
-                if(previous)
-                    previous->next = current->next;
-                else
-                    freeList = current->next;
+                removeFromFreeList();
                 
                 newHeader->next = freeList;
                 freeList = newHeader;

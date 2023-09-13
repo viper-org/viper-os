@@ -70,10 +70,12 @@ namespace vpr
         T* mData;
     };
 
-    template <class Tp, class... Args>
-    unique_ptr<Tp> make_unique(Args&&... args)
+    template <class T, class... Args>
+    unique_ptr<T> make_unique(Args&&... args)
     {
-        return unique_ptr<Tp>(new Tp(args...));
+        //return unique_ptr<T>(new Tp(args...));
+        T* object = new T(args...);
+        return unique_ptr<T>(object);
     }
 }
 

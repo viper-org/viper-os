@@ -100,6 +100,15 @@ namespace vpr
             mSize++;
         }
 
+        template <typename... Args>
+        void emplace_front(Args&&... args)
+        {
+            node* newNode = new node(T(args...), mRoot);
+            mRoot = newNode;
+
+            mSize++;
+        }
+
         size_t size() const
         {
             return mSize;
