@@ -20,6 +20,7 @@
 #include <sched/Scheduler.h>
 
 #include <fs/Tmpfs.h>
+#include <fs/DevFs.h>
 #include <fs/Vfs.h>
 
 void test()
@@ -61,12 +62,11 @@ extern "C" void _start()
     
     //sched::Start();
     fs::tmpfs::Init();
+    fs::devfs::Init();
 
-    fs::vfs::create("tmpfs:hi");
+    auto node = fs::vfs::lookup("dev:tty");
 
-    auto node = fs::vfs::lookup("tmpfs:hi");
-
-    Terminal::Print(node->getPath().c_str());
+    node->write("hello", 5);
 
     asm volatile("sti; 1: hlt; jmp 1b");
 }

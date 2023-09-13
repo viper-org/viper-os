@@ -1,7 +1,8 @@
-#include "drivers/Framebuffer.h"
-#include "fs/Module.h"
-#include <string.h>
 #include <drivers/Terminal.h>
+#include <drivers/Framebuffer.h>
+
+#include <fs/Module.h>
+#include <fs/DevFs.h>
 
 namespace Framebuffer
 {
@@ -18,12 +19,16 @@ namespace Terminal
 
     static fs::Module font;
 
+    void DriverWrite(const void* buffer, size_t count);
+
     void Init()
     {
         maxCol = Framebuffer::framebuffer.horiz / 8;
         maxRow = Framebuffer::framebuffer.vert / 8;
 
         font = fs::Module::Get("/font.bmp");
+
+        fs::devfs::Filesystem::RegisterDeviceFile("tty", nullptr, DriverWrite);
     }
 
     constexpr int FONT_SIZE = 8;
@@ -79,5 +84,11 @@ namespace Terminal
             PutChar(*data, fg, bg);
             data++;
         }
+    }
+
+
+    void DriverWrite(const void* buffer, size_t count)
+    {
+        PutString(static_cast<const char*>(buffer), count, 0xFFFFFF, 0);
     }
 }
