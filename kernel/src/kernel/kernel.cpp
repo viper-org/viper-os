@@ -52,7 +52,7 @@ extern "C" void _start()
     APIC::Init();
 
     HPET::Init();
-    //timer::Init();
+    timer::Init();
 
     //sched::Process process = (uint64_t)&test;
     //sched::Process process2 = (uint64_t)&test2;
