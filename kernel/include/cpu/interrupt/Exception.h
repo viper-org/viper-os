@@ -12,6 +12,14 @@ namespace exception
     void Init();
 
     void subscribe(int vector, Handler callback);
+
+    namespace vectors
+    {
+        enum
+        {
+            pageFault = 0xE,
+        };
+    }
 }
 
 #endif

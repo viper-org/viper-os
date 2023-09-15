@@ -52,13 +52,14 @@ namespace vpr
                 return mNode->data;
             }
 
-            T& operator->()
+            T* operator->()
             {
-                return mNode->data;
+                return &mNode->data;
             }
 
             iterator& operator++()
             {
+                mPrevious = mNode;
                 mNode = mNode->next;
                 return *this;
             }
@@ -79,6 +80,7 @@ namespace vpr
             }
 
             list::node* mNode;
+            list::node* mPrevious;
         };
         
 
@@ -107,6 +109,19 @@ namespace vpr
             mRoot = newNode;
 
             mSize++;
+        }
+
+        void erase(iterator& it)
+        {
+            if (it.mPrevious)
+            {
+                it.mPrevious->next = it.mNode->next;
+                delete it.mNode;
+            }
+            else
+            {
+                mRoot = it.mNode->next;
+            }
         }
 
         size_t size() const

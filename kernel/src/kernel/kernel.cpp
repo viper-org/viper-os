@@ -7,6 +7,7 @@
 #include <mm/Pmm.h>
 #include <mm/Paging.h>
 #include <mm/Heap.h>
+#include <mm/Vmm.h>
 
 #include <cpu/Gdt/Gdt.h>
 #include <cpu/interrupt/Idt.h>
@@ -23,6 +24,8 @@
 #include <fs/DevFs.h>
 #include <fs/Vfs.h>
 
+#include <string.h>
+
 void test()
 {
     Terminal::PutChar('A', 0xff0000, 0);
@@ -38,8 +41,9 @@ void test2()
 extern "C" void _start()
 {
     PMM::Init();
-    Paging::Init();
+    paging::Init();
     mm::Init();
+    vm::Init();
 
     GlobalDescriptorTable::Init();
     idt::Init();
@@ -65,8 +69,16 @@ extern "C" void _start()
     fs::devfs::Init();
 
     auto node = fs::vfs::lookup("dev:tty");
-
     node->write("hello", 5);
 
-    asm volatile("sti; 1: hlt; jmp 1b");
+    paging::AddressSpace addrspace = paging::AddressSpace::Create();
+    addrspace.switchTo();
+    
+    void* addr = vm::GetPages(&addrspace, 1, paging::flags::write | 4);
+
+    strcpy((char*)addr, "hello world");
+
+    node->write((char*)addr, 11);
+
+    asm volatile("cli; 1: hlt; jmp 1b");
 }

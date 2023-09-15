@@ -20,13 +20,17 @@ namespace vpr
 
         function(RetType(*ptr)(Args...))
             : innerPtr(ptr)
+            , inner(nullptr)
         {
         }
 
         function(function const& rhs) 
-            : inner(rhs.inner->copy())
-            , innerPtr(rhs.innerPtr)
+            : innerPtr(rhs.innerPtr)
         {
+            if (!innerPtr)
+            {
+                inner = rhs.inner->copy();
+            }
         }
         function(function&& rhs) 
             : inner(std::move(rhs.inner))

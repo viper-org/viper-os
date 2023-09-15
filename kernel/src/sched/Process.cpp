@@ -18,7 +18,7 @@ namespace sched
         mContext.baseFrame.rflags = 0x246;
         
         mContext.controlRegisters.cr4 = 0x20;
-        mContext.controlRegisters.cr3 = (uint64_t)Paging::KernelAddrSpace()->pml4;
+        mContext.controlRegisters.cr3 = (uint64_t)paging::KernelAddrSpace()->pml4;
         mContext.controlRegisters.cr0 = 0x80010011;
 
         mPrivilege = Privilege::Kernel;

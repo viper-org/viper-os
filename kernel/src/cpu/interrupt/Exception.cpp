@@ -36,7 +36,7 @@ namespace exception
         
         if (handlers[frame->baseFrame.vector]->size())
         {
-            for (const auto& handler : *handlers[frame->baseFrame.vector])
+            for (auto& handler : *handlers[frame->baseFrame.vector])
             {
                 if (handler(frame)) // Nonzero return value means failure
                 {

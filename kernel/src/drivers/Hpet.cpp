@@ -24,7 +24,7 @@ namespace HPET
     {
         HPET* hpet = (HPET*)ACPI::FindTable("HPET");
         address = (uint8_t*)PMM::PhysToVirt(hpet->address.addr);
-        Paging::MapPage(nullptr, hpet->address.addr, (uint64_t)address, 0x3);
+        paging::MapPage(nullptr, hpet->address.addr, (uint64_t)address, 0x3);
         
         WriteRegister(0x10, ReadRegister(0x10) | 1); // ENABLE_CNF = 1
     }

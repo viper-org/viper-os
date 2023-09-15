@@ -22,7 +22,7 @@ namespace mm
         uint64_t virtualAddress = maxMemory - (HEAP_SIZE + 1) * PMM::PAGE_SIZE;
 
         PMM::PhysicalAddress physicalAddress = PMM::GetPages(HEAP_SIZE);
-        Paging::MapPages(nullptr, physicalAddress, virtualAddress, 0x3, HEAP_SIZE);
+        paging::MapPages(nullptr, physicalAddress, virtualAddress, 0x3, HEAP_SIZE);
 
         void* fl = (void*)virtualAddress;
         freeList = new(fl) Header;

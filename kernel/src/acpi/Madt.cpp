@@ -23,7 +23,7 @@ namespace MADT
         madt = (MADT*)ACPI::FindTable("APIC");
         lapic = (uint32_t*)PMM::PhysToVirt(madt->lapic);
 
-        Paging::MapPage(nullptr, madt->lapic, madt->lapic + 0xFFFF800000000000, 3);
+        paging::MapPage(nullptr, madt->lapic, madt->lapic + 0xFFFF800000000000, 3);
 
         uint8_t* start = (uint8_t*)madt;
         uint8_t* end = start + madt->header.length;
@@ -43,7 +43,7 @@ namespace MADT
                 case 1:
                 {
                     ioapic = ((uint32_t*)offset)[1];
-                    Paging::MapPage(nullptr, ioapic, ioapic + 0xFFFF800000000000, 3);
+                    paging::MapPage(nullptr, ioapic, ioapic + 0xFFFF800000000000, 3);
                     ioapic += 0xFFFF800000000000;
                     break;
                 }
