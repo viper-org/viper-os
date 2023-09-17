@@ -25,6 +25,20 @@ namespace vpr
         {
         }
 
+        list(const list& other)
+        {
+            auto it = other.cbegin();
+            mRoot = new node(*it, nullptr);
+            ++it;
+
+            node* current = mRoot;
+            for(; it != other.cend(); ++it)
+            {
+                current->next = new node(*it, nullptr);
+                current = current->next;
+            }
+        }
+
         list(list&& other)
             : mRoot(other.mRoot)
         {
@@ -40,6 +54,22 @@ namespace vpr
                 delete currentNode;
                 currentNode = next;
             }
+        }
+
+        list& operator=(const list& other)
+        {
+            auto it = other.cbegin();
+            mRoot = new node(*it, nullptr);
+            ++it;
+
+            node* current = mRoot;
+            for(; it != other.cend(); ++it)
+            {
+                current->next = new node(*it, nullptr);
+                current = current->next;
+            }
+
+            return *this;
         }
 
 
@@ -68,11 +98,6 @@ namespace vpr
             {
                 return (mNode == other.mNode);
             }
-
-            bool operator!=(const iterator& other) const
-            {
-                return (mNode != other.mNode);
-            }
         private:
             iterator(list::node* node)
                 : mNode(node)
@@ -81,6 +106,40 @@ namespace vpr
 
             list::node* mNode;
             list::node* mPrevious;
+        };
+
+        class const_iterator
+        {
+        friend class list;
+        public:
+            const T& operator*() const
+            {
+                return mNode->data;
+            }
+
+            const T* operator->() const
+            {
+                return &mNode->data;
+            }
+
+            const_iterator& operator++()
+            {
+                mNode = mNode->next;
+                return *this;
+            }
+
+            bool operator==(const const_iterator& other) const
+            {
+                return (mNode == other.mNode);
+            }
+
+        private:
+            const_iterator(list::node* node)
+                : mNode(node)
+            {
+            }
+
+            const list::node* mNode;
         };
         
 
@@ -92,6 +151,27 @@ namespace vpr
         iterator end()
         {
             return iterator(nullptr);
+        }
+
+        const_iterator begin() const
+        {
+            return const_iterator(mRoot);
+        }
+
+        const_iterator end() const
+        {
+            return const_iterator(nullptr);
+        }
+
+        const_iterator cbegin() const
+        {
+            return const_iterator(mRoot);
+        }
+
+
+        const_iterator cend() const
+        {
+            return const_iterator(nullptr);
         }
 
         void push_front(T data)
