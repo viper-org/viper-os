@@ -88,7 +88,7 @@ namespace paging
             {
                 pt[idx] = (uint64_t)PMM::GetPage();
                 memset((uint8_t*)PMM::PhysToVirt(Entry(pt[idx])), 0, PMM::PAGE_SIZE);
-                pt[idx] |= Flags;
+                pt[idx] |= Flags | flags::present;
             }
 
             pt = (uint64_t*)PMM::PhysToVirt(Entry(pt[idx]));
