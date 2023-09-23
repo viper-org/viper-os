@@ -28,14 +28,26 @@
 
 void test()
 {
-    Terminal::PutChar('A', 0xff0000, 0);
-    asm("1: hlt; jmp 1b");
+    while(1)
+    {
+        Terminal::PutChar('A', 0xff0000, 0);
+        asm("pause");
+        asm("pause");
+        asm("pause");
+        asm("pause");
+        asm("pause");
+        asm("pause");
+        asm("pause");
+        asm("pause");
+        asm("pause");
+        asm("pause");
+    }
 }
 
 void test2()
 {
     Terminal::PutChar('B', 0x0000ff, 0);
-    asm("1: hlt; jmp 1b");
+    sched::RemoveCurrentThread();
 }
 
 extern "C" void _start()
@@ -62,10 +74,10 @@ extern "C" void _start()
     fs::tmpfs::Init();
     fs::devfs::Init();
 
-    sched::Process testProc = (uint64_t)&test;
-    sched::Process testProc2 = (uint64_t)&test2;
-    sched::AddProcess(testProc);
-    sched::AddProcess(testProc2);
+    sched::Process* testProc  = new sched::Process((uint64_t)&test);
+    sched::Process* testProc2 = new sched::Process((uint64_t)&test2);
+    sched::AddProcess(*testProc);
+    sched::AddProcess(*testProc2);
     sched::Start();
 
     asm volatile("cli; 1: hlt; jmp 1b");

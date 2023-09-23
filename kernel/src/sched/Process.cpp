@@ -1,4 +1,5 @@
 #include <sched/Process.h>
+#include <sched/Scheduler.h>
 
 #include <mm/Paging.h>
 #include <mm/Pmm.h>
@@ -9,6 +10,8 @@ namespace sched
 {
     Thread::Thread(Process* parent, uint64_t start) 
         : mParent(parent)
+        , next(nullptr)
+        , previous(nullptr)
     {
         mContext.baseFrame.rip = start;
         mContext.baseFrame.cs = 0x8;
@@ -26,19 +29,49 @@ namespace sched
         launch_kernel_task(&mContext);
     }
 
+    void Thread::terminate()
+    {
+        if (mParent->getMainThread().get() == this) // Terminating main thread - terminate the process
+        {
+            sched::RemoveThreadsByPid(mParent->getPid());
+
+            vpr::shared_ptr<Thread> current = *mParent->getThreads().begin();
+            vpr::shared_ptr<Thread> next;
+
+            // Get rid of references of the threads so they can be freed
+            for (; current != *mParent->getThreads().end(); current = next)
+            {
+                next = current->next;
+                current->next = nullptr;
+                current->previous = nullptr;
+            }
+            mParent->getThreads().clear();
+        }
+    }
+
     cpu::Context& Thread::getContext()
     {
         return mContext;
     }
 
+    Process* Thread::getParent()
+    {
+        return mParent;
+    }
+
+
+    static int pid = 0;
+
     Process::Process()
         : mMainThread(vpr::make_shared<Thread>(this, 0))
+        , mPid(pid++)
     {
         mThreads.push_front(mMainThread);
     }
 
     Process::Process(uint64_t start)
         : mMainThread(vpr::make_shared<Thread>(this, start))
+        , mPid(pid++)
     {
         mThreads.push_front(mMainThread);
 
@@ -49,5 +82,10 @@ namespace sched
     vpr::shared_ptr<Thread>& Process::getMainThread()
     {
         return mMainThread;
+    }
+
+    int Process::getPid() const
+    {
+        return mPid;
     }
 }

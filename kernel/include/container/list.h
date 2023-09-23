@@ -325,7 +325,7 @@ namespace vpr
                 return mNode;
             }
 
-            const_iterator operator++()
+            const_iterator& operator++()
             {
                 mNode = NextFn(mNode);
                 return *this;
@@ -403,6 +403,14 @@ namespace vpr
                     mTail = nullptr;
                 }
             }
+            PreviousFn(it.mNode) = nullptr;
+            NextFn(it.mNode) = nullptr;
+        }
+
+        void clear()
+        {
+            mRoot = nullptr;
+            mTail = nullptr;
         }
 
     private:

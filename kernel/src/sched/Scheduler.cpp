@@ -15,7 +15,7 @@ namespace sched
 
     vpr::lazy<Process::ThreadList> readyThreads;
 
-     void LaunchCurrentThread()
+    void LaunchCurrentThread()
     {
         ticks = 0;
         (*readyThreads->begin())->launch();
@@ -45,9 +45,9 @@ namespace sched
         LaunchCurrentThread();
     }
 
-    void AddProcess(const Process& p)
+    void AddProcess(Process& p)
     {
-        for (const auto& thread : p.getThreads())
+        for (auto& thread : p.getThreads())
         {
             readyThreads->push_back(thread);
         }
@@ -56,5 +56,27 @@ namespace sched
     Thread* CurrentThread()
     {
         return readyThreads->begin()->get();
+    }
+
+
+    void RemoveCurrentThread()
+    {
+        vpr::shared_ptr<Thread> current = *readyThreads->begin();
+        readyThreads->erase(readyThreads->begin());
+        current->terminate();
+        LaunchCurrentThread();
+    }
+
+    void RemoveThreadsByPid(int pid)
+    {
+        for (auto it = readyThreads->begin(); it != readyThreads->end(); ++it)
+        {
+            if ((*it)->getParent()->getPid() == pid)
+            {
+                auto copy = it; // Make a copy so we can keep iterating
+                ++it;
+                readyThreads->erase(copy);
+            }
+        }
     }
 }

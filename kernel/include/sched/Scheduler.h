@@ -7,9 +7,12 @@ namespace sched
 {
     void Start();
 
-    void AddProcess(const Process& p);
+    void AddProcess(Process& p);
 
     Thread* CurrentThread();
+
+    void RemoveCurrentThread();
+    void RemoveThreadsByPid(int pid);
 }
 
 #endif

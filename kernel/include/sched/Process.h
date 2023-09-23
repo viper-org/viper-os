@@ -19,7 +19,10 @@ namespace sched
 
         [[noreturn]] void launch();
 
+        void terminate();
+
         cpu::Context& getContext();
+        Process* getParent();
 
     private:
         cpu::Context mContext;
@@ -53,16 +56,20 @@ namespace sched
 
         vpr::shared_ptr<Thread>& getMainThread();
 
-        const ThreadList& getThreads() const
+        ThreadList& getThreads()
         {
             return mThreads;
         }
+
+        int getPid() const;
 
     private:
         ThreadList mThreads;
         vpr::shared_ptr<Thread> mMainThread;
 
         Privilege mPrivilege;
+
+        int mPid;
     };
 }
 
