@@ -5,13 +5,11 @@
 
 namespace sched
 {
-    [[noreturn]] void Start();
+    void Start();
 
-    void AddProcess(Process p);
+    void AddProcess(const Process& p);
 
-    void EndCurrentProcess();
-
-    Process* CurrentProcess();
+    Thread* CurrentThread();
 }
 
 #endif

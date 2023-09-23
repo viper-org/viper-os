@@ -13,6 +13,8 @@ namespace Terminal
     void PutString(const char* data, unsigned int size, Framebuffer::Color fg, Framebuffer::Color bg);
 
     void Print(const char* data, Framebuffer::Color fg = 0xFFFFFF, Framebuffer::Color bg = 0);
+
+    void Printf(const char* format, ...);
 }
 
 #endif // VIPER_OS_DRIVERS_TERMINAL_H

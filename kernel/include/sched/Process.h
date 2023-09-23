@@ -3,11 +3,44 @@
 
 #include <cpu/Context.h>
 
+#include <container/ptr.h>
+#include <container/list.h>
+
+
 namespace sched
 {
+    class Process;
+
+    class Thread
+    {
+    friend class Process;
+    public:
+        Thread(Process* parent, uint64_t start);
+
+        [[noreturn]] void launch();
+
+        cpu::Context& getContext();
+
+    private:
+        cpu::Context mContext;
+        Process* mParent;
+
+        vpr::shared_ptr<Thread> next;
+        vpr::shared_ptr<Thread> previous;
+    };
+
     class Process
     {
+    friend class Thread;
     public:
+        using ThreadList = vpr::intrusive_list<vpr::shared_ptr<Thread>,
+        [](vpr::shared_ptr<Thread>& thread) -> vpr::shared_ptr<Thread>& {
+            return thread->next;
+        },
+        [](vpr::shared_ptr<Thread>& thread) -> vpr::shared_ptr<Thread>& {
+            return thread->previous;
+        }>;
+
         enum class Privilege
         {
             User,
@@ -16,14 +49,19 @@ namespace sched
 
         Process();
 
-        Process(uint64_t rip);
+        Process(uint64_t start);
 
-        [[noreturn]] void launch();
+        vpr::shared_ptr<Thread>& getMainThread();
 
-        cpu::Context* getContext();
+        const ThreadList& getThreads() const
+        {
+            return mThreads;
+        }
 
     private:
-        cpu::Context mContext;
+        ThreadList mThreads;
+        vpr::shared_ptr<Thread> mMainThread;
+
         Privilege mPrivilege;
     };
 }

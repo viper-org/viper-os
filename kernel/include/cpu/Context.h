@@ -46,7 +46,7 @@ namespace cpu
         } baseFrame;
     };
 
-    void SaveContext(Context* dest, Context* source);
+    void SaveContext(Context& dest, Context* source);
 }
 
 #endif

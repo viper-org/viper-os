@@ -4,8 +4,8 @@
 
 namespace cpu
 {
-    void SaveContext(Context* dest, Context* source)
+    void SaveContext(Context& dest, Context* source)
     {
-        memcpy(dest, source, sizeof(Context));
+        memcpy(&dest, source, sizeof(Context));
     }
 }

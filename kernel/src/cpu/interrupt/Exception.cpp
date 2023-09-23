@@ -29,9 +29,9 @@ namespace exception
 
     extern "C" void CommonExceptionHandler(InterruptFrame* frame)
     {
-        if (sched::CurrentProcess())
+        if (sched::CurrentThread())
         {
-            cpu::SaveContext(sched::CurrentProcess()->getContext(), frame);
+            cpu::SaveContext(sched::CurrentThread()->getContext(), frame);
         }
         
         if (handlers[frame->baseFrame.vector]->size())

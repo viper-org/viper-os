@@ -29,13 +29,13 @@
 void test()
 {
     Terminal::PutChar('A', 0xff0000, 0);
-    sched::EndCurrentProcess();
+    asm("1: hlt; jmp 1b");
 }
 
 void test2()
 {
     Terminal::PutChar('B', 0x0000ff, 0);
-    sched::EndCurrentProcess();
+    asm("1: hlt; jmp 1b");
 }
 
 extern "C" void _start()
@@ -59,26 +59,14 @@ extern "C" void _start()
     HPET::Init();
     timer::Init();
 
-    //sched::Process process = (uint64_t)&test;
-    //sched::Process process2 = (uint64_t)&test2;
-    //sched::AddProcess(process);
-    //sched::AddProcess(process2);
-    
-    //sched::Start();
     fs::tmpfs::Init();
     fs::devfs::Init();
 
-    auto node = fs::vfs::lookup("dev:tty");
-    node->write("hello", 5);
-
-    paging::AddressSpace addrspace = paging::AddressSpace::Create();
-    addrspace.switchTo();
-    
-    void* addr = vm::GetPages(&addrspace, 1, paging::flags::write | 4);
-
-    strcpy((char*)addr, "hello world");
-
-    node->write((char*)addr, 11);
+    sched::Process testProc = (uint64_t)&test;
+    sched::Process testProc2 = (uint64_t)&test2;
+    sched::AddProcess(testProc);
+    sched::AddProcess(testProc2);
+    sched::Start();
 
     asm volatile("cli; 1: hlt; jmp 1b");
 }

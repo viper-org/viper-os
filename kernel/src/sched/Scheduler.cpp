@@ -2,6 +2,7 @@
 
 #include <drivers/ApicTimer.h>
 
+#include <container/atomic.h>
 #include <container/lazy.h>
 #include <container/ring.h>
 
@@ -10,53 +11,50 @@ extern "C" void IdleProcess();
 namespace sched
 {
     constexpr int quantum = 3; // 3 ticks is 30ms
+    vpr::atomic_int ticks = 0;
 
-    vpr::lazy<vpr::ring<Process> > processes;
-    vpr::lazy<Process> idleProcess;
-    int ticks = 0;
+    vpr::lazy<Process::ThreadList> readyThreads;
 
-    [[noreturn]] void LaunchCurrentProcess()
+     void LaunchCurrentThread()
     {
         ticks = 0;
-        processes->current()->launch();
+        (*readyThreads->begin())->launch();
     }
 
-    [[noreturn]] void Schedule()
+    void CycleCurrent()
     {
-        if (processes->empty())
-        {
-            ticks = 0;
-            idleProcess->launch();
-        }
-        processes->next();
-        LaunchCurrentProcess();
+        vpr::shared_ptr<Thread> current = *readyThreads->begin();
+        readyThreads->erase(readyThreads->begin());
+        readyThreads->push_back(current);
+    }
+
+    void Schedule()
+    {
+        CycleCurrent();
+        LaunchCurrentThread();
     }
 
     void Start()
     {
-        idleProcess = Process((uint64_t)&IdleProcess);
         timer::subscribe([](){
             if (++ticks >= quantum)
             {
                 Schedule();
             }
         });
-        LaunchCurrentProcess();
+        LaunchCurrentThread();
     }
 
-    void AddProcess(Process p)
+    void AddProcess(const Process& p)
     {
-        processes->push_back(p);
+        for (const auto& thread : p.getThreads())
+        {
+            readyThreads->push_back(thread);
+        }
     }
 
-    void EndCurrentProcess()
+    Thread* CurrentThread()
     {
-        processes->removeCurrent();
-        Schedule();
-    }
-
-    Process* CurrentProcess()
-    {
-        return processes->current();
+        return readyThreads->begin()->get();
     }
 }

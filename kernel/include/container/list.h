@@ -3,6 +3,8 @@
 
 #include <memory.h>
 
+#include <utility>
+
 namespace vpr
 {
     template <class T>
@@ -202,6 +204,8 @@ namespace vpr
             {
                 mRoot = it.mNode->next;
             }
+
+            mSize--;
         }
 
         size_t size() const
@@ -212,6 +216,198 @@ namespace vpr
     private:
         node* mRoot;
         size_t mSize;
+    };
+
+    template <class T, T&(*NextFn)(T&), T&(*PreviousFn)(T&)>
+    class intrusive_list
+    {
+    public:
+        intrusive_list()
+            : mRoot(nullptr)
+            , mTail(nullptr)
+        {
+        }
+
+        intrusive_list(T root)
+            : mRoot(root)
+            , mTail(root)
+        {
+        }
+
+        intrusive_list(const intrusive_list& other)
+            : mRoot(other.mRoot)
+            , mTail(other.mTail)
+        {
+        }
+
+        intrusive_list(intrusive_list&& other)
+            : mRoot(std::move(other.mRoot))
+            , mTail(std::move(other.mTail))
+        {
+        }
+
+        void push_back(T item)
+        {
+            if (mTail)
+            {
+                PreviousFn(item) = mTail;
+                NextFn(mTail) = item;
+                mTail = item;
+            }
+            else
+            {
+                mRoot = item;
+                mTail = item;
+            }
+        }
+
+        void push_front(T item)
+        {
+            if (mTail)
+            {
+                NextFn(item) = mRoot;
+                PreviousFn(mRoot) = item;
+                mRoot = item;
+            }
+            else
+            {
+                mRoot = item;
+                mTail = item;
+            }
+        }
+
+
+        class iterator
+        {
+        friend class intrusive_list;
+        public:
+            T& operator*()
+            {
+                return mNode;
+            }
+
+            T* operator->()
+            {
+                return &mNode;
+            }
+
+            iterator& operator++()
+            {
+                mNode = NextFn(mNode);
+                return *this;
+            }
+
+            bool operator==(const iterator& other) const
+            {
+                return (mNode == other.mNode);
+            }
+
+        private:
+            iterator(T node)
+                : mNode(node)
+            {
+            }
+
+            T mNode;
+        };
+
+        class const_iterator
+        {
+        friend class intrusive_list;
+        public:
+            const T& operator*() const
+            {
+                return mNode;
+            }
+
+            const T* operator->() const
+            {
+                return mNode;
+            }
+
+            const_iterator operator++()
+            {
+                mNode = NextFn(mNode);
+                return *this;
+            }
+            
+            bool operator==(const const_iterator& other) const
+            {
+                return (mNode == other.mNode);
+            }
+
+        private:
+            const_iterator(T node)
+                : mNode(node)
+            {
+            }
+
+            T mNode;
+        };
+
+        iterator begin()
+        {
+            return iterator(mRoot);
+        }
+
+        iterator end()
+        {
+            return iterator(nullptr);
+        }
+
+        const_iterator begin() const
+        {
+            return const_iterator(mRoot);
+        }
+
+        const_iterator end() const
+        {
+            return const_iterator(nullptr);
+        }
+
+        const_iterator cbegin() const
+        {
+            return const_iterator(mRoot);
+        }
+
+        const_iterator cend() const
+        {
+            return const_iterator(nullptr);
+        }
+
+        void erase(iterator it)
+        {
+            if (T previous = PreviousFn(it.mNode))
+            {
+                if (T next = NextFn(it.mNode))
+                {
+                    NextFn(previous) = next;
+                    PreviousFn(next) = previous;
+                }
+                else // Last item
+                {
+                    NextFn(previous) = nullptr;
+                    mTail = previous;
+                }
+            }
+            else // Must be root node
+            {
+                if (T next = NextFn(it.mNode))
+                {
+                    PreviousFn(next) = nullptr;
+                    mRoot = next;
+                }
+                else
+                {
+                    mRoot = nullptr;
+                    mTail = nullptr;
+                }
+            }
+        }
+
+    private:
+        T mRoot;
+        T mTail;
     };
 }
 

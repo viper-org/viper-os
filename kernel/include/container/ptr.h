@@ -1,11 +1,12 @@
 #ifndef VIPER_OS_CONTAINER_PTR_H
 #define VIPER_OS_CONTAINER_PTR_H 1
 
-#include <drivers//Terminal.h>
+#include <container/atomic.h>
 
 #include <memory.h>
 
 #include <cstddef>
+#include <utility>
 
 namespace vpr
 {
@@ -34,6 +35,13 @@ namespace vpr
         {
         }
 
+        template<typename U>
+        unique_ptr& operator=(unique_ptr<U>&& other)
+        {
+            mData = std::move(other.mData);
+            return *this;
+        }
+
         
         ~unique_ptr()
         {
@@ -56,7 +64,7 @@ namespace vpr
         }
 
 
-        T operator*() const
+        T& operator*() const
         {
             return *mData;
         }
@@ -64,6 +72,11 @@ namespace vpr
         T* operator->() const
         {
             return mData;
+        }
+
+        operator bool() const
+        {
+            return (mData != nullptr);
         }
 
     private:
@@ -76,6 +89,100 @@ namespace vpr
         //return unique_ptr<T>(new Tp(args...));
         T* object = new T(args...);
         return unique_ptr<T>(object);
+    }
+
+
+    template <class T>
+    class shared_ptr
+    {
+    public:
+        shared_ptr()
+            : mData(nullptr)
+            , mRefCount(nullptr)
+        {
+        }
+
+        shared_ptr(std::nullptr_t)
+            : shared_ptr()
+        {
+        }
+
+        shared_ptr(T* data)
+            : mData(data)
+            , mRefCount(new atomic_long(1))
+        {
+        }
+
+        shared_ptr(const shared_ptr& other)
+            : mData(other.mData)
+            , mRefCount(other.mRefCount)
+        {
+            if (other.mRefCount)
+            {
+                *mRefCount += 1;
+            }
+        }
+
+        ~shared_ptr()
+        {
+            if (mRefCount)
+            {
+                *mRefCount -= 1;
+                if (*mRefCount == 0)
+                {
+                    delete mData;
+                    delete mRefCount;
+                }
+            }
+        }
+
+        T* get()
+        {
+            return mData;
+        }
+
+
+        T& operator*()
+        {
+            return *mData;
+        }
+
+        T* operator->()
+        {
+            return mData;
+        }
+
+
+        long use_count() const
+        {
+            return *mRefCount;
+        }
+
+        bool unique() const
+        {
+            return (*mRefCount == 1);
+        }
+
+        operator bool()
+        {
+            return (mData != nullptr);
+        }
+
+        bool operator==(const shared_ptr other) const
+        {
+            return (mData == other.mData);
+        }
+
+    private:
+        T* mData;
+        atomic_long* mRefCount;
+    };
+
+    template <class T, class... Args>
+    shared_ptr<T> make_shared(Args&&... args)
+    {
+        T* object = new T(args...);
+        return shared_ptr<T>(object);
     }
 }
 

@@ -5,7 +5,7 @@
 
 namespace timer
 {
-    using Handler = vpr::function<void()>;
+    using Handler = void(*)();
 
     void Init();
 

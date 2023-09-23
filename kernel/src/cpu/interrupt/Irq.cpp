@@ -20,10 +20,11 @@ namespace irq
 
     extern "C" void CommonIRQHandler(InterruptFrame* frame)
     {
-        if (sched::CurrentProcess())
+        if (sched::CurrentThread())
         {
-            cpu::SaveContext(sched::CurrentProcess()->getContext(), frame);
+            cpu::SaveContext(sched::CurrentThread()->getContext(), frame);
         }
+        
         if (handlers[frame->baseFrame.vector - 32])
         {
             handlers[frame->baseFrame.vector - 32](frame);

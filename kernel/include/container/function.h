@@ -1,3 +1,4 @@
+#include "drivers/Terminal.h"
 #ifndef VIPER_OS_CONTAINER_FUNCTION_H
 #define VIPER_OS_CONTAINER_FUNCTION_H 1
 
@@ -15,6 +16,7 @@ namespace vpr
         template <typename F>
         function(F f)
             : inner(vpr::make_unique<ConcreteFunction<F>>(std::move(f)))
+            , innerPtr(nullptr)
         {
         }
 
@@ -24,10 +26,10 @@ namespace vpr
         {
         }
 
-        function(function const& rhs) 
+        function(const function& rhs) 
             : innerPtr(rhs.innerPtr)
         {
-            if (!innerPtr)
+            if (rhs.inner)
             {
                 inner = rhs.inner->copy();
             }
@@ -38,13 +40,13 @@ namespace vpr
         {
         }
 
-        function& operator=(function const& rhs)
+        function& operator=(const function& rhs)
         {
-            if (this != &rhs)
+            if (rhs.inner)
             {
                 inner = rhs.inner->copy();
-                innerPtr = rhs.innerPtr;
             }
+            innerPtr = rhs.innerPtr;
             return *this;
         }
         function& operator=(function&& rhs)
@@ -56,7 +58,7 @@ namespace vpr
 
         RetType operator()(Args... args) const
         {
-            if (inner.get())
+            if (inner)
             {
                 return inner->call(static_cast<Args&&>(args)...);
             }
@@ -76,7 +78,7 @@ namespace vpr
         struct ConcreteFunction : VirtualFunction
         {
             ConcreteFunction(F f) 
-                : func{std::move(f)}
+                : func(std::move(f))
             {
             }
 
@@ -86,16 +88,13 @@ namespace vpr
             }
             virtual vpr::unique_ptr<VirtualFunction> copy() const
             {
-                if (!this) // In case we only store a function ptr
-                {
-                    return nullptr;
-                }
+                Terminal::Print("copy()\n");
                 return vpr::make_unique<ConcreteFunction<F>>(func);
             }
 
             F func;
         };
-
+        
         vpr::unique_ptr<VirtualFunction> inner;
         RetType(*innerPtr)(Args...);
     };
