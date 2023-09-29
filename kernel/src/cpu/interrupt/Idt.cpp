@@ -36,12 +36,12 @@ namespace idt
 
         for(uint8_t vector = 0; vector < 32; vector++)
         {
-            idt[vector] = IDTEntry(ExceptionStubTable[vector], DEFAULT_FLAGS, 0);
+            idt[vector] = IDTEntry(ExceptionStubTable[vector], DEFAULT_FLAGS, 1);
             vectors[vector] = true;
         }
         for(uint8_t vector = 0; vector < 16; vector++)
         {
-            idt[vector + 32] = IDTEntry(IRQStubTable[vector], DEFAULT_FLAGS, 0);
+            idt[vector + 32] = IDTEntry(IRQStubTable[vector], DEFAULT_FLAGS, 1);
             vectors[vector + 32] = true;
         }
 

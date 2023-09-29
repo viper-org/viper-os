@@ -1,7 +1,7 @@
 #include <cpu/Gdt/Gdt.h>
 #include <cstdint>
 
-namespace GlobalDescriptorTable
+namespace gdt
 {
     struct [[gnu::packed]] GDTPointer
     {
@@ -11,7 +11,7 @@ namespace GlobalDescriptorTable
 
     extern "C" void install_gdt(GDTPointer* gdtr);
 
-    std::uint64_t descriptors[3];
+    std::uint64_t descriptors[5];
 
     void Init()
     {

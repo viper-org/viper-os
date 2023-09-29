@@ -10,6 +10,7 @@
 #include <mm/Vmm.h>
 
 #include <cpu/Gdt/Gdt.h>
+#include <cpu/Gdt/Tss.h>
 #include <cpu/interrupt/Idt.h>
 #include <cpu/interrupt/Exception.h>
 #include <cpu/interrupt/Irq.h>
@@ -28,26 +29,14 @@
 
 void test()
 {
-    while(1)
-    {
-        Terminal::PutChar('A', 0xff0000, 0);
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-        asm("pause");
-    }
+    Terminal::Print("hello from process 1\n");
+    while(1) asm("hlt");
 }
 
 void test2()
 {
-    Terminal::PutChar('B', 0x0000ff, 0);
-    sched::RemoveCurrentThread();
+    Terminal::Print("hello from process 2\n");
+    while(1) asm("hlt");
 }
 
 extern "C" void _start()
@@ -57,7 +46,8 @@ extern "C" void _start()
     mm::Init();
     vm::Init();
 
-    GlobalDescriptorTable::Init();
+    gdt::Init();
+    tss::Init();
     idt::Init();
 
     Framebuffer::Init();
