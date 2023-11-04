@@ -1,0 +1,11 @@
+*.cmake
+*.a
+Makefile
+
+.cache
+CMakeFiles
+_deps
+
+compile_commands.json
+CMakeCache.txt
+viperos-*

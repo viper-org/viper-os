@@ -9,7 +9,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 
 set(SOURCES
-    "src/test.cpp"
+    "src/mm/pmmTests.cpp"
 )
 
 set(HEADERS
@@ -25,3 +25,9 @@ target_include_directories(viperos-tests
 
 target_link_libraries(viperos-tests PRIVATE Catch2::Catch2WithMain)
 target_link_libraries(viperos-tests PRIVATE echis)
+target_link_libraries(viperos-tests PRIVATE gcov)
+target_compile_definitions(viperos-tests PRIVATE VIPEROS_ENABLE_TEST_FUNCTIONS)
+target_compile_options(viperos-tests PRIVATE -fprofile-arcs -ftest-coverage)
+
+target_compile_definitions(echis PRIVATE VIPEROS_ENABLE_TEST_FUNCTIONS)
+target_compile_options(echis PRIVATE -fprofile-arcs -ftest-coverage)
