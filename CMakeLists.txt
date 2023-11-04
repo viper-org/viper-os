@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 3.26)
+
+project(viper-os)
+
+add_subdirectory(echis)
+
+if (${arch} MATCHES "tests")
+    add_subdirectory(tests)
+else()
+    add_subdirectory(arch/${arch})
+endif()
