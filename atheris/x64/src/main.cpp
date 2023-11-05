@@ -18,7 +18,7 @@ namespace x64
         {
             atheris::Halt();
         }
-        echis::console::PutString("Hello world!", 12, 0x00ffff, 0);
+        echis::console::Print("Hello world!", 0x00ffff, 0);
         atheris::Halt();
     }
 }

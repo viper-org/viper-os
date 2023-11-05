@@ -68,6 +68,21 @@ namespace echis
             }
         }
 
+        /*
+         * Prints a string
+         *
+         * The string must end with a null
+         * terminator
+         */
+        template <typename T = console>
+        static void Print(const char* string, uint32_t foreground, uint32_t background)
+        {
+            for (size_t i = 0; string[i] != '\0'; ++i)
+            {
+                T::PutChar(string[i], foreground, background);
+            }
+        }
+
 #ifdef VIPEROS_ENABLE_TEST_FUNCTIONS
         /*
          * Resets the global state to startup values
