@@ -3,12 +3,25 @@ cmake_minimum_required(VERSION 3.26)
 set(SOURCES
     "src/main.cpp"
     
+    "src/driver/consoleInstall.cpp"
     "src/driver/framebufferInstall.cpp"
+
+    "src/fs/module.cpp"
+
 
     "src/atheris/halt.cpp"
 )
 
 set(HEADERS
+    "include/driver/framebufferInstall.h"
+    "include/driver/consoleInstall.h"
+
+    "include/fs/module.h"
+
+
+    "include/atheris/halt.h"
+
+
     "include/limine.h"
 )
 
@@ -16,6 +29,7 @@ set(LINKER_OPTIONS
     "-Wl,-melf_x86_64"
     "-nostdlib"
     "-static"
+    "-no-pie"
     "-Wl,--no-dynamic-linker"
     "-ztext"
     "-zmax-page-size=0x1000"
@@ -32,6 +46,8 @@ set(COMPILER_OPTIONS
     "-fno-lto"
     "-fno-rtti"
     "-fno-exceptions"
+    "-fno-pie"
+    "-fno-pic"
     "-m64"
     "-march=x86-64"
     "-mno-80387"
@@ -39,6 +55,7 @@ set(COMPILER_OPTIONS
     "-mno-sse"
     "-mno-sse2"
     "-mno-red-zone"
+    "-mcmodel=kernel"
 )
 
 set(CMAKE_CXX_COMPILER x86_64-elf-g++)

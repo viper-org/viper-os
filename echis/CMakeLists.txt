@@ -5,6 +5,9 @@ set(SOURCES
 
     "src/driver/framebuffer.cpp"
     "src/driver/console.cpp"
+
+    
+    "src/libc/string.cpp"
 )
 
 set(HEADERS
@@ -12,6 +15,9 @@ set(HEADERS
 
     "include/echis/driver/framebuffer.h"
     "include/echis/driver/console.h"
+
+
+    "include/string.h"
 )
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})

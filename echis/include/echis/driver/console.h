@@ -1,4 +1,3 @@
-#include <iostream>
 #ifndef VIPEROS_ECHIS_DRIVER_CONSOLE_H
 #define VIPEROS_ECHIS_DRIVER_CONSOLE_H 1
 

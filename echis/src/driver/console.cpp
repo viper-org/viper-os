@@ -14,6 +14,8 @@ namespace echis
         if (fontInfo.bitmapData == nullptr)
         {
             fontInfo = newFontInfo;
+            mHoriz = screenHoriz;
+            mVert = screenVert;
         }
     }
 

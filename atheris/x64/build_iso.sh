@@ -9,6 +9,6 @@ sgdisk viperos-x64.hdd -n 1:2048 -t 1:ef00
 ./limine/limine bios-install viperos-x64.hdd
 mformat -i viperos-x64.hdd@@1M
 mmd -i viperos-x64.hdd@@1M ::/EFI ::/EFI/BOOT
-mcopy -i viperos-x64.hdd@@1M ./viperos-x64 limine.cfg limine/limine-bios.sys ::/
+mcopy -i viperos-x64.hdd@@1M ./viperos-x64 ../../modules/* limine.cfg limine/limine-bios.sys ::/
 mcopy -i viperos-x64.hdd@@1M limine/BOOTX64.EFI ::/EFI/BOOT
 mcopy -i viperos-x64.hdd@@1M limine/BOOTIA32.EFI ::/EFI/BOOT

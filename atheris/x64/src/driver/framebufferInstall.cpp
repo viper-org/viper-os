@@ -11,17 +11,19 @@ namespace x64
         .revision = 1,
         .response = nullptr
     };
+
+    limine_framebuffer_response* framebufferResponse;
     
     int InstallFramebuffer()
     {
-        if (limine_framebuffer_response* response = framebufferRequest.response)
+        if ((framebufferResponse = framebufferRequest.response))
         {
-            if (response->framebuffer_count == 0)
+            if (framebufferResponse->framebuffer_count == 0)
             {
                 return 1;
             }
 
-            if (limine_framebuffer* framebuffer = response->framebuffers[0])
+            if (limine_framebuffer* framebuffer = framebufferResponse->framebuffers[0])
             {
                 echis::framebuffer::Init(framebuffer->address,
                                              framebuffer->pitch,

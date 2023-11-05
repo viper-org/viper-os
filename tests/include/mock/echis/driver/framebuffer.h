@@ -2,7 +2,6 @@
 #define VIPEROS_MOCK_ECHIS_DRIVER_FRAMEBUFFER_H 1
 
 #include <stdint.h>
-#include <iostream>
 #include <vector>
 
 namespace mock
