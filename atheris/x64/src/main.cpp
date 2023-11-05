@@ -1,13 +1,18 @@
-#include <limine.h>
+#include <driver/framebufferInstall.h>
 
-limine_framebuffer_request fbReq = {
-    .id = LIMINE_FRAMEBUFFER_REQUEST,
-    .revision = 1
-};
+#include <echis/driver/framebuffer.h>
 
-extern "C" void kernel_main()
+#include <common/halt.h>
+
+namespace x64
 {
-    unsigned char* addr = (unsigned char*)fbReq.response->framebuffers[0]->address;
-    addr[10 * 4 + 10 * fbReq.response->framebuffers[0]->pitch] = 0xff;
-    asm("1: cli; hlt: jmp 1b"); 
+    extern "C" void kernel_main()
+    {
+        if (InstallFramebuffer() == FramebufferInstallError)
+        {
+            atheris::Halt();
+        }
+        echis::framebuffer::PutPixel(10, 10, 0xff0000);
+        atheris::Halt();
+    }
 }

@@ -25,9 +25,9 @@ namespace echis
             uint8_t* address = reinterpret_cast<uint8_t*>(screen.base);
             uint32_t index = x * 4 + y * screen.pitch;
 
-            address[index]     = (color >> 16) & 0xff;
+            address[index + 0] = (color)       & 0xff;
             address[index + 1] = (color >> 8)  & 0xff;
-            address[index + 2] = (color)       & 0xff;
+            address[index + 2] = (color >> 16) & 0xff;
         }
     }
 }

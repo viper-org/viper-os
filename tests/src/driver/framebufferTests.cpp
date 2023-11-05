@@ -27,13 +27,20 @@ namespace framebufferTests
 
     TEST_CASE_METHOD(FramebufferTestsFixture, "Putting a pixel at (0,0)", "[framebufferTests]")
     {
-        echis::framebuffer::PutPixel(0, 0, 0xffffff);
+        std::mt19937 rng;
+        std::uniform_int_distribution<int> colorUid(0, 0xff);
+
+        int r = colorUid(rng);
+        int g = colorUid(rng);
+        int b = colorUid(rng);
+
+        echis::framebuffer::PutPixel(0, 0, r << 16 | g << 8 | b);
 
         uint8_t* base = reinterpret_cast<uint8_t*>(mFramebufferBase.get());
 
-        REQUIRE(base[0] == 0xff);
-        REQUIRE(base[1] == 0xff);
-        REQUIRE(base[2] == 0xff);
+        REQUIRE(base[0] == b);
+        REQUIRE(base[1] == g);
+        REQUIRE(base[2] == r);
     }
 
     TEST_CASE_METHOD(FramebufferTestsFixture, "Putting pixels on the first row", "[framebufferTests]")
@@ -54,9 +61,9 @@ namespace framebufferTests
 
             uint8_t* base = reinterpret_cast<uint8_t*>(mFramebufferBase.get());
 
-            REQUIRE(base[x * pixelSize + 0] == r);
+            REQUIRE(base[x * pixelSize + 0] == b);
             REQUIRE(base[x * pixelSize + 1] == g);
-            REQUIRE(base[x * pixelSize + 2] == b);
+            REQUIRE(base[x * pixelSize + 2] == r);
         }
     }
     
@@ -79,9 +86,9 @@ namespace framebufferTests
 
             uint8_t* base = reinterpret_cast<uint8_t*>(mFramebufferBase.get());
 
-            REQUIRE(base[x * pixelSize + y * pitch + 0] == r);
+            REQUIRE(base[x * pixelSize + y * pitch + 0] == b);
             REQUIRE(base[x * pixelSize + y * pitch + 1] == g);
-            REQUIRE(base[x * pixelSize + y * pitch + 2] == b);
+            REQUIRE(base[x * pixelSize + y * pitch + 2] == r);
         }
     }
 }

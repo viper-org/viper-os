@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.26)
 
 set(SOURCES
     "src/main.cpp"
+    
+    "src/driver/framebufferInstall.cpp"
+
+    "src/atheris/halt.cpp"
 )
 
 set(HEADERS
@@ -52,7 +56,9 @@ target_include_directories(viperos-x64
 target_link_libraries(viperos-x64 PRIVATE echis)
 target_link_options(viperos-x64 PRIVATE ${LINKER_OPTIONS})
 target_compile_options(viperos-x64 PRIVATE ${COMPILER_OPTIONS})
+target_include_directories(viperos-x64 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../public)
 
 target_compile_options(echis PRIVATE ${COMPILER_OPTIONS})
+target_include_directories(echis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../public)
 
 add_custom_command(TARGET viperos-x64 POST_BUILD COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/build_iso.sh)
