@@ -24,6 +24,16 @@ namespace echis
          * the call is ignored
          */
         void PutPixel(uint32_t x, uint32_t y, uint32_t color);
+
+        /*
+         * Draws a bitmap of specified size
+         * at specified x and y coordinates
+         *
+         * 1 bit will put the foreground
+         * color, and a 0 bit will put
+         * the background color
+         */
+        void DrawBitmap(void* bitmap, uint32_t x, uint32_t y, uint32_t sizeX, uint32_t sizeY, uint32_t foreground, uint32_t background);
     }
 }
 

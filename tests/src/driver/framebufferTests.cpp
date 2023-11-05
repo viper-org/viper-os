@@ -72,11 +72,12 @@ namespace framebufferTests
         for (int i = 0; i < 100; i++)
         {
             std::mt19937 rng;
-            std::uniform_int_distribution<int> uid(0, rowSize);
+            std::uniform_int_distribution<int> rowUid(0, rowSize);
+            std::uniform_int_distribution<int> colUid(0, colSize);
             std::uniform_int_distribution<int> colorUid(0, 0xff);
 
-            int x = uid(rng);
-            int y = uid(rng);
+            int x = rowUid(rng);
+            int y = colUid(rng);
 
             int r = colorUid(rng);
             int g = colorUid(rng);
@@ -89,6 +90,63 @@ namespace framebufferTests
             REQUIRE(base[x * pixelSize + y * pitch + 0] == b);
             REQUIRE(base[x * pixelSize + y * pitch + 1] == g);
             REQUIRE(base[x * pixelSize + y * pitch + 2] == r);
+        }
+    }
+
+    TEST_CASE_METHOD(FramebufferTestsFixture, "Drawing a bitmap", "[framebufferTests]")
+    {
+        std::mt19937 rng;
+        std::uniform_int_distribution<int> rowUid(0, rowSize);
+        std::uniform_int_distribution<int> colUid(0, colSize);
+        std::uniform_int_distribution<int> colorUid(0, 0xff);
+
+        int x = rowUid(rng);
+        int y = colUid(rng);
+
+        int foregroundR = colorUid(rng);
+        int foregroundG = colorUid(rng);
+        int foregroundB = colorUid(rng);
+        int backgroundR = colorUid(rng);
+        int backgroundG = colorUid(rng);
+        int backgroundB = colorUid(rng);
+
+        uint8_t bitmap[] = {
+            0xff,
+            0x00,
+            0xff,
+            0x00,
+            0xff,
+            0x00,
+            0xff,
+            0x00
+        };
+
+        echis::framebuffer::DrawBitmap(bitmap,
+                                       x, y,
+                                       8, 8,
+                                       foregroundR << 16 | foregroundG << 8 | foregroundB,
+                                       backgroundR << 16 | backgroundG << 8 | backgroundB);
+
+        uint8_t* base = reinterpret_cast<uint8_t*>(mFramebufferBase.get());
+
+        for (int i = 0; i < 8; i++)
+        {
+            uint8_t row = bitmap[i];
+            for (int j = 0; j < 8; j++)
+            {
+                if ((row >> (8 - j - 1) & 0x1))
+                {
+                    REQUIRE(base[(x + j) * pixelSize + (y + i) * pitch + 0] == foregroundB);
+                    REQUIRE(base[(x + j) * pixelSize + (y + i) * pitch + 1] == foregroundG);
+                    REQUIRE(base[(x + j) * pixelSize + (y + i) * pitch + 2] == foregroundR);
+                }
+                else
+                {
+                    REQUIRE(base[(x + j) * pixelSize + (y + i) * pitch + 0] == backgroundB);
+                    REQUIRE(base[(x + j) * pixelSize + (y + i) * pitch + 1] == backgroundG);
+                    REQUIRE(base[(x + j) * pixelSize + (y + i) * pitch + 2] == backgroundR);
+                }
+            }
         }
     }
 }
