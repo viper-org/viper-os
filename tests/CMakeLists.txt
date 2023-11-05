@@ -12,9 +12,16 @@ set(SOURCES
     "src/mm/pmmTests.cpp"
     
     "src/driver/framebufferTests.cpp"
+    "src/driver/consoleTests.cpp"
+
+
+    "src/mock/echis/driver/framebuffer.cpp"
+    "src/mock/echis/driver/console.cpp"
 )
 
 set(HEADERS
+    "include/mock/echis/driver/framebuffer.h"
+    "include/mock/echis/driver/console.h"
 )
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})

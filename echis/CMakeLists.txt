@@ -4,12 +4,14 @@ set(SOURCES
     "src/mm/pmm.cpp"
 
     "src/driver/framebuffer.cpp"
+    "src/driver/console.cpp"
 )
 
 set(HEADERS
     "include/echis/mm/pmm.h"
 
     "include/echis/driver/framebuffer.h"
+    "include/echis/driver/console.h"
 )
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
