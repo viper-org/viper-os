@@ -21,6 +21,17 @@ namespace mock
             static std::vector<PutCharAtInvocation> PutCharAtInvocations;
             static void PutCharAt(unsigned char c, uint32_t x, uint32_t y, uint32_t foreground, uint32_t background);
 
+
+            struct PutCharInvocation
+            {
+                unsigned char c;
+                uint32_t foreground;
+                uint32_t background;
+            };
+            static std::vector<PutCharInvocation> PutCharInvocations;
+            static void PutChar(unsigned char c, uint32_t foreground, uint32_t background);
+            
+
             struct PutCharMoveCursorInvocation
             {
             };

@@ -17,7 +17,7 @@ set(HEADERS
     "include/echis/driver/console.h"
 
 
-    "include/string.h"
+    "include/libc/string.h"
 )
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})

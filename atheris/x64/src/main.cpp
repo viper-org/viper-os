@@ -18,11 +18,7 @@ namespace x64
         {
             atheris::Halt();
         }
-        echis::console::PutChar('H', 0xffffff, 0);
-        echis::console::PutChar('e', 0xffffff, 0);
-        echis::console::PutChar('l', 0xffffff, 0);
-        echis::console::PutChar('l', 0xffffff, 0);
-        echis::console::PutChar('o', 0xffffff, 0);
+        echis::console::PutString("Hello world!", 12, 0x00ffff, 0);
         atheris::Halt();
     }
 }

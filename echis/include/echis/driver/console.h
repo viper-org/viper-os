@@ -3,6 +3,7 @@
 
 #include <echis/driver/framebuffer.h>
 
+#include <stddef.h>
 #include <stdint.h>
 
 namespace echis
@@ -49,6 +50,22 @@ namespace echis
             T::PutCharAt(c, mX, mY, foreground, background);
 
             T::PutCharMoveCursor();
+        }
+
+        /*
+         * Prints an array of characters
+         * with specified size
+         *
+         * Size must be equal to or less than
+         * the size of the array
+         */
+        template <typename T = console>
+        static void PutString(const char* data, size_t size, uint32_t foreground, uint32_t background)
+        {
+            for (size_t i = 0; i < size; ++i)
+            {
+                T::PutChar(data[i], foreground, background);
+            }
         }
 
 #ifdef VIPEROS_ENABLE_TEST_FUNCTIONS

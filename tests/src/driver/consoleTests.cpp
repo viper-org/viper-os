@@ -123,4 +123,57 @@ namespace consoleTests
             REQUIRE(mock::echis::console::PutCharAtInvocations[0].background == (backgroundR << 16 | backgroundG << 8 | backgroundB));
         }
     }
+
+    TEST_CASE_METHOD(ConsoleTestsFixture, "Printing string array with size", "[consoleTests]")
+    {
+        std::unique_ptr<uint8_t[]> bitmap = std::make_unique<uint8_t[]>(8 * 256);
+        echis::console::FontInfo fontInfo = {
+            .bitmapData = bitmap.get(),
+            .sizeX      = 8,
+            .sizeY      = 8
+        };
+        echis::console::Init(fontInfo, 320, 200);
+
+        for (int i = 1; i < 100; ++i)
+        {
+            mock::echis::console::PutCharInvocations.clear();
+
+            std::mt19937 rng;
+            std::uniform_int_distribution<uint8_t> colorUid(0, 0xff);
+
+            constexpr const char characters[] = "0123456789"
+                                                "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                                "abcdefghijklmnopqrstuvwxyz";
+
+            std::uniform_int_distribution<char> charUid(0, sizeof(characters) - 1);
+
+            std::string str;
+            str.reserve(i);
+            for (int j = 0; j < i; ++j)
+            {
+                str += characters[charUid(rng)];
+            }
+
+            int foregroundR = colorUid(rng);
+            int foregroundG = colorUid(rng);
+            int foregroundB = colorUid(rng);
+            int backgroundR = colorUid(rng);
+            int backgroundG = colorUid(rng);
+            int backgroundB = colorUid(rng);
+
+            echis::console::PutString<mock::echis::console>(str.data(), i,
+                                                            foregroundR << 16 | foregroundG << 8 | foregroundB,
+                                                            backgroundR << 16 | backgroundG << 8 | backgroundB);
+
+            REQUIRE(mock::echis::console::PutCharInvocations.size() == i);
+
+            // Passed in values should be exactly the same
+            for (int j = 0; j < i; ++j)
+            {
+                REQUIRE(mock::echis::console::PutCharInvocations[j].c == str[j]);
+                REQUIRE(mock::echis::console::PutCharInvocations[j].foreground == (foregroundR << 16 | foregroundG << 8 | foregroundB));
+                REQUIRE(mock::echis::console::PutCharInvocations[j].background == (backgroundR << 16 | backgroundG << 8 | backgroundB));
+            }
+        }
+    }
 }

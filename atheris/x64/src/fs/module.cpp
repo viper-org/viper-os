@@ -2,7 +2,7 @@
 
 #include <limine.h>
 
-#include <string.h>
+#include <libc/string.h>
 
 static volatile limine_module_request moduleRequest = {
     .id = LIMINE_MODULE_REQUEST,

@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-int strcmp(const char* s1, const char* s2);
+extern "C" int strcmp(const char* s1, const char* s2);
 
 void* memset(void* dest, int ch, size_t count);
 
