@@ -5,7 +5,10 @@ Makefile
 .cache
 CMakeFiles
 _deps
+ovmf
+limine
 
 compile_commands.json
 CMakeCache.txt
 viperos-*
+limine.h

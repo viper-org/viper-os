@@ -1,4 +1,3 @@
-#include <iostream>
 #include <mm/pmm.h>
 
 #include <util/math.h>
@@ -16,8 +15,8 @@ namespace echis
 
 
         MemoryRegion::MemoryRegion(uint32_t size)
-            : totalSize(size)
-            , next(nullptr)
+            : next(nullptr)
+            , totalSize(size)
         {
         }
 
@@ -35,11 +34,6 @@ namespace echis
             return pageSize;
         }
 
-
-        static inline uint32_t NumPages(uint64_t n)
-        {
-            return (n + pageSize - 1) / pageSize;
-        }
         
         void AddRegion(void* base, uint32_t size)
         {
