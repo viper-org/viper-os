@@ -2,10 +2,14 @@ cmake_minimum_required(VERSION 3.26)
 
 set(SOURCES
     "src/mm/pmm.cpp"
+
+    "src/driver/framebuffer.cpp"
 )
 
 set(HEADERS
     "include/echis/mm/pmm.h"
+
+    "include/echis/driver/framebuffer.h"
 )
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})

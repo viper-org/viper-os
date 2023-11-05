@@ -10,6 +10,8 @@ FetchContent_MakeAvailable(Catch2)
 
 set(SOURCES
     "src/mm/pmmTests.cpp"
+    
+    "src/driver/framebufferTests.cpp"
 )
 
 set(HEADERS
