@@ -6,6 +6,9 @@ set(SOURCES
     "src/driver/framebuffer.cpp"
     "src/driver/console.cpp"
 
+    "src/driver/impl/framebuffer.cpp"
+    "src/driver/impl/console.cpp"
+
     
     "src/libc/string.cpp"
 )
@@ -15,6 +18,9 @@ set(HEADERS
 
     "include/echis/driver/framebuffer.h"
     "include/echis/driver/console.h"
+
+    "include/echis/driver/impl/framebuffer.h"
+    "include/echis/driver/impl/console.h"
 
 
     "include/libc/string.h"

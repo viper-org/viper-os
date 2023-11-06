@@ -1,4 +1,4 @@
-#include <echis/driver/framebuffer.h>
+#include <echis/driver/impl/framebuffer.h>
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -18,7 +18,7 @@ namespace framebufferTests
         FramebufferTestsFixture()
             : mFramebufferBase(std::make_unique<std::byte[]>(pitch * colSize))
         {
-            echis::framebuffer::Init(mFramebufferBase.get(), pitch, rowSize, colSize);
+            echis::framebufferImpl::Init(mFramebufferBase.get(), pitch, rowSize, colSize);
         }
 
     protected:
@@ -34,7 +34,7 @@ namespace framebufferTests
         int g = colorUid(rng);
         int b = colorUid(rng);
 
-        echis::framebuffer::PutPixel(0, 0, r << 16 | g << 8 | b);
+        echis::framebufferImpl::PutPixel(0, 0, r << 16 | g << 8 | b);
 
         uint8_t* base = reinterpret_cast<uint8_t*>(mFramebufferBase.get());
 
@@ -57,7 +57,7 @@ namespace framebufferTests
             int g = colorUid(rng);
             int b = colorUid(rng);
 
-            echis::framebuffer::PutPixel(x, 0, r << 16 | g << 8 | b);
+            echis::framebufferImpl::PutPixel(x, 0, r << 16 | g << 8 | b);
 
             uint8_t* base = reinterpret_cast<uint8_t*>(mFramebufferBase.get());
 
@@ -83,7 +83,7 @@ namespace framebufferTests
             int g = colorUid(rng);
             int b = colorUid(rng);
 
-            echis::framebuffer::PutPixel(x, y, r << 16 | g << 8 | b);
+            echis::framebufferImpl::PutPixel(x, y, r << 16 | g << 8 | b);
 
             uint8_t* base = reinterpret_cast<uint8_t*>(mFramebufferBase.get());
 
@@ -121,7 +121,7 @@ namespace framebufferTests
             0x00
         };
 
-        echis::framebuffer::DrawBitmap(bitmap,
+        echis::framebufferImpl::DrawBitmap(bitmap,
                                        x, y,
                                        8, 8,
                                        foregroundR << 16 | foregroundG << 8 | foregroundB,

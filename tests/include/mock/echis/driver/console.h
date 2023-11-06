@@ -8,7 +8,7 @@ namespace mock
 {
     namespace echis
     {
-        struct console
+        struct consoleImpl
         {
             struct PutCharAtInvocation
             {

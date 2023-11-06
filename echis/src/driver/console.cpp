@@ -1,33 +1,34 @@
 #include <driver/console.h>
-#include <driver/framebuffer.h>
+
+#include <driver/impl/console.h>
 
 namespace echis
 {
-    console::FontInfo console::globalFontInfo;
-    uint32_t console::mHoriz;
-    uint32_t console::mVert;
-    uint32_t console::mX;
-    uint32_t console::mY;
-
-    void console::Init(FontInfo newFontInfo, uint32_t screenHoriz, uint32_t screenVert, FontInfo& fontInfo)
+    namespace console
     {
-        if (fontInfo.bitmapData == nullptr)
+        void Init(FontInfo font, uint32_t screenHoriz, uint32_t screenVert)
         {
-            fontInfo = newFontInfo;
-            mHoriz = screenHoriz;
-            mVert = screenVert;
+            consoleImpl::Init({font.bitmapData, font.sizeX, font.sizeY}, screenHoriz, screenVert);
+        }
+
+        void PutCharAt(unsigned char c, uint32_t x, uint32_t y, uint32_t foreground, uint32_t background)
+        {
+            consoleImpl::PutCharAt(c, x, y, foreground, background);
+        }
+
+        void PutChar(unsigned char c, uint32_t foreground, uint32_t background)
+        {
+            consoleImpl::PutChar(c, foreground, background);
+        }
+
+        void PutString(const char* data, size_t size, uint32_t foreground, uint32_t background)
+        {
+            consoleImpl::PutString(data, size, foreground, background);
+        }
+
+        void Print(const char* string, uint32_t foreground, uint32_t background)
+        {
+            consoleImpl::Print(string, foreground, background);
         }
     }
-
-
-#ifdef VIPEROS_ENABLE_TEST_FUNCTIONS
-    void console::ResetGlobalState()
-    {
-        globalFontInfo = {
-            .bitmapData = nullptr,
-            .sizeX      = 0,
-            .sizeY      = 0,
-        };
-    }
-#endif
 }

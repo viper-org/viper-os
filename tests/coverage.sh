@@ -1,1 +1,1 @@
-gcovr --exclude echis/src/libc
+gcovr --exclude echis/src/libc --exclude echis/src/driver/.*\.cpp
