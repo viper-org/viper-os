@@ -1,8 +1,8 @@
-#include <vector>
 #ifndef VIPEROS_MOCK_ECHIS_DRIVER_CONSOLE_H
 #define VIPEROS_MOCK_ECHIS_DRIVER_CONSOLE_H 1
 
 #include <stdint.h>
+#include <vector>
 
 namespace mock
 {

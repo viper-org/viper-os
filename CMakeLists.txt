@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 
-project(viper-os)
+project(viper-os C CXX ASM)
 
 add_subdirectory(echis)
 

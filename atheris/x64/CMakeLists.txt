@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.26)
 
 set(SOURCES
     "src/main.cpp"
+
+    "src/cpu/gdt/gdt.cpp"
+    "src/cpu/gdt/install_gdt.s"
     
     "src/driver/consoleInstall.cpp"
     "src/driver/framebufferInstall.cpp"
@@ -13,6 +16,8 @@ set(SOURCES
 )
 
 set(HEADERS
+    "include/cpu/gdt/gdt.h"
+
     "include/driver/framebufferInstall.h"
     "include/driver/consoleInstall.h"
 

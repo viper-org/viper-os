@@ -1,3 +1,5 @@
+#include <cpu/gdt/gdt.h>
+
 #include <driver/framebufferInstall.h>
 #include <driver/consoleInstall.h>
 
@@ -10,6 +12,7 @@ namespace x64
 {
     extern "C" void kernel_main()
     {
+        cpu::gdt::Install();
         if (InstallFramebuffer() == FramebufferInstallError)
         {
             atheris::Halt();
