@@ -11,6 +11,9 @@ set(SOURCES
     "src/driver/impl/framebuffer.cpp"
     "src/driver/impl/console.cpp"
 
+
+    "src/std/thread/mutex.cpp"
+
     
     "src/libc/string.cpp"
 )
@@ -25,6 +28,10 @@ set(HEADERS
 
     "include/echis/driver/impl/framebuffer.h"
     "include/echis/driver/impl/console.h"
+
+
+    "include/echis/std/container/atomic.h"
+    "include/echis/std/thread/mutex.h"
 
 
     "include/libc/string.h"

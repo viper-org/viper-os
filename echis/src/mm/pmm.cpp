@@ -2,6 +2,8 @@
 
 #include <util/math.h>
 
+#include <std/thread/mutex.h>
+
 #include <limits.h>
 #include <string.h>
 #include <new>
@@ -12,6 +14,7 @@ namespace echis
     {
         static int pageSize = 0;
         static MemoryRegion* memoryRegions = nullptr;
+        static vpr::mutex pmmMutex;
 
 
         MemoryRegion::MemoryRegion(uint32_t size)
@@ -146,6 +149,7 @@ namespace echis
 
         physaddr GetPages(uint32_t pageCount)
         {
+            vpr::lock_guard<vpr::mutex> lock(pmmMutex);
             if (pageCount == 0)
             {
                 return 0;
