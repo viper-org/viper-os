@@ -8,27 +8,27 @@ set(SOURCES
     "src/cpu/interrupt/idt.cpp"
     "src/cpu/interrupt/exception.cpp"
     "src/cpu/interrupt/handlers.s"
-    
-    "src/driver/consoleInstall.cpp"
-    "src/driver/framebufferInstall.cpp"
 
     "src/fs/module.cpp"
 
 
     "src/atheris/halt.cpp"
+
+    "src/atheris/driver/framebufferInit.cpp"
+    "src/atheris/driver/consoleInit.cpp"
 )
 
 set(HEADERS
     "include/cpu/gdt/gdt.h"
     "include/cpu/interrupt/idt.h"
 
-    "include/driver/framebufferInstall.h"
-    "include/driver/consoleInstall.h"
-
     "include/fs/module.h"
 
 
     "include/atheris/halt.h"
+
+    "include/atheris/driver/framebufferInit.h"
+    "include/atheris/driver/consoleInit.h"
 
 
     "include/limine.h"
@@ -83,9 +83,10 @@ target_include_directories(viperos-x64
 target_link_libraries(viperos-x64 PRIVATE echis)
 target_link_options(viperos-x64 PRIVATE ${LINKER_OPTIONS})
 target_compile_options(viperos-x64 PRIVATE ${COMPILER_OPTIONS})
-target_include_directories(viperos-x64 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../public)
+target_include_directories(viperos-x64 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../public/atheris)
 
 target_compile_options(echis PRIVATE ${COMPILER_OPTIONS})
 target_include_directories(echis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../public)
+target_include_directories(echis PRIVATE include)
 
 add_custom_command(TARGET viperos-x64 POST_BUILD COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/build_iso.sh)

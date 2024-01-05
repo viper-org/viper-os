@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.26)
 
 set(SOURCES
+    "src/core/kernel.cpp"
+
     "src/mm/pmm.cpp"
 
     "src/driver/framebuffer.cpp"
@@ -14,6 +16,8 @@ set(SOURCES
 )
 
 set(HEADERS
+    "include/echis/core/kernel.h"
+
     "include/echis/mm/pmm.h"
 
     "include/echis/driver/framebuffer.h"

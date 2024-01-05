@@ -1,5 +1,5 @@
-#ifndef VIPEROS_ATHERIS_GENERIC_HALT_H
-#define VIPEROS_ATHERIS_GENERIC_HALT_H 1
+#ifndef VIPEROS_ATHERIS_COMMON_HALT_H
+#define VIPEROS_ATHERIS_COMMON_HALT_H 1
 
 /*
  * Generic function to halt the CPU
@@ -11,4 +11,4 @@
 
 #include <atheris/halt.h>
 
-#endif
+#endif // VIPEROS_ATHERIS_COMMON_HALT_H
