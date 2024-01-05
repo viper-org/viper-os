@@ -5,6 +5,9 @@ set(SOURCES
 
     "src/cpu/gdt/gdt.cpp"
     "src/cpu/gdt/install_gdt.s"
+    "src/cpu/interrupt/idt.cpp"
+    "src/cpu/interrupt/exception.cpp"
+    "src/cpu/interrupt/handlers.s"
     
     "src/driver/consoleInstall.cpp"
     "src/driver/framebufferInstall.cpp"
@@ -17,6 +20,7 @@ set(SOURCES
 
 set(HEADERS
     "include/cpu/gdt/gdt.h"
+    "include/cpu/interrupt/idt.h"
 
     "include/driver/framebufferInstall.h"
     "include/driver/consoleInstall.h"
@@ -45,6 +49,7 @@ set(COMPILER_OPTIONS
     "-Wall"
     "-Wextra"
     "-Wpedantic"
+    "-O0"
     "-ffreestanding"
     "-fno-stack-protector"
     "-fno-stack-check"

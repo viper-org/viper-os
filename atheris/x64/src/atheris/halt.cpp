@@ -4,6 +4,6 @@ namespace atheris
 {
     void Halt()
     {
-        asm("1: cli; hlt; jmp 1b");
+        asm("1: hlt; jmp 1b");
     }
 }

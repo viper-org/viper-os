@@ -1,4 +1,5 @@
 #include <cpu/gdt/gdt.h>
+#include <cpu/interrupt/idt.h>
 
 #include <driver/framebufferInstall.h>
 #include <driver/consoleInstall.h>
@@ -13,6 +14,8 @@ namespace x64
     extern "C" void kernel_main()
     {
         cpu::gdt::Install();
+        cpu::interrupt::Install();
+
         if (InstallFramebuffer() == FramebufferInstallError)
         {
             atheris::Halt();
@@ -21,7 +24,8 @@ namespace x64
         {
             atheris::Halt();
         }
-        echis::console::Print("Hello world!", 0x00ffff, 0);
+        echis::console::Print("Hello world!\n", 0x00ffff, 0);
+
         atheris::Halt();
     }
 }
