@@ -33,9 +33,18 @@ namespace echis
         template <typename ConsoleT = consoleImpl>
         static void PutChar(unsigned char c, uint32_t foreground, uint32_t background)
         {
-            ConsoleT::PutCharAt(c, mX, mY, foreground, background);
-
-            ConsoleT::PutCharMoveCursor();
+            switch(c)
+            {
+                case '\n':
+                    mX = 0;
+                    ++mY;
+                    break;
+                
+                default:
+                    ConsoleT::PutCharAt(c, mX, mY, foreground, background);
+                    ConsoleT::PutCharMoveCursor();
+                    break;
+            }
         }
 
         template <typename ConsoleT = consoleImpl>
