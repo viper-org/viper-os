@@ -4,11 +4,11 @@
 /*
  * Generic function to install the console
  *
- * Must be provided in atheris/driver/consoleInit.h
+ * Must be provided in atheris/private/driver/consoleInit.h
  *
  * void atheris::console::Init()
  */
 
-#include <atheris/driver/consoleInit.h>
+#include <atheris/private/driver/consoleInit.h>
 
 #endif // VIPEROS_ATHERIS_DRIVER_CONSOLE_H

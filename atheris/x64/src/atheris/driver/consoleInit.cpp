@@ -1,4 +1,4 @@
-#include <atheris/driver/consoleInit.h>
+#include <atheris/private/driver/consoleInit.h>
 
 #include <fs/module.h>
 

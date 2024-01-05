@@ -1,14 +1,14 @@
 #ifndef VIPEROS_ECHIS_MM_PMM_H
 #define VIPEROS_ECHIS_MM_PMM_H 1
 
+#include <echis/mm/physaddr.h>
+
 #include <stdint.h>
 
 namespace echis
 {
     namespace pmm
     {
-        using physaddr = uint64_t;
-
         struct MemoryRegion
         {
             MemoryRegion(uint32_t size);

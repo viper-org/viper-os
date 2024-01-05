@@ -37,6 +37,7 @@ target_include_directories(echis
     PUBLIC
         include
 )
+target_include_directories(echis PUBLIC include/libc)
 
 target_include_directories(echis
     PRIVATE

@@ -1,4 +1,4 @@
-#include <atheris/halt.h>
+#include <atheris/private/halt.h>
 
 namespace atheris
 {

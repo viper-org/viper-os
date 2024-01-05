@@ -11,24 +11,36 @@ set(SOURCES
 
     "src/fs/module.cpp"
 
+    "src/mm/util.cpp"
+
 
     "src/atheris/halt.cpp"
 
     "src/atheris/driver/framebufferInit.cpp"
     "src/atheris/driver/consoleInit.cpp"
+
+    "src/atheris/mm/pm.cpp"
+    "src/atheris/mm/vm.cpp"
 )
 
 set(HEADERS
     "include/cpu/gdt/gdt.h"
     "include/cpu/interrupt/idt.h"
+    "include/cpu/asm.h"
+    "include/cpu/context.h"
 
     "include/fs/module.h"
 
+    "include/mm/util.h"
 
-    "include/atheris/halt.h"
 
-    "include/atheris/driver/framebufferInit.h"
-    "include/atheris/driver/consoleInit.h"
+    "include/atheris/private/halt.h"
+
+    "include/atheris/private/driver/framebufferInit.h"
+    "include/atheris/private/driver/consoleInit.h"
+
+    "include/atheris/private/mm/pm.h"
+    "include/atheris/private/mm/vm.h"
 
 
     "include/limine.h"

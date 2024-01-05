@@ -1,4 +1,4 @@
-#include <atheris/driver/framebufferInit.h>
+#include <atheris/private/driver/framebufferInit.h>
 
 #include <echis/driver/framebuffer.h>
 

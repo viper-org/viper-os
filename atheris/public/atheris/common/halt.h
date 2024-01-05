@@ -4,11 +4,11 @@
 /*
  * Generic function to halt the CPU
  *
- * Must be provided in atheris/halt.h
+ * Must be provided in atheris/private/halt.h
  *
  * void atheris::Halt()
  */
 
-#include <atheris/halt.h>
+#include <atheris/private/halt.h>
 
 #endif // VIPEROS_ATHERIS_COMMON_HALT_H

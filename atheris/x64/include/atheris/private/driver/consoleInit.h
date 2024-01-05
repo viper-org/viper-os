@@ -6,8 +6,8 @@ namespace atheris
     namespace console
     {
         /*
-         * Installs the console with limine's
-         * console request
+         * Installs the console with font
+         * provided as a module
          */
 
         void Init();
