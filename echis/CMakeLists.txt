@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.26)
 set(SOURCES
     "src/core/kernel.cpp"
 
+    "src/core/exception/exception.cpp"
+
     "src/mm/pmm.cpp"
 
     "src/driver/framebuffer.cpp"
@@ -20,6 +22,8 @@ set(SOURCES
 
 set(HEADERS
     "include/echis/core/kernel.h"
+
+    "include/echis/core/exception/exception.h"
 
     "include/echis/mm/pmm.h"
 
