@@ -42,6 +42,11 @@ namespace x64
 
                 install_gdt(&gdtr);
             }
+
+            void APInstall()
+            {
+                install_gdt(&gdtr);
+            }
         }
     }
 }

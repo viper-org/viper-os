@@ -19,7 +19,7 @@ namespace vpr
         void unlock();
 
     private:
-        atomic_bool locked;
+        volatile atomic_bool locked;
     };
 
 

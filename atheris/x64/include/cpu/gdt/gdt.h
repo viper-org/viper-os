@@ -29,6 +29,7 @@ namespace x64
             };
 
             void Install();
+            void APInstall();
         }
     }
 }

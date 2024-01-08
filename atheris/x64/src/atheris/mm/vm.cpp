@@ -81,6 +81,11 @@ namespace atheris
             cpu::WriteCR<3>(kernelAddressSpace.pml4);
         }
 
+        void APInstallKernelPageTables()
+        {
+            cpu::WriteCR<3>(kernelAddressSpace.pml4);
+        }
+
         void MapPage(AddressSpace* addressSpace, echis::pmm::physaddr physicalAddress, uint64_t virtualAddress, uint16_t flags)
         {
             if (addressSpace == nullptr)

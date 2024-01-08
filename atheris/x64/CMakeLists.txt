@@ -21,6 +21,8 @@ set(SOURCES
 
     "src/atheris/mm/pm.cpp"
     "src/atheris/mm/vm.cpp"
+
+    "src/atheris/cpu/smpInit.cpp"
 )
 
 set(HEADERS
@@ -41,6 +43,8 @@ set(HEADERS
 
     "include/atheris/private/mm/pm.h"
     "include/atheris/private/mm/vm.h"
+
+    "include/atheris/private/cpu/smpInit.h"
 
 
     "include/limine.h"

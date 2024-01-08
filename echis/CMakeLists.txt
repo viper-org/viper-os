@@ -18,6 +18,7 @@ set(SOURCES
 
     
     "src/libc/string.cpp"
+    "src/libc/stdio.cpp"
 )
 
 set(HEADERS
@@ -39,6 +40,7 @@ set(HEADERS
 
 
     "include/libc/string.h"
+    "include/libc/stdio.h"
 )
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
@@ -51,7 +53,7 @@ target_include_directories(echis
 target_include_directories(echis PUBLIC include/libc)
 
 target_include_directories(echis
-    PRIVATE
+    PUBLIC
         include/echis
 )
 

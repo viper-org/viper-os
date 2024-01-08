@@ -14,7 +14,7 @@ namespace vpr
             __atomic_store(&mData, &desired, __ATOMIC_RELAXED);
         }
 
-        T operator=(T desired)
+        T operator=(T desired) volatile
         {
             __atomic_store(&mData, &desired, __ATOMIC_RELAXED);
 
@@ -23,7 +23,7 @@ namespace vpr
             return ret;
         }
 
-        operator T()
+        operator T() volatile
         {
             T ret;
             __atomic_load(&mData, &ret, __ATOMIC_RELAXED);
@@ -31,53 +31,53 @@ namespace vpr
         }
 
 
-        T operator++()
+        T operator++() volatile
         {
             return __atomic_fetch_add(&mData, 1, __ATOMIC_SEQ_CST);
         }
 
-        T operator++(int)
+        T operator++(int) volatile
         {
             return __atomic_add_fetch(&mData, 1, __ATOMIC_SEQ_CST);
         }
 
-        T operator--()
+        T operator--() volatile
         {
             return __atomic_fetch_sub(&mData, 1, __ATOMIC_SEQ_CST);
         }
 
-        T operator--(int)
+        T operator--(int) volatile
         {
             return __atomic_sub_fetch(&mData, 1, __ATOMIC_SEQ_CST);
         }
 
 
-        T operator+=(T arg)
+        T operator+=(T arg) volatile
         {
             return __atomic_fetch_add(&mData, arg, __ATOMIC_SEQ_CST);
         }
 
-        T operator-=(T arg)
+        T operator-=(T arg) volatile
         {
             return __atomic_fetch_sub(&mData, arg, __ATOMIC_SEQ_CST);
         }
 
-        T operator&=(T arg)
+        T operator&=(T arg) volatile
         {
             return __atomic_fetch_and(&mData, arg, __ATOMIC_SEQ_CST);
         }
 
-        T operator|=(T arg)
+        T operator|=(T arg) volatile
         {
             return __atomic_fetch_or(&mData, arg, __ATOMIC_SEQ_CST);
         }
 
-        T operator^=(T arg)
+        T operator^=(T arg) volatile
         {
             return __atomic_fetch_xor(&mData, arg, __ATOMIC_SEQ_CST);
         }
 
-        bool compare_exchange(T& expected, T desired)
+        bool compare_exchange(T& expected, T desired) volatile
         {
             return __atomic_compare_exchange(&mData, &expected, &desired, false, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
         }

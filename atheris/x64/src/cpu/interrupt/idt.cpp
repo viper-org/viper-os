@@ -41,6 +41,11 @@ namespace x64
 
                 asm volatile("lidt %0; sti" :: "m"(idtr));
             }
+
+            void APInstall()
+            {
+                asm volatile("lidt %0; sti" :: "m"(idtr));
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ namespace vpr
 {
     void mutex::lock()
     {
+        while(locked);
         bool expected = false;
         do locked.compare_exchange(expected, true);
         while (expected);

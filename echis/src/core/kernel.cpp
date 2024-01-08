@@ -6,7 +6,11 @@
 #include <atheris/mm/pm.h>
 #include <atheris/mm/vm.h>
 
+#include <atheris/cpu/smp.h>
+
 #include <atheris/common/halt.h>
+
+#include <stdio.h>
 
 namespace echis
 {
@@ -18,7 +22,7 @@ namespace echis
         atheris::pm::Init();
         atheris::vm::Init();
 
-        echis::console::Print("Hello, World!\n", 0x00ffff, 0);
+        atheris::cpu::smp::Init();
 
         atheris::Halt();
     }
