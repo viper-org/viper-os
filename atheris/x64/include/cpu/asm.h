@@ -36,6 +36,14 @@ namespace x64
 
             return result;
         }
+
+        uint64_t ReadGS();
+
+        enum class MSR : uint32_t
+        {
+            GSBase = 0xC0000101,
+        };
+        void WriteMSR(MSR msr, uint64_t value);
     }
 }
 

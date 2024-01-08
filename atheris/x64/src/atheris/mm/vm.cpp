@@ -129,5 +129,10 @@ namespace atheris
                 MapPage(addressSpace, physicalAddress + i, virtualAddress + i, flags);
             }
         }
+
+        void* GetVirtualAddress(echis::pmm::physaddr physaddr)
+        {
+            return reinterpret_cast<void*>(PhysToVirt(physaddr));
+        }
     }
 }

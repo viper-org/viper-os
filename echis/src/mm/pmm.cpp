@@ -4,6 +4,8 @@
 
 #include <std/thread/mutex.h>
 
+#include <atheris/mm/vm.h>
+
 #include <limits.h>
 #include <string.h>
 #include <new>
@@ -40,13 +42,15 @@ namespace echis
         
         void AddRegion(void* base, uint32_t size)
         {
-            MemoryRegion* region = new(base) MemoryRegion(size);
+            void* virtualBase = atheris::vm::GetVirtualAddress(reinterpret_cast<uint64_t>(base));
+
+            MemoryRegion* region = new(virtualBase) MemoryRegion(size);
 
             uint32_t bitmapSize = (size - sizeof(MemoryRegion)) / (pageSize * CHAR_BIT);
-            region->bitmap = new(static_cast<uint8_t*>(base) + sizeof(MemoryRegion)) uint8_t[bitmapSize];
+            region->bitmap = new(static_cast<uint8_t*>(virtualBase) + sizeof(MemoryRegion)) uint8_t[bitmapSize];
             region->bitmapEnd = region->bitmap + bitmapSize;
 
-            region->base = reinterpret_cast<physaddr>(util::AlignUp(region->bitmapEnd, pageSize));
+            region->base = reinterpret_cast<physaddr>(util::AlignUp(static_cast<uint8_t*>(base) + sizeof(MemoryRegion) + bitmapSize, pageSize));
             region->totalSize -= bitmapSize + sizeof(MemoryRegion);
             region->totalFree = region->totalSize;
 

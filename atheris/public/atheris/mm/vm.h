@@ -28,6 +28,15 @@
  */
 
 /*
+ * Generic function to return the virtual
+ * address of a provided physical address
+ *
+ * Must be provided in atheris/private/mm/vm.h
+ *
+ * void* atheris::vm::GetVirtualAddress(echis::pmm::physaddr)
+ */
+
+/*
  * Generic function to get the current
  * address space
  *

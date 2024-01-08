@@ -1,4 +1,4 @@
-#include <driver/console.h>
+#include <mm/heap.h>
 
 #include <atheris/driver/framebuffer.h>
 #include <atheris/driver/console.h>
@@ -21,6 +21,7 @@ namespace echis
 
         atheris::pm::Init();
         atheris::vm::Init();
+        mm::Init();
 
         atheris::cpu::smp::Init();
 

@@ -6,6 +6,7 @@ set(SOURCES
     "src/core/exception/exception.cpp"
 
     "src/mm/pmm.cpp"
+    "src/mm/heap.cpp"
 
     "src/driver/framebuffer.cpp"
     "src/driver/console.cpp"
@@ -27,6 +28,8 @@ set(HEADERS
     "include/echis/core/exception/exception.h"
 
     "include/echis/mm/pmm.h"
+    "include/echis/mm/physaddr.h"
+    "include/echis/mm/heap.h"
 
     "include/echis/driver/framebuffer.h"
     "include/echis/driver/console.h"

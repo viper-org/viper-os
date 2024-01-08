@@ -1,4 +1,7 @@
-#include "driver/console.h"
+#include <driver/console.h>
+
+#include <std/thread/mutex.h>
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdint.h>
@@ -40,8 +43,11 @@ int itoa(int64_t value, char *sp, int radix)
     return len;
 }
 
+vpr::mutex printfMutex;
+
 void printf(const char* format, ...)
 {
+    vpr::lock_guard<vpr::mutex> lock(printfMutex);
     va_list arg;
     va_start(arg, format);
     

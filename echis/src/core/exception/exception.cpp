@@ -1,8 +1,10 @@
 #include <core/exception/exception.h>
 
-#include <driver/console.h>
+#include <atheris/cpu/core.h>
 
-#include <atheris/private/halt.h>
+#include <atheris/common/halt.h>
+
+#include <stdio.h>
 
 namespace echis
 {
@@ -18,8 +20,8 @@ namespace echis
 
         void raise(Exception except, int)
         {
-            console::Print("Exception received: ", 0xff0000, 0);
-            console::Print(exceptions[except], 0xff0000, 0);
+            int b = atheris::cpu::core::id;
+            printf("%#Exception received on CPU#%d: %s\n", 0xff0000, b, exceptions[except]);
             atheris::Halt();
         }
     }

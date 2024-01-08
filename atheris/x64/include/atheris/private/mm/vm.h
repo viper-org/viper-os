@@ -22,6 +22,8 @@ namespace atheris
         void MapPage (AddressSpace* addressSpace, echis::pmm::physaddr physicalAddress, uint64_t virtualAddress, uint16_t flags);
         void MapPages(AddressSpace* addressSpace, echis::pmm::physaddr physicalAddress, uint64_t virtualAddress, uint16_t flags, uint32_t pageCount);
 
+        void* GetVirtualAddress(echis::pmm::physaddr physaddr);
+
         namespace flags
         {
             enum flags : uint16_t

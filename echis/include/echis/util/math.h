@@ -10,7 +10,7 @@ namespace echis
         template <typename T>
         static inline T AlignUp(T val, int align)
         {
-            return reinterpret_cast<T>((reinterpret_cast<intmax_t>(val) & ~(align - 1)) + align);
+            return reinterpret_cast<T>((reinterpret_cast<uintmax_t>(val) & ~(align - 1)) + align);
         }
     }
 }
