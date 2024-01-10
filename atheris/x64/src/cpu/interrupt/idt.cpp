@@ -9,6 +9,7 @@ namespace x64
         namespace interrupt
         {
             extern "C" uint64_t exception_stub_table[];
+            extern "C" uint64_t irq_stub_table[];
 
             Descriptor::Descriptor(uint64_t isr, uint8_t flags, uint8_t ist)
                 : offsetLow(isr & 0xffff)
@@ -24,7 +25,8 @@ namespace x64
             Descriptor::Descriptor() {}
 
             constexpr uint8_t defaultFlags = 0x8e;
-            constexpr int exceptionCount = 32;
+            constexpr int MaxException = 32;
+            constexpr int MaxIRQ       = 256;
 
             static Descriptor idt[256];
             static Pointer idtr;
@@ -34,9 +36,14 @@ namespace x64
                 idtr.limit = sizeof(idt) - 1;
                 idtr.base = idt;
 
-                for (int vector = 0; vector < exceptionCount; ++vector)
+                for (int vector = 0; vector < MaxException; ++vector)
                 {
                     idt[vector] = Descriptor(exception_stub_table[vector], defaultFlags, 0);
+                }
+
+                for (int vector = MaxException; vector < MaxIRQ; ++vector)
+                {
+                    idt[vector] = Descriptor(irq_stub_table[vector - MaxException], defaultFlags, 0);
                 }
 
                 asm volatile("lidt %0; sti" :: "m"(idtr));

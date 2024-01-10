@@ -15,5 +15,12 @@ namespace x64
         {
             asm volatile("wrmsr" :: "a"(value & 0xFFFFFFFF), "d"((value >> 32) & 0xFFFFFFFF), "c"(msr));
         }
+
+        uint64_t ReadMSR(MSR msr)
+        {
+            uint64_t ret;
+            asm volatile("rdmsr" : "=a"(ret) : "c"(msr));
+            return ret;
+        }
     }
 }

@@ -1,3 +1,4 @@
+#include "atheris/private/cpu/smp.h"
 #include <mm/heap.h>
 
 #include <atheris/driver/framebuffer.h>
@@ -24,6 +25,8 @@ namespace echis
         mm::Init();
 
         atheris::cpu::smp::Init();
+
+        atheris::cpu::smp::SendIPI(2, 255, atheris::cpu::smp::IPIDestination::Single);
 
         atheris::Halt();
     }

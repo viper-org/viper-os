@@ -8,7 +8,16 @@ namespace atheris
         namespace smp
         {
             void Init();
-        }
+
+            enum class IPIDestination
+            {
+                Single,
+                Self,
+                BroadcastAll,
+                BroadcastOthers
+            };
+            void SendIPI(int core, int vector, IPIDestination destination);
+        };
     }
 }
 

@@ -7,7 +7,9 @@ set(SOURCES
     "src/cpu/gdt/install_gdt.s"
     "src/cpu/interrupt/idt.cpp"
     "src/cpu/interrupt/exception.cpp"
+    "src/cpu/interrupt/irq.cpp"
     "src/cpu/interrupt/handlers.s"
+    "src/cpu/interrupt/apic.cpp"
     "src/cpu/asm.cpp"
 
     "src/fs/module.cpp"
@@ -23,13 +25,14 @@ set(SOURCES
     "src/atheris/mm/pm.cpp"
     "src/atheris/mm/vm.cpp"
 
-    "src/atheris/cpu/smpInit.cpp"
+    "src/atheris/cpu/smp.cpp"
     "src/atheris/cpu/core.cpp"
 )
 
 set(HEADERS
     "include/cpu/gdt/gdt.h"
     "include/cpu/interrupt/idt.h"
+    "include/cpu/interrupt/apic.h"
     "include/cpu/asm.h"
     "include/cpu/context.h"
 
@@ -46,7 +49,7 @@ set(HEADERS
     "include/atheris/private/mm/pm.h"
     "include/atheris/private/mm/vm.h"
 
-    "include/atheris/private/cpu/smpInit.h"
+    "include/atheris/private/cpu/smp.h"
     "include/atheris/private/cpu/core.h"
 
 

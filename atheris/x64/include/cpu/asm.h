@@ -41,9 +41,12 @@ namespace x64
 
         enum class MSR : uint32_t
         {
+            IA32_APIC_BASE = 0x1B,
+
             GSBase = 0xC0000101,
         };
         void WriteMSR(MSR msr, uint64_t value);
+        uint64_t ReadMSR(MSR msr);
     }
 }
 
