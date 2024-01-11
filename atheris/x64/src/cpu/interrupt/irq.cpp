@@ -1,6 +1,8 @@
+#include <cpu/interrupt/apic.h>
 #include <cpu/context.h>
 #include <cpu/core.h>
-#include <common/halt.h>
+#include <cpu/smp.h>
+#include <cpu/halt.h>
 
 #include <stdio.h>
 
@@ -10,11 +12,12 @@ namespace atheris
     {
         extern "C" void CommonIRQHandler(cpu::Context* context)
         {
-            if (context->BaseFrame.vector == 255)
+            ::x64::cpu::apic::SendEOI();
+            if (context->BaseFrame.vector == ::atheris::cpu::smp::IPI::Panic)
             {
                 int id = atheris::cpu::core::id;
-                printf("%#Halt IPI received on CPU#%i\n", 0xff0000, id);
-                atheris::Halt();
+                printf("%#Panic IPI received on CPU#%i\n", 0xff0000, id);
+                atheris::cpu::Halt();
             }
         }
     }

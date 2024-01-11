@@ -1,8 +1,7 @@
 #include <core/exception/exception.h>
 
 #include <atheris/cpu/core.h>
-
-#include <atheris/common/halt.h>
+#include <atheris/cpu/halt.h>
 
 #include <stdio.h>
 
@@ -22,7 +21,7 @@ namespace echis
         {
             int b = atheris::cpu::core::id;
             printf("%#Exception received on CPU#%d: %s\n", 0xff0000, b, exceptions[except]);
-            atheris::Halt();
+            atheris::cpu::Halt();
         }
     }
 }

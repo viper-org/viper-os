@@ -1,12 +1,12 @@
 #include <atheris/private/cpu/smp.h>
 #include <atheris/private/cpu/core.h>
+#include <atheris/private/cpu/halt.h>
 
 #include <cpu/gdt/gdt.h>
 #include <cpu/interrupt/idt.h>
 #include <cpu/interrupt/apic.h>
 #include <cpu/asm.h>
 
-#include <common/halt.h>
 
 #include <mm/vm.h>
 #include <mm/util.h>
@@ -68,28 +68,29 @@ namespace atheris
                 x64::cpu::WriteMSR(x64::cpu::MSR::GSBase, reinterpret_cast<uint64_t>(core));
                 x64::cpu::apic::Init();
 
-                atheris::Halt();
+                Halt();
             }
 
 
             void SendIPI(int core, int vector, IPIDestination destination)
             {
-                uint8_t mode = 0;
+                using namespace x64::cpu;
+                apic::IPIMode::IPIMode mode = apic::IPIMode::Single;
                 switch(destination)
                 {
                     case IPIDestination::Self:
-                        mode = 1;
+                        mode = apic::IPIMode::Self;
                         break;
                     case IPIDestination::BroadcastAll:
-                        mode = 2;
+                        mode = apic::IPIMode::BroadcastAll;
                         break;
                     case IPIDestination::BroadcastOthers:
-                        mode = 3;
+                        mode = apic::IPIMode::BroadcastOthers;
                         break;
                     default:
                         break;
                 }
-                x64::cpu::apic::SendIPI(core, vector, mode);
+                apic::SendIPI(core, vector, mode);
             }
         }
     }

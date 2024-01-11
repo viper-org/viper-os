@@ -17,16 +17,16 @@ set(SOURCES
     "src/mm/util.cpp"
 
 
-    "src/atheris/halt.cpp"
-
+    
     "src/atheris/driver/framebufferInit.cpp"
     "src/atheris/driver/consoleInit.cpp"
-
+    
     "src/atheris/mm/pm.cpp"
     "src/atheris/mm/vm.cpp"
-
+    
     "src/atheris/cpu/smp.cpp"
     "src/atheris/cpu/core.cpp"
+    "src/atheris/cpu/halt.cpp"
 )
 
 set(HEADERS
@@ -41,16 +41,16 @@ set(HEADERS
     "include/mm/util.h"
 
 
-    "include/atheris/private/halt.h"
-
+    
     "include/atheris/private/driver/framebufferInit.h"
     "include/atheris/private/driver/consoleInit.h"
-
+    
     "include/atheris/private/mm/pm.h"
     "include/atheris/private/mm/vm.h"
-
+    
     "include/atheris/private/cpu/smp.h"
     "include/atheris/private/cpu/core.h"
+    "include/atheris/private/cpu/halt.h"
 
 
     "include/limine.h"

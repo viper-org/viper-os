@@ -6,8 +6,6 @@
 #include <echis/driver/framebuffer.h>
 #include <echis/driver/console.h>
 
-#include <common/halt.h>
-
 namespace x64
 {
     extern "C" void kernel_init()
@@ -16,6 +14,5 @@ namespace x64
         cpu::interrupt::Install();
 
         echis::kernel_main();
-        atheris::Halt();
     }
 }

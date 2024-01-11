@@ -11,6 +11,7 @@ namespace x64
         {
             enum Registers
             {
+                APIC_EOI  = 0xB0,
                 APIC_ICR0 = 0x300,
                 APIC_ICR1 = 0x310,
             };
@@ -41,10 +42,15 @@ namespace x64
                 return msr & 0xffffff000;
             }
 
-            void SendIPI(int id, int vector, int mode)
+            void SendIPI(int id, int vector, IPIMode::IPIMode mode)
             {
                 WriteRegister(APIC_ICR1, id << 24);
-                WriteRegister(APIC_ICR0, mode | vector);
+                WriteRegister(APIC_ICR0, (mode << 18) | vector);
+            }
+
+            void SendEOI()
+            {
+                WriteRegister(APIC_EOI, 0);
             }
         }
     }

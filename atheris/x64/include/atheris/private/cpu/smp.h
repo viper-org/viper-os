@@ -16,6 +16,15 @@ namespace atheris
                 BroadcastAll,
                 BroadcastOthers
             };
+
+            namespace IPI
+            {
+                enum IPI
+                {
+                    Panic = 0xff,
+                };
+            }
+
             void SendIPI(int core, int vector, IPIDestination destination);
         };
     }

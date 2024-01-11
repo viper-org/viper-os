@@ -1,4 +1,3 @@
-#include "atheris/private/cpu/smp.h"
 #include <mm/heap.h>
 
 #include <atheris/driver/framebuffer.h>
@@ -8,8 +7,7 @@
 #include <atheris/mm/vm.h>
 
 #include <atheris/cpu/smp.h>
-
-#include <atheris/common/halt.h>
+#include <atheris/cpu/halt.h>
 
 #include <stdio.h>
 
@@ -26,8 +24,8 @@ namespace echis
 
         atheris::cpu::smp::Init();
 
-        atheris::cpu::smp::SendIPI(2, 255, atheris::cpu::smp::IPIDestination::Single);
+        atheris::cpu::smp::SendIPI(0, atheris::cpu::smp::IPI::Panic, atheris::cpu::smp::IPIDestination::BroadcastOthers);
 
-        atheris::Halt();
+        atheris::cpu::Halt();
     }
 }

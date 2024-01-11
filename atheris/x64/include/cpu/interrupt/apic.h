@@ -22,7 +22,20 @@ namespace x64
             void Init();
             echis::pmm::physaddr GetPhysicalAddress();
 
-            void SendIPI(int id, int vector, int mode);
+            namespace IPIMode
+            {
+                enum IPIMode
+                {
+                    Single          = 0b00,
+                    Self            = 0b01,
+                    BroadcastAll    = 0b10,
+                    BroadcastOthers = 0b11
+                };
+            }
+
+            void SendIPI(int id, int vector, IPIMode::IPIMode mode);
+
+            void SendEOI();
         }
     }
 }
