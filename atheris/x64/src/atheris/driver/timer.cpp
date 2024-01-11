@@ -12,7 +12,6 @@ namespace atheris
 
         void Init()
         {
-            x64::hpet::Init();
             x64::cpu::apic::InitTimer();
         }
 

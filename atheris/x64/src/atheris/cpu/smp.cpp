@@ -7,6 +7,7 @@
 #include <cpu/interrupt/apic.h>
 #include <cpu/asm.h>
 
+#include <driver/timer.h>
 
 #include <mm/vm.h>
 #include <mm/util.h>
@@ -62,6 +63,7 @@ namespace atheris
                 core::CoreLocal* core = new core::CoreLocal(coreInfo->lapic_id);
                 x64::cpu::WriteMSR(x64::cpu::MSR::GSBase, reinterpret_cast<uint64_t>(core));
                 x64::cpu::apic::Init();
+                timer::Init();
 
                 Halt();
             }

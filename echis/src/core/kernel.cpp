@@ -8,6 +8,7 @@
 #include <atheris/mm/vm.h>
 
 #include <atheris/cpu/smp.h>
+#include <atheris/cpu/core.h>
 #include <atheris/cpu/halt.h>
 #include <atheris/cpu/init.h>
 
@@ -29,10 +30,8 @@ namespace echis
         atheris::cpu::smp::Init();
         atheris::timer::Init();
         atheris::timer::Subscribe([](){
-            printf("Timer");
+            printf("Timer on CPU#%i ", static_cast<int>(atheris::cpu::core::id));
         });
-
-        atheris::cpu::smp::SendIPI(0, atheris::cpu::smp::IPI::Panic, atheris::cpu::smp::IPIDestination::BroadcastOthers);
 
         atheris::cpu::Halt();
     }

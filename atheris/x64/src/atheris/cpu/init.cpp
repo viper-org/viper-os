@@ -6,6 +6,7 @@
 #include <mm/util.h>
 
 #include <driver/acpi.h>
+#include <driver/hpet.h>
 
 namespace atheris
 {
@@ -18,6 +19,7 @@ namespace atheris
                             x64::PhysToVirt(x64::cpu::apic::GetPhysicalAddress()),
                             vm::flags::present | vm::flags::write);
             x64::acpi::Init();
+            x64::hpet::Init();
         }
     }
 }
