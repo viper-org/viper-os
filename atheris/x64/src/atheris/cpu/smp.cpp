@@ -6,6 +6,7 @@
 #include <cpu/interrupt/idt.h>
 #include <cpu/interrupt/apic.h>
 #include <cpu/asm.h>
+#include <cpu/syscall.h>
 
 #include <driver/timer.h>
 
@@ -45,10 +46,6 @@ namespace atheris
                         smpRequest.response->cpus[i]->goto_address = &APInit;
                     }
                 }
-
-                core::CoreLocal* core = new core::CoreLocal(smpRequest.response->bsp_lapic_id);
-                x64::cpu::WriteMSR(x64::cpu::MSR::GSBase, reinterpret_cast<uint64_t>(core));
-                x64::cpu::apic::Init();
             }
 
             void APInit(limine_smp_info* coreInfo)
@@ -62,8 +59,10 @@ namespace atheris
 
                 core::CoreLocal* core = new core::CoreLocal(coreInfo->lapic_id);
                 x64::cpu::WriteMSR(x64::cpu::MSR::GSBase, reinterpret_cast<uint64_t>(core));
+                x64::cpu::tss::Install();
                 x64::cpu::apic::Init();
                 timer::Init();
+                x64::cpu::EnableSyscall();
 
                 Halt();
             }

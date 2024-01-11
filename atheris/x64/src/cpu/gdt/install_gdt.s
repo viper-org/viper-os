@@ -1,5 +1,6 @@
 .text
-.global install_gdt
+.globl install_gdt
+.globl install_tss
 .type install_gdt, @function
 install_gdt:
     cli
@@ -16,4 +17,10 @@ reload_segments:
     movw %ax, %ss
     movw %ax, %fs
     movw %ax, %gs
+    ret
+
+.type install_tss, @function
+install_tss:
+    movw $0x28, %ax
+    ltr %ax
     ret

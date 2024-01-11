@@ -24,15 +24,34 @@ namespace atheris
         extern "C" char _kernel_start[];
         extern "C" char _kernel_end[];
 
-
         AddressSpace kernelAddressSpace;
-        AddressSpace* currentAddressSpace = &kernelAddressSpace;
+        AddressSpace* currentAddressSpace = nullptr;
 
         static volatile limine_kernel_address_request kernelAddressRequest = {
             .id = LIMINE_KERNEL_ADDRESS_REQUEST,
             .revision = 1,
             .response = nullptr
         };
+
+        AddressSpace AddressSpace::Create()
+        {
+            AddressSpace ret;
+            echis::pmm::physaddr newPml4 = echis::pmm::GetPage();
+            memset(reinterpret_cast<void*>(PhysToVirt(newPml4)), 0, PageSize);
+            ret.pml4 = ValidatePageTable(newPml4);
+
+            void* higherHalf       = reinterpret_cast<void*>(PhysToVirt(ret.pml4 + (256 * sizeof(uint64_t))));
+            void* kernelHigherHalf = reinterpret_cast<void*>(PhysToVirt(kernelAddressSpace.pml4 + (256 * sizeof(uint64_t))));
+
+            memcpy(higherHalf, kernelHigherHalf, 256 * sizeof(uint64_t));
+
+            return ret;
+        }
+
+        void AddressSpace::switchTo()
+        {
+            x64::cpu::WriteCR<3>(pml4);
+        }
 
         AddressSpace* AddressSpace::Current()
         {
@@ -42,8 +61,19 @@ namespace atheris
         void CreateKernelPML4()
         {
             echis::pmm::physaddr pml4 = echis::pmm::GetPage();
-            memset(reinterpret_cast<void*>(PhysToVirt(kernelAddressSpace.pml4)), 0, PageSize);
+            memset(reinterpret_cast<void*>(PhysToVirt(pml4)), 0, PageSize);
             kernelAddressSpace.pml4 = ValidatePageTable(pml4);
+        }
+
+        void CreateGlobalPoolPages()
+        {
+            for(int i = 256; i < 512; i++)
+            {
+                uint64_t* pml4 = reinterpret_cast<uint64_t*>(kernelAddressSpace.pml4);
+                pml4[i] = echis::pmm::GetPage();
+                memset(reinterpret_cast<uint8_t*>(PhysToVirt(ValidatePageTable(pml4[i]))), 0, PageSize);
+                pml4[i] |= 0x3;
+            }
         }
 
         void MapKernel()
@@ -78,12 +108,14 @@ namespace atheris
         {
             CreateKernelPageTables();
 
-            cpu::WriteCR<3>(kernelAddressSpace.pml4);
+            kernelAddressSpace.switchTo();
+
+            currentAddressSpace = &kernelAddressSpace;
         }
 
         void APInstallKernelPageTables()
         {
-            cpu::WriteCR<3>(kernelAddressSpace.pml4);
+            kernelAddressSpace.switchTo();
         }
 
         void MapPage(AddressSpace* addressSpace, echis::pmm::physaddr physicalAddress, uint64_t virtualAddress, uint16_t flags)

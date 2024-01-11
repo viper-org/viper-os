@@ -43,7 +43,10 @@ namespace x64
         {
             IA32_APIC_BASE = 0x1B,
 
-            GSBase = 0xC0000101,
+            IA32_EFER      = 0xC0000080,
+            IA32_STAR      = 0xC0000081,
+            IA32_LSTAR     = 0xC0000082,
+            GSBase         = 0xC0000101,
         };
         void WriteMSR(MSR msr, uint64_t value);
         uint64_t ReadMSR(MSR msr);

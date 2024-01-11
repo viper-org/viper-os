@@ -2,11 +2,13 @@ cmake_minimum_required(VERSION 3.26)
 
 set(SOURCES
     "src/core/kernel.cpp"
-
     "src/core/exception/exception.cpp"
+    "src/core/test_user_program.s"
 
     "src/mm/pmm.cpp"
     "src/mm/heap.cpp"
+
+    "src/sched/process.cpp"
 
     "src/driver/framebuffer.cpp"
     "src/driver/console.cpp"
@@ -31,6 +33,8 @@ set(HEADERS
     "include/echis/mm/physaddr.h"
     "include/echis/mm/heap.h"
 
+    "include/echis/sched/process.h"
+
     "include/echis/driver/framebuffer.h"
     "include/echis/driver/console.h"
 
@@ -39,6 +43,7 @@ set(HEADERS
 
 
     "include/echis/std/container/atomic.h"
+    "include/echis/std/container/ring.h"
     "include/echis/std/thread/mutex.h"
 
 

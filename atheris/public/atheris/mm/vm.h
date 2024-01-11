@@ -46,6 +46,25 @@
  */
 
 /*
+ * Generic function to construct a new
+ * address space with all of the kernel
+ * mappings
+ *
+ * Must be provided in atheris/private/mm/vm.h
+ *
+ * static atheris::vm::AddressSpace atheris::vm::AddressSpace::Create()
+ */
+
+/*
+ * Generic function to switch to an
+ * address space
+ *
+ * Must be provided in atheris/private/mm/vm.h
+ *
+ * void atheris::vm::AddressSpace::switchTo()
+ */
+
+/*
  * Enum providing flags for page mappings
  *
  * Must be provided in atheris/private/mm/vm.h
@@ -53,7 +72,8 @@
  * enum atheris::vm::flags::flags : uint16_t
  * {
  *     present,
- *     write   
+ *     write,
+ *     user
  * }
  */
 

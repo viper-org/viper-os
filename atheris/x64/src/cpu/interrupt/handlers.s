@@ -52,6 +52,11 @@ exception_frame_assembler:
     movq %cr4, %rax
     pushq %rax
 
+    movw $0x10, %ax
+    movw %ax, %ds
+    movw %ax, %es
+    movw %ax, %ss
+
     movq %rsp, %rdi # Pass the stack frame as the first parameter
     call CommonExceptionHandler
 
@@ -112,6 +117,11 @@ irq_frame_assembler:
     pushq %rax
     movq %cr4, %rax
     pushq %rax
+
+    movw $0x10, %ax
+    movw %ax, %ds
+    movw %ax, %es
+    movw %ax, %ss
 
     movq %rsp, %rdi # Pass the stack frame as the first parameter
     call CommonIRQHandler

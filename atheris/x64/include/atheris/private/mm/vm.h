@@ -11,9 +11,13 @@ namespace atheris
     {
         struct AddressSpace
         {
+
+            void switchTo();
+            
             echis::pmm::physaddr pml4;
 
             static AddressSpace* Current();
+            static AddressSpace Create();
         };
 
         void Init();
@@ -30,6 +34,7 @@ namespace atheris
             {
                 present = 1 << 0,
                 write   = 1 << 1,
+                user    = 1 << 2,
             };
         }
     }

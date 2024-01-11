@@ -4,6 +4,7 @@ set(SOURCES
     "src/main.cpp"
 
     "src/cpu/gdt/gdt.cpp"
+    "src/cpu/gdt/tss.cpp"
     "src/cpu/gdt/install_gdt.s"
     "src/cpu/interrupt/idt.cpp"
     "src/cpu/interrupt/exception.cpp"
@@ -11,6 +12,7 @@ set(SOURCES
     "src/cpu/interrupt/handlers.s"
     "src/cpu/interrupt/apic.cpp"
     "src/cpu/asm.cpp"
+    "src/cpu/syscall.cpp"
 
     "src/driver/acpi.cpp"
     "src/driver/hpet.cpp"
@@ -32,14 +34,19 @@ set(SOURCES
     "src/atheris/cpu/core.cpp"
     "src/atheris/cpu/halt.cpp"
     "src/atheris/cpu/init.cpp"
+
+    "src/atheris/sched/user.cpp"
+    "src/atheris/sched/enter_usermode.s"
 )
 
 set(HEADERS
     "include/cpu/gdt/gdt.h"
+    "include/cpu/gdt/tss.h"
     "include/cpu/interrupt/idt.h"
     "include/cpu/interrupt/apic.h"
     "include/cpu/asm.h"
     "include/cpu/context.h"
+    "include/cpu/syscall.h"
 
     "include/driver/acpi.h"
     "include/driver/hpet.h"
@@ -61,6 +68,8 @@ set(HEADERS
     "include/atheris/private/cpu/core.h"
     "include/atheris/private/cpu/halt.h"
     "include/atheris/private/cpu/init.h"
+
+    "include/atheris/private/sched/user.h"
 
 
     "include/limine.h"
@@ -116,6 +125,7 @@ target_link_libraries(viperos-x64 PRIVATE echis)
 target_link_options(viperos-x64 PRIVATE ${LINKER_OPTIONS})
 target_compile_options(viperos-x64 PRIVATE ${COMPILER_OPTIONS})
 target_include_directories(viperos-x64 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../public/atheris)
+target_include_directories(viperos-x64 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../public)
 
 target_compile_options(echis PRIVATE ${COMPILER_OPTIONS})
 target_include_directories(echis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../public)

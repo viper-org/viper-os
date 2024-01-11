@@ -1,4 +1,5 @@
 #include <cpu/gdt/gdt.h>
+#include <cpu/gdt/tss.h>
 
 namespace x64
 {
@@ -20,13 +21,14 @@ namespace x64
             Descriptor::Descriptor() {}
 
 
-            Descriptor gdt[3];
+            Descriptor gdt[7];
             Pointer gdtr;
 
             void Install()
             {
                 constexpr uint8_t codeAccess = 0x9A;
                 constexpr uint8_t dataAccess = 0x92;
+                constexpr uint8_t user       = 0x60;
                 constexpr uint8_t codeFlags  = 0xA0;
                 constexpr uint8_t dataFlags  = 0xC0;
 
@@ -34,6 +36,12 @@ namespace x64
 
                 gdt[1] = Descriptor(0, 0, codeAccess, codeFlags);
                 gdt[2] = Descriptor(0, 0, dataAccess, dataFlags);
+
+                gdt[3] = Descriptor(0, 0, dataAccess | user, dataFlags);
+                gdt[4] = Descriptor(0, 0, codeAccess | user, codeFlags);
+
+                gdt[5] = Descriptor(0, 0, 0, 0);
+                gdt[6] = Descriptor(0, 0, 0, 0);
 
                 gdtr = {
                     .limit = sizeof(gdt) - 1,

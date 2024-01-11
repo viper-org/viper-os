@@ -13,6 +13,7 @@ namespace x64
         {
             enum Registers
             {
+                APIC_ID         = 0x20,
                 APIC_EOI        = 0xB0,
                 APIC_ICR0       = 0x300,
                 APIC_ICR1       = 0x310,
@@ -62,6 +63,11 @@ namespace x64
                 uint64_t msr = ReadMSR(MSR::IA32_APIC_BASE);
 
                 return msr & 0xffffff000;
+            }
+
+            int GetID()
+            {
+                return (ReadRegister(APIC_ID) >> 24) & 0xF;
             }
 
             void SendIPI(int id, int vector, IPIMode::IPIMode mode)

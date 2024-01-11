@@ -11,6 +11,16 @@ void* memset(void* dest, int ch, size_t count)
     return dest;
 }
 
+void memcpy(void* dest, const void* src, size_t count)
+{
+    char* p1       = static_cast<char*>(dest);
+    const char* p2 = static_cast<const char*>(src);
+
+    for (size_t i = 0; i < count; ++i)
+    {
+        p1[i] = p2[i];
+    }
+}
 
 int strcmp(const char* s1, const char* s2)
 {
