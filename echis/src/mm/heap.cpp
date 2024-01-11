@@ -115,7 +115,7 @@ void* operator new(size_t size)
     return echis::mm::Alloc(size);
 }
 
-void operator delete(void* mem)
+void operator delete(void* mem, unsigned long)
 {
     return echis::mm::Free(mem);
 }

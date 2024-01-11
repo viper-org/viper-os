@@ -1,5 +1,6 @@
 #include <mm/pmm.h>
 #include <mm/heap.h>
+#include <mm/vmm.h>
 
 #include <sched/process.h>
 
@@ -45,7 +46,12 @@ namespace echis
                              0xFFFFFFFFFFFE0000,
                              atheris::vm::flags::present | atheris::vm::flags::write);
         proc.getMainThread()->getKernelStack().size = pmm::GetPageSize();
-        proc.getMainThread()->getKernelStack().top = reinterpret_cast<void*>(0xFFFFFFFFFFFE0000 + pmm::GetPageSize());
+        proc.getMainThread()->getKernelStack().top  = 0xFFFFFFFFFFFE0000 + pmm::GetPageSize();
+
+        proc.getMainThread()->getUserStack().size = pmm::GetPageSize();
+        proc.getMainThread()->getUserStack().top  = reinterpret_cast<uint64_t>(vm::GetPages(&proc.getAddressSpace(),
+                                                                 1,
+                                                                 atheris::vm::flags::present | atheris::vm::flags::write)) + pmm::GetPageSize();
     }
 
     void kernel_main()

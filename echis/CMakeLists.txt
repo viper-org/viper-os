@@ -7,6 +7,7 @@ set(SOURCES
 
     "src/mm/pmm.cpp"
     "src/mm/heap.cpp"
+    "src/mm/vmm.cpp"
 
     "src/sched/process.cpp"
 
@@ -32,6 +33,7 @@ set(HEADERS
     "include/echis/mm/pmm.h"
     "include/echis/mm/physaddr.h"
     "include/echis/mm/heap.h"
+    "include/echis/mm/vmm.h"
 
     "include/echis/sched/process.h"
 

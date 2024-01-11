@@ -73,7 +73,23 @@
  * {
  *     present,
  *     write,
- *     user
+ *     user,
+ *     lazy
+ * }
+ */
+
+/*
+ * Structure describing a node in an
+ * address space's free list for virtual
+ * memory allocation
+ *
+ * Must be provided in atheris/private/mm.vm.h
+ *
+ * struct VMNode
+ * {
+ *     size_t   pages;
+ *     uint64_t base;
+ *     VMNode*  next;
  * }
  */
 
@@ -83,6 +99,9 @@
  * Must be provided in atheris/private/mm/vm.h
  *
  * struct AddressSpace
+ * {
+ *     VMNode* freeList;
+ * }
  */
 
 #include <atheris/private/mm/vm.h>

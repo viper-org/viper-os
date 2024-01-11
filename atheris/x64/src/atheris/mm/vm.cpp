@@ -45,6 +45,10 @@ namespace atheris
 
             memcpy(higherHalf, kernelHigherHalf, 256 * sizeof(uint64_t));
 
+            ret.freeList = new VMNode;
+            ret.freeList->base = 0x1000;
+            ret.freeList->pages = NPAGES(0x00007FFFFFFFE000 - 0x1000); // Ignore top and bottom pages
+
             return ret;
         }
 

@@ -19,8 +19,8 @@ namespace echis
 
             struct Stack
             {
-                void* top;
-                size_t size;
+                uint64_t top;
+                size_t   size;
             };
 
             Process* getParent() const;

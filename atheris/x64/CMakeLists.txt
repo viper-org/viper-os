@@ -13,6 +13,7 @@ set(SOURCES
     "src/cpu/interrupt/apic.cpp"
     "src/cpu/asm.cpp"
     "src/cpu/syscall.cpp"
+    "src/cpu/syscall_handler.s"
 
     "src/driver/acpi.cpp"
     "src/driver/hpet.cpp"

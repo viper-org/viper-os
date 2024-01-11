@@ -4,17 +4,25 @@
 #include <echis/mm/physaddr.h>
 
 #include <stdint.h>
+#include <stddef.h>
 
 namespace atheris
 {
     namespace vm
     {
+        struct VMNode
+        {
+            size_t   pages;
+            uint64_t base;
+            VMNode*  next;
+        };
+
         struct AddressSpace
         {
-
             void switchTo();
             
             echis::pmm::physaddr pml4;
+            VMNode* freeList;
 
             static AddressSpace* Current();
             static AddressSpace Create();
@@ -35,6 +43,7 @@ namespace atheris
                 present = 1 << 0,
                 write   = 1 << 1,
                 user    = 1 << 2,
+                lazy    = 1 << 12,
             };
         }
     }

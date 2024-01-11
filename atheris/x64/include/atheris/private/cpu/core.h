@@ -14,6 +14,8 @@ namespace atheris
                 CoreLocal(int id);
 
                 CoreLocal* self;
+                uint64_t kernelStack;
+                uint64_t userStackSave;
                 int id;
                 ::x64::cpu::tss::TSSDescriptor tssDesc;
 
