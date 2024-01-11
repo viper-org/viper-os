@@ -20,6 +20,7 @@ namespace x64
             };
 
             void Init();
+            void InitTimer();
             echis::pmm::physaddr GetPhysicalAddress();
 
             namespace IPIMode

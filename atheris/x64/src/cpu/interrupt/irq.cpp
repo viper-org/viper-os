@@ -4,6 +4,8 @@
 #include <cpu/smp.h>
 #include <cpu/halt.h>
 
+#include <driver/timer.h>
+
 #include <stdio.h>
 
 namespace atheris
@@ -18,6 +20,10 @@ namespace atheris
                 int id = atheris::cpu::core::id;
                 printf("%#Panic IPI received on CPU#%i\n", 0xff0000, id);
                 atheris::cpu::Halt();
+            }
+            else if (context->BaseFrame.vector == atheris::timer::TimerInterruptVector)
+            {
+                atheris::timer::TimerInterruptHandler();
             }
         }
     }

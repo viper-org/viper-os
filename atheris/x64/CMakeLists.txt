@@ -12,6 +12,9 @@ set(SOURCES
     "src/cpu/interrupt/apic.cpp"
     "src/cpu/asm.cpp"
 
+    "src/driver/acpi.cpp"
+    "src/driver/hpet.cpp"
+
     "src/fs/module.cpp"
 
     "src/mm/util.cpp"
@@ -20,6 +23,7 @@ set(SOURCES
     
     "src/atheris/driver/framebufferInit.cpp"
     "src/atheris/driver/consoleInit.cpp"
+    "src/atheris/driver/timer.cpp"
     
     "src/atheris/mm/pm.cpp"
     "src/atheris/mm/vm.cpp"
@@ -27,6 +31,7 @@ set(SOURCES
     "src/atheris/cpu/smp.cpp"
     "src/atheris/cpu/core.cpp"
     "src/atheris/cpu/halt.cpp"
+    "src/atheris/cpu/init.cpp"
 )
 
 set(HEADERS
@@ -36,6 +41,9 @@ set(HEADERS
     "include/cpu/asm.h"
     "include/cpu/context.h"
 
+    "include/driver/acpi.h"
+    "include/driver/hpet.h"
+
     "include/fs/module.h"
 
     "include/mm/util.h"
@@ -44,6 +52,7 @@ set(HEADERS
     
     "include/atheris/private/driver/framebufferInit.h"
     "include/atheris/private/driver/consoleInit.h"
+    "include/atheris/private/driver/timer.h"
     
     "include/atheris/private/mm/pm.h"
     "include/atheris/private/mm/vm.h"
@@ -51,6 +60,7 @@ set(HEADERS
     "include/atheris/private/cpu/smp.h"
     "include/atheris/private/cpu/core.h"
     "include/atheris/private/cpu/halt.h"
+    "include/atheris/private/cpu/init.h"
 
 
     "include/limine.h"

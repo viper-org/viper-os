@@ -26,11 +26,16 @@ int memcmp(const void* a, const void* b, size_t count)
 {
     const char* p1 = reinterpret_cast<const char*>(a);
     const char* p2 = reinterpret_cast<const char*>(b);
-    while(--count && (*p1 == *p2))
+    for (size_t i = 0; i < count; ++i, ++p1, ++p2)
     {
-        --count;
-        ++p1;
-        ++p2;
+        if (*p1 < *p2)
+        {
+            return -1;
+        }
+        if (*p1 > *p2)
+        {
+            return 1;
+        }
     }
-    return *p1 - *p2;
+    return 0;
 }

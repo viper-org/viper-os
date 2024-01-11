@@ -34,11 +34,6 @@ namespace atheris
 
             void Init()
             {
-                vm::MapPage(nullptr,
-                            x64::cpu::apic::GetPhysicalAddress(),
-                            x64::PhysToVirt(x64::cpu::apic::GetPhysicalAddress()),
-                            vm::flags::present | vm::flags::write);
-
                 nextAPDone = true;
                 for (uint64_t i = 0; i < smpRequest.response->cpu_count; ++i)
                 {
