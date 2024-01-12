@@ -38,6 +38,8 @@ set(SOURCES
 
     "src/atheris/sched/user.cpp"
     "src/atheris/sched/enter_usermode.s"
+    "src/atheris/sched/prepare_thread.s"
+    "src/atheris/sched/switch_context.s"
 )
 
 set(HEADERS

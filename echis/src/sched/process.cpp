@@ -1,5 +1,7 @@
 #include <sched/process.h>
 
+#include <atheris/sched/user.h>
+
 namespace echis
 {
     namespace sched
@@ -32,6 +34,11 @@ namespace echis
         Thread::Stack& Thread::getKernelStack()
         {
             return mKernelStack;
+        }
+
+        atheris::sched::ThreadContext*& Thread::getContext()
+        {
+            return mContext;
         }
 
 

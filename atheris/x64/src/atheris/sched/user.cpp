@@ -10,6 +10,8 @@ namespace atheris
     namespace sched
     {
         extern "C" void enter_usermode(uint64_t rip, uint64_t stack);
+        extern "C" void prepare_thread(uint64_t func, ThreadContext** context, uint64_t kernelStack, echis::sched::Thread* thread);
+        extern "C" void switch_context(ThreadContext** oldContext, ThreadContext* newContext);
 
         void UserInit(echis::sched::Thread* thread)
         {
@@ -18,6 +20,19 @@ namespace atheris
             cpu::core::CoreLocal::Get()->kernelStack = thread->getKernelStack().top;
 
             enter_usermode(thread->getStartingAddress(), thread->getUserStack().top);
+        }
+
+        void PrepareThread(echis::sched::Thread* thread)
+        {
+            prepare_thread(reinterpret_cast<uint64_t>(UserInit), &thread->getContext(), thread->getKernelStack().top, thread);
+            //prepare_thread(thread->getKernelStack().top, thread);
+            //thread->getContext()->rip = reinterpret_cast<uint64_t>(UserInit);
+            //thread->getContext()->rdi = reinterpret_cast<uint64_t>(thread);
+        }
+
+        void SwitchContext(ThreadContext** oldContext, ThreadContext* newContext)
+        {
+            switch_context(oldContext, newContext);
         }
     }
 }

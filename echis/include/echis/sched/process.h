@@ -5,6 +5,11 @@
 
 #include <stddef.h>
 
+namespace atheris::sched
+{
+    struct ThreadContext;
+}
+
 namespace echis
 {
     namespace sched
@@ -27,6 +32,7 @@ namespace echis
             uint64_t getStartingAddress() const;
             Stack& getUserStack();
             Stack& getKernelStack();
+            atheris::sched::ThreadContext*& getContext();
 
             Thread* next; // For intrusive circular linked list in scheduler
 
@@ -34,6 +40,7 @@ namespace echis
             Process* mParent;
             Stack mUserStack;
             Stack mKernelStack;
+            atheris::sched::ThreadContext* mContext;
             uint64_t mStart;
         };
 

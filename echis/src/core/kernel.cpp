@@ -73,7 +73,9 @@ namespace echis
 
         sched::Process proc(0x69000);
         SetupTestUserProc(proc);
-        atheris::sched::UserInit(proc.getMainThread());
+        atheris::sched::PrepareThread(proc.getMainThread());
+        atheris::sched::ThreadContext* old;
+        atheris::sched::SwitchContext(&old, proc.getMainThread()->getContext());
 
         atheris::cpu::Halt();
     }

@@ -125,7 +125,7 @@ irq_frame_assembler:
 
     movq %rsp, %rdi # Pass the stack frame as the first parameter
     call CommonIRQHandler
-
+    
     popq %rax
     movq %rax, %cr4
     popq %rax
