@@ -12,12 +12,17 @@ set(SOURCES
     "src/sched/process.cpp"
     "src/sched/sched.cpp"
 
+    "src/fs/vfs.cpp"
+    "src/fs/tmpfs.cpp"
+
     "src/driver/framebuffer.cpp"
     "src/driver/console.cpp"
 
     "src/driver/impl/framebuffer.cpp"
     "src/driver/impl/console.cpp"
 
+
+    "src/std/container/string.cpp"
 
     "src/std/thread/mutex.cpp"
 
@@ -39,6 +44,9 @@ set(HEADERS
     "include/echis/sched/process.h"
     "include/echis/sched/sched.h"
 
+    "include/echis/fs/vfs.h"
+    "include/echis/fs/tmpfs.h"
+
     "include/echis/driver/framebuffer.h"
     "include/echis/driver/console.h"
 
@@ -48,6 +56,8 @@ set(HEADERS
 
     "include/echis/std/container/atomic.h"
     "include/echis/std/container/ring.h"
+    "include/echis/std/container/string.h"
+    "include/echis/std/container/vector.h"
     "include/echis/std/thread/mutex.h"
 
 

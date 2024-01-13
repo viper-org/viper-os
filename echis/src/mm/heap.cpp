@@ -76,7 +76,7 @@ namespace echis
                     }
 
                     size_t newSize = current->size - count;
-                    char* newHeaderLocation = reinterpret_cast<char*>(current + count);
+                    char* newHeaderLocation = reinterpret_cast<char*>(current) + count;
                     Header* newHeader = reinterpret_cast<Header*>(newHeaderLocation);
                     newHeader->size = newSize;
 
@@ -85,7 +85,7 @@ namespace echis
                     newHeader->next = freeList;
                     freeList = newHeader;
 
-                    current->size -= count;
+                    current->size = count;
                     return current + 1;
                 }
                 previous = current;
@@ -103,7 +103,7 @@ namespace echis
                 return;
             }
 
-            Header* header = reinterpret_cast<Header*>(mem);
+            Header* header = reinterpret_cast<Header*>(mem) - 1;
             header->next = freeList;
             freeList = header;
         }
@@ -113,6 +113,11 @@ namespace echis
 void* operator new(size_t size)
 {
     return echis::mm::Alloc(size);
+}
+
+void operator delete(void* mem)
+{
+    return echis::mm::Free(mem);
 }
 
 void operator delete(void* mem, unsigned long)
@@ -126,6 +131,11 @@ void* operator new[](size_t size)
 }
 
 void operator delete[](void* mem)
+{
+    return echis::mm::Free(mem);
+}
+
+void operator delete[](void* mem, unsigned long)
 {
     return echis::mm::Free(mem);
 }

@@ -5,6 +5,8 @@
 #include <sched/process.h>
 #include <sched/sched.h>
 
+#include <fs/tmpfs.h>
+
 #include <atheris/driver/framebuffer.h>
 #include <atheris/driver/console.h>
 #include <atheris/driver/timer.h>
@@ -68,9 +70,16 @@ namespace echis
 
         atheris::cpu::smp::Init();
         atheris::timer::Init();
-        /*atheris::timer::Subscribe([](){
-            printf("Timer on CPU#%i ", static_cast<int>(atheris::cpu::core::id));
-        });*/
+        
+        fs::tmpfs::Init();
+        fs::vfs::create("tmp:hi");
+        auto node = fs::vfs::lookup("tmp:hi");
+        const char* write = "Hello from file!";
+        node->write(write, strlen(write) + 1);
+        char buf[100];
+        size_t count = 100;
+        node->read(buf, &count);
+        printf("Read message \"%s\" from file\n", buf);
 
         sched::Process proc(0x69000);
         sched::Process proc1(0x69000);

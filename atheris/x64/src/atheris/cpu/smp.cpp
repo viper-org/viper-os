@@ -50,7 +50,7 @@ namespace atheris
 
             void APInit(limine_smp_info* coreInfo)
             {
-                //printf("CPU#%i started\n", coreInfo->lapic_id);
+                printf("CPU#%i started\n", coreInfo->lapic_id);
                 nextAPDone = true;
 
                 vm::APInstallKernelPageTables();
@@ -59,7 +59,7 @@ namespace atheris
 
                 core::CoreLocal* core = new core::CoreLocal(coreInfo->lapic_id);
                 x64::cpu::WriteMSR(x64::cpu::MSR::GSBase, reinterpret_cast<uint64_t>(core));
-                x64::cpu::tss::Install();
+                //x64::cpu::tss::Install(); TODO: Make gdt core local
                 x64::cpu::apic::Init();
                 timer::Init();
                 x64::cpu::EnableSyscall();
