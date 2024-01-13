@@ -6,5 +6,5 @@ test_user_program:
     syscall
     jmp .
 
-msg: .asciz "Hello From Userspace!"
+msg: .asciz "Hello From Userspace!\n"
 test_user_program_end:

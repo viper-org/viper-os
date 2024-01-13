@@ -3,6 +3,7 @@
 #include <mm/vmm.h>
 
 #include <sched/process.h>
+#include <sched/sched.h>
 
 #include <atheris/driver/framebuffer.h>
 #include <atheris/driver/console.h>
@@ -28,13 +29,13 @@ namespace echis
 
     void SetupTestUserProc(sched::Process& proc)
     {
+        proc.getAddressSpace().switchTo();
+
         pmm::physaddr page = pmm::GetPage();
         atheris::vm::MapPage(&proc.getAddressSpace(),
                              page,
                              0x69000,
                              atheris::vm::flags::present | atheris::vm::flags::write | atheris::vm::flags::user);
-
-        proc.getAddressSpace().switchTo();
 
         char* start = reinterpret_cast<char*>(test_user_program);
         char* end   = reinterpret_cast<char*>(test_user_program_end);
@@ -43,15 +44,15 @@ namespace echis
         pmm::physaddr stackPage = pmm::GetPage();
         atheris::vm::MapPage(&proc.getAddressSpace(),
                              stackPage,
-                             0xFFFFFFFFFFFE0000,
+                             0xFFFFFF0000000000,
                              atheris::vm::flags::present | atheris::vm::flags::write);
         proc.getMainThread()->getKernelStack().size = pmm::GetPageSize();
-        proc.getMainThread()->getKernelStack().top  = 0xFFFFFFFFFFFE0000 + pmm::GetPageSize();
+        proc.getMainThread()->getKernelStack().top  = 0xFFFFFF0000000000 + pmm::GetPageSize();
 
         proc.getMainThread()->getUserStack().size = pmm::GetPageSize();
         proc.getMainThread()->getUserStack().top  = reinterpret_cast<uint64_t>(vm::GetPages(&proc.getAddressSpace(),
                                                                  1,
-                                                                 atheris::vm::flags::present | atheris::vm::flags::write)) + pmm::GetPageSize();
+                                                                 atheris::vm::flags::present | atheris::vm::flags::write | atheris::vm::flags::user)) + pmm::GetPageSize();
     }
 
     void kernel_main()
@@ -72,10 +73,16 @@ namespace echis
         });*/
 
         sched::Process proc(0x69000);
+        sched::Process proc1(0x69000);
+        sched::Process proc2(0x69000);
         SetupTestUserProc(proc);
-        atheris::sched::PrepareThread(proc.getMainThread());
-        atheris::sched::ThreadContext* old;
-        atheris::sched::SwitchContext(&old, proc.getMainThread()->getContext());
+        SetupTestUserProc(proc1);
+        SetupTestUserProc(proc2);
+        sched::AddProcess(&proc);
+        sched::AddProcess(&proc1);
+        sched::AddProcess(&proc2);
+
+        sched::Start();
 
         atheris::cpu::Halt();
     }

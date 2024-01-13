@@ -3,6 +3,7 @@
 #include <cpu/gdt/tss.h>
 #include <cpu/core.h>
 
+#include <echis/sched/sched.h>
 #include <echis/sched/process.h>
 
 namespace atheris
@@ -24,6 +25,7 @@ namespace atheris
 
         void PrepareThread(echis::sched::Thread* thread)
         {
+            thread->getParent()->getAddressSpace().switchTo();
             prepare_thread(reinterpret_cast<uint64_t>(UserInit), &thread->getContext(), thread->getKernelStack().top, thread);
             //prepare_thread(thread->getKernelStack().top, thread);
             //thread->getContext()->rip = reinterpret_cast<uint64_t>(UserInit);
@@ -32,6 +34,7 @@ namespace atheris
 
         void SwitchContext(ThreadContext** oldContext, ThreadContext* newContext)
         {
+            cpu::core::CoreLocal::Get()->newPml4 = echis::sched::Current()->getParent()->getAddressSpace().pml4;
             switch_context(oldContext, newContext);
         }
     }

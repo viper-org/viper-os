@@ -6,14 +6,14 @@ prepare_thread:
     movq %rdx, %rsp
 
     pushq %rdi
-    pushq $0
-    pushq $0
-    pushq $0
-    pushq $0
-    pushq $0
+    pushq $0x0
+    pushq $0x0
+    pushq $0x0
+    pushq $0x0
+    pushq $0x0
     pushq %rcx
-    pushq $0
-    pushq $0
+    pushq $0x0
+    pushq $0x0
 
     movq %rsp, (%rsi)
     movq %r11, %rsp

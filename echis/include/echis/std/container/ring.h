@@ -17,11 +17,14 @@ namespace vpr
             if (mPointer)
             {
                 obj->next = mPointer;
+                mTail->next = obj;
                 mPointer = obj;
             }
             else
             {
                 mPointer = obj;
+                mTail = obj;
+                obj->next = obj;
             }
         }
 
@@ -30,10 +33,12 @@ namespace vpr
             if (mPointer->next == mPointer)
             {
                 mPointer = nullptr;
+                mTail = nullptr;
             }
             else
             {
                 mPointer = mPointer->next;
+                mTail->next = mPointer;
             }
         }
 
@@ -42,13 +47,22 @@ namespace vpr
             return mPointer;
         }
 
-        T* next()
+        T* peek()
         {
             return mPointer->next;
         }
 
+        T* next()
+        {
+            T* ret = mPointer;
+            mPointer = mPointer->next;
+            //mTail->next = mPointer;
+            return ret;
+        }
+
     private:
         T* mPointer;
+        T* mTail;
     };
 }
 

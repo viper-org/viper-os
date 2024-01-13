@@ -16,6 +16,9 @@ switch_context:
 
     movq %rsp, (%rax)
     movq %rdx, %rsp
+    
+    movq %gs:0x18, %rdx
+    movq %rdx, %cr3
 
     popq %rbp
     popq %rbx

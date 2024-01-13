@@ -50,7 +50,7 @@ namespace atheris
 
             void APInit(limine_smp_info* coreInfo)
             {
-                printf("CPU#%i started\n", coreInfo->lapic_id);
+                //printf("CPU#%i started\n", coreInfo->lapic_id);
                 nextAPDone = true;
 
                 vm::APInstallKernelPageTables();

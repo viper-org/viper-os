@@ -7,7 +7,7 @@
  *
  * Must be provided in atheris/private/cpu/core.h
  *
- * const int atheris::cpu::core::id
+ * int atheris::cpu::core::id
  */
 
 #include <atheris/private/cpu/core.h>

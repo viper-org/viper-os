@@ -3,13 +3,12 @@
 #include <driver/hpet.h>
 
 #include <cpu/interrupt/apic.h>
+#include <cpu/core.h>
 
 namespace atheris
 {
     namespace timer
     {
-        static TimerHandler handler = nullptr;
-
         void Init()
         {
             x64::cpu::apic::InitTimer();
@@ -17,12 +16,12 @@ namespace atheris
 
         void Subscribe(TimerHandler newHandler)
         {
-            handler = newHandler;
+            cpu::core::CoreLocal::Get()->timerHandler = newHandler;
         }
 
         void TimerInterruptHandler()
         {
-            if (handler)
+            if (auto handler = cpu::core::CoreLocal::Get()->timerHandler)
             {
                 handler();
             }

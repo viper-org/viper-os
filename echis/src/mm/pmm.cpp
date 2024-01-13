@@ -10,6 +10,7 @@
 #include <string.h>
 #include <new>
 
+            extern int itoa(int64_t, char*, int);
 namespace echis
 {
     namespace pmm

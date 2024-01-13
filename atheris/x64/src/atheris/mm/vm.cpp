@@ -71,13 +71,13 @@ namespace atheris
 
         void CreateGlobalPoolPages()
         {
-            for(int i = 256; i < 512; i++)
+            /*for(int i = 256; i < 512; i++)
             {
                 uint64_t* pml4 = reinterpret_cast<uint64_t*>(kernelAddressSpace.pml4);
                 pml4[i] = echis::pmm::GetPage();
                 memset(reinterpret_cast<uint8_t*>(PhysToVirt(ValidatePageTable(pml4[i]))), 0, PageSize);
                 pml4[i] |= 0x3;
-            }
+            }*/
         }
 
         void MapKernel()
@@ -85,7 +85,7 @@ namespace atheris
             echis::pmm::physaddr physicalBase = kernelAddressRequest.response->physical_base;
             echis::pmm::physaddr virtualBase  = kernelAddressRequest.response->virtual_base;
             
-            MapPages(&kernelAddressSpace, physicalBase, virtualBase, flags::present | flags::write, _kernel_end - _kernel_start);
+            MapPages(&kernelAddressSpace, physicalBase, virtualBase, flags::present | flags::write, NPAGES(_kernel_end - _kernel_start));
         }
 
         void MapHHDM()

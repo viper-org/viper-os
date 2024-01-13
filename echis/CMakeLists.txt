@@ -10,6 +10,7 @@ set(SOURCES
     "src/mm/vmm.cpp"
 
     "src/sched/process.cpp"
+    "src/sched/sched.cpp"
 
     "src/driver/framebuffer.cpp"
     "src/driver/console.cpp"
@@ -36,6 +37,7 @@ set(HEADERS
     "include/echis/mm/vmm.h"
 
     "include/echis/sched/process.h"
+    "include/echis/sched/sched.h"
 
     "include/echis/driver/framebuffer.h"
     "include/echis/driver/console.h"

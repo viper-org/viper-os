@@ -12,7 +12,8 @@
 
 /*
  * Generic function to register a
- * new handler for the timer
+ * new handler for the timer on
+ * the current core
  *
  * Must be provided in atheris/private/driver/timer.h
  *
