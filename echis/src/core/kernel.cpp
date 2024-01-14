@@ -6,6 +6,9 @@
 #include <sched/sched.h>
 
 #include <fs/tmpfs.h>
+#include <fs/initrd.h>
+
+#include <driver/console.h>
 
 #include <atheris/driver/framebuffer.h>
 #include <atheris/driver/console.h>
@@ -72,14 +75,13 @@ namespace echis
         atheris::timer::Init();
         
         fs::tmpfs::Init();
-        fs::vfs::create("tmp:hi");
-        auto node = fs::vfs::lookup("tmp:hi");
-        const char* write = "Hello from file!";
-        node->write(write, strlen(write) + 1);
+        fs::initrd::Init();
+
+        fs::vfs::Node* node = fs::vfs::lookup("tmp:test.txt");
         char buf[100];
         size_t count = 100;
         node->read(buf, &count);
-        printf("Read message \"%s\" from file\n", buf);
+        console::PutString(buf, count, 0xffff00, 0);
 
         sched::Process proc(0x69000);
         sched::Process proc1(0x69000);

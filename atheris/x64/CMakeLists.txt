@@ -40,6 +40,8 @@ set(SOURCES
     "src/atheris/sched/enter_usermode.s"
     "src/atheris/sched/prepare_thread.s"
     "src/atheris/sched/switch_context.s"
+
+    "src/atheris/fs/initrd.cpp"
 )
 
 set(HEADERS
@@ -73,6 +75,8 @@ set(HEADERS
     "include/atheris/private/cpu/init.h"
 
     "include/atheris/private/sched/user.h"
+
+    "include/atheris/private/fs/initrd.h"
 
 
     "include/limine.h"

@@ -32,6 +32,16 @@ void memcpy(void* dest, const void* src, size_t count)
     }
 }
 
+void strcpy(char* dest, const char* src)
+{
+    while(*src)
+    {
+        *dest = *src;
+        dest++;
+        src++;
+    }
+}
+
 int strcmp(const char* s1, const char* s2)
 {
     while(*s1 && (*s1 == *s2))

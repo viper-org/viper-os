@@ -71,11 +71,16 @@ namespace echis
                     if (current->size == count)
                     {
                         removeFromFreeList(current, previous);
-
                         return current + 1;
                     }
 
                     size_t newSize = current->size - count;
+                    if (newSize < sizeof(Header) + 1) // Not enough space for a new header + smallest allocation
+                    {
+                        removeFromFreeList(current, previous);
+                        return current + 1;
+                    }
+
                     char* newHeaderLocation = reinterpret_cast<char*>(current) + count;
                     Header* newHeader = reinterpret_cast<Header*>(newHeaderLocation);
                     newHeader->size = newSize;

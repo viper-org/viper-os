@@ -1,6 +1,7 @@
 *.cmake
 *.a
 Makefile
+*.tar
 
 .cache
 CMakeFiles

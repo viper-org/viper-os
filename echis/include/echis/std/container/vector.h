@@ -31,6 +31,14 @@ namespace vpr
             other.mCapacity = 0;
         }
 
+        ~vector()
+        {
+            if (mData)
+            {
+                delete mData;
+            }
+        }
+
 
         reference operator[](size_t pos)
         {

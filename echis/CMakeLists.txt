@@ -14,6 +14,7 @@ set(SOURCES
 
     "src/fs/vfs.cpp"
     "src/fs/tmpfs.cpp"
+    "src/fs/initrd.cpp"
 
     "src/driver/framebuffer.cpp"
     "src/driver/console.cpp"
@@ -46,6 +47,7 @@ set(HEADERS
 
     "include/echis/fs/vfs.h"
     "include/echis/fs/tmpfs.h"
+    "include/echis/fs/initrd.h"
 
     "include/echis/driver/framebuffer.h"
     "include/echis/driver/console.h"

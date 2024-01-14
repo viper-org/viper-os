@@ -3,6 +3,10 @@ cd $(dirname $0)
 git clone https://github.com/limine-bootloader/limine.git --branch=v5.x-branch-binary --depth=1
 make -C limine
 
+cd ../../initrd
+tar cvf ../modules/initrd.tar *
+cd ../atheris/x64
+
 rm -f viperos-x64.hdd
 dd if=/dev/zero bs=1M count=0 seek=64 of=viperos-x64.hdd
 sgdisk viperos-x64.hdd -n 1:2048 -t 1:ef00

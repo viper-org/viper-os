@@ -1,6 +1,7 @@
 #include <fs/vfs.h>
 
 #include <std/container/vector.h>
+#include <std/container/late_init.h>
 
 #include <string.h>
 
@@ -10,7 +11,7 @@ namespace echis
     {
         namespace vfs
         {
-            vpr::vector<Filesystem*> filesystems;
+            vpr::late_init<vpr::vector<Filesystem*>> filesystems;
 
             Node::Node(const vpr::string& path, Filesystem* parent)
                 : mPath(path)
@@ -40,7 +41,7 @@ namespace echis
 
             void Filesystem::Register(Filesystem* fs)
             {
-                filesystems.push_back(fs);
+                filesystems->push_back(fs);
             }
 
             Node* lookup(const vpr::string& path)
@@ -53,11 +54,11 @@ namespace echis
 
                 char* filesystemName = new char[index + 1];
                 memcpy(filesystemName, path.c_str(), index);
-                filesystemName[index + 1] = 0;
+                filesystemName[index] = 0;
 
                 vpr::string pathName = path.c_str() + index + 1;
 
-                for(auto filesystem : filesystems)
+                for(auto filesystem : *filesystems)
                 {
                     if (filesystem->getIdent() == filesystemName)
                     {
@@ -79,11 +80,11 @@ namespace echis
 
                 char* filesystemName = new char[index + 1];
                 memcpy(filesystemName, path.c_str(), index);
-                filesystemName[index + 1] = 0;
+                filesystemName[index] = 0;
 
                 vpr::string pathName = path.c_str() + index + 1;
 
-                for(auto filesystem : filesystems)
+                for(auto filesystem : *filesystems)
                 {
                     if (filesystem->getIdent() == filesystemName)
                     {
