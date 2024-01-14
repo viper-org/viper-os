@@ -26,6 +26,11 @@ namespace echis
             return mStart;
         }
 
+        void Thread::setStartingAddress(uint64_t newStart)
+        {
+            mStart = newStart;
+        }
+
         Thread::Stack& Thread::getUserStack()
         {
             return mUserStack;

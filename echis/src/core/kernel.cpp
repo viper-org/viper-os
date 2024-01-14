@@ -1,3 +1,4 @@
+#include "ldr/elf.h"
 #include <mm/pmm.h>
 #include <mm/heap.h>
 #include <mm/vmm.h>
@@ -34,17 +35,15 @@ namespace echis
 
     void SetupTestUserProc(sched::Process& proc)
     {
-        proc.getAddressSpace().switchTo();
+        fs::vfs::Node* node = fs::vfs::lookup("tmp:test.exe");
+        char* buffer = new char[0x4000];
+        size_t count = 0x4000;
+        node->read(buffer, &count);
 
-        pmm::physaddr page = pmm::GetPage();
-        atheris::vm::MapPage(&proc.getAddressSpace(),
-                             page,
-                             0x69000,
-                             atheris::vm::flags::present | atheris::vm::flags::write | atheris::vm::flags::user);
+        elf::Executable exec = elf::Load(buffer, &proc.getAddressSpace());
+        proc.getMainThread()->setStartingAddress(exec.entryPoint);
 
-        char* start = reinterpret_cast<char*>(test_user_program);
-        char* end   = reinterpret_cast<char*>(test_user_program_end);
-        memcpy(reinterpret_cast<void*>(0x69000), start, end - start);
+        delete[] buffer;
 
         pmm::physaddr stackPage = pmm::GetPage();
         atheris::vm::MapPage(&proc.getAddressSpace(),
@@ -77,21 +76,9 @@ namespace echis
         fs::tmpfs::Init();
         fs::initrd::Init();
 
-        fs::vfs::Node* node = fs::vfs::lookup("tmp:test.txt");
-        char buf[100];
-        size_t count = 100;
-        node->read(buf, &count);
-        console::PutString(buf, count, 0xffff00, 0);
-
-        sched::Process proc(0x69000);
-        sched::Process proc1(0x69000);
-        sched::Process proc2(0x69000);
+        sched::Process proc(0);
         SetupTestUserProc(proc);
-        SetupTestUserProc(proc1);
-        SetupTestUserProc(proc2);
         sched::AddProcess(&proc);
-        sched::AddProcess(&proc1);
-        sched::AddProcess(&proc2);
 
         sched::Start();
 

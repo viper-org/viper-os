@@ -38,7 +38,7 @@ namespace echis
             if (++quantum >= MAX_QUANTUM)
             {
                 quantum = 0;
-                if (threads.peek())
+                if (threads.peek() != threads.current())
                 {
                     Thread* oldThread = threads.next();
                     atheris::sched::SwitchContext(&oldThread->getContext(), threads.current()->getContext());

@@ -30,6 +30,7 @@ namespace echis
 
             Process* getParent() const;
             uint64_t getStartingAddress() const;
+            void setStartingAddress(uint64_t newStart);
             Stack& getUserStack();
             Stack& getKernelStack();
             atheris::sched::ThreadContext*& getContext();
