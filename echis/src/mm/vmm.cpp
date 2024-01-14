@@ -13,7 +13,8 @@ namespace echis
                 return nullptr;
             }
 
-            flags |= atheris::vm::flags::lazy;
+            flags |=  atheris::vm::flags::lazy;
+            flags &= ~atheris::vm::flags::present;
 
             const auto removeFromFreeList = [addressSpace](atheris::vm::VMNode* current, atheris::vm::VMNode* previous) {
                 if (previous)

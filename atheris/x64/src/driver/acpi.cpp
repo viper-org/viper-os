@@ -12,55 +12,58 @@ static volatile limine_rsdp_request rsdpRequest = {
     .response = nullptr,
 };
 
-namespace x64
+namespace atheris
 {
-    namespace acpi
+    namespace x64
     {
-        XSDT* xsdt = nullptr;
-        RSDT* rsdt = nullptr;
-
-        void Init()
+        namespace acpi
         {
-            RSDP* rsdp = (RSDP*)rsdpRequest.response->address;
-            if(rsdp->revision == 2)
-            {
-                RSDP2* rsdp2 = (RSDP2*)rsdp;
-                xsdt = reinterpret_cast<XSDT*>(PhysToVirt(rsdp2->xsdt));
-            }
-            else
-                rsdt = reinterpret_cast<RSDT*>(PhysToVirt(rsdp->rsdt));
-        }
+            XSDT* xsdt = nullptr;
+            RSDT* rsdt = nullptr;
 
-        void* FindTable(const char* signature)
-        {
-            if(xsdt)
+            void Init()
             {
-                int entryCount = (xsdt->header.length - sizeof(xsdt->header)) / 8;
-
-                for(int i = 0; i < entryCount; i++)
+                RSDP* rsdp = (RSDP*)rsdpRequest.response->address;
+                if(rsdp->revision == 2)
                 {
-                    uint64_t* other = (uint64_t*)((uint8_t*)xsdt + sizeof(XSDT));
-                    SDTHeader* hdr = reinterpret_cast<SDTHeader*>(PhysToVirt(other[i]));
+                    RSDP2* rsdp2 = (RSDP2*)rsdp;
+                    xsdt = reinterpret_cast<XSDT*>(PhysToVirt(rsdp2->xsdt));
+                }
+                else
+                    rsdt = reinterpret_cast<RSDT*>(PhysToVirt(rsdp->rsdt));
+            }
 
-                    if(!memcmp(hdr->signature, signature, 4))
+            void* FindTable(const char* signature)
+            {
+                if(xsdt)
+                {
+                    int entryCount = (xsdt->header.length - sizeof(xsdt->header)) / 8;
+
+                    for(int i = 0; i < entryCount; i++)
                     {
-                        return (void*)hdr;
+                        uint64_t* other = (uint64_t*)((uint8_t*)xsdt + sizeof(XSDT));
+                        SDTHeader* hdr = reinterpret_cast<SDTHeader*>(PhysToVirt(other[i]));
+
+                        if(!memcmp(hdr->signature, signature, 4))
+                        {
+                            return (void*)hdr;
+                        }
                     }
                 }
-            }
-            else if(rsdt)
-            {
-                int entryCount = (rsdt->header.length - sizeof(rsdt->header)) / 4;
-
-                for(int i = 0; i < entryCount; i++)
+                else if(rsdt)
                 {
-                    uint32_t* other = (uint32_t*)((uint8_t*)rsdt + sizeof(RSDT));
-                    SDTHeader* hdr = reinterpret_cast<SDTHeader*>(PhysToVirt(other[i]));
-                    if(!memcmp((uint8_t*)hdr->signature, (uint8_t*)signature, 4))
-                        return (void*)hdr;
+                    int entryCount = (rsdt->header.length - sizeof(rsdt->header)) / 4;
+
+                    for(int i = 0; i < entryCount; i++)
+                    {
+                        uint32_t* other = (uint32_t*)((uint8_t*)rsdt + sizeof(RSDT));
+                        SDTHeader* hdr = reinterpret_cast<SDTHeader*>(PhysToVirt(other[i]));
+                        if(!memcmp((uint8_t*)hdr->signature, (uint8_t*)signature, 4))
+                            return (void*)hdr;
+                    }
                 }
+                return nullptr;
             }
-            return nullptr;
         }
     }
 }

@@ -37,6 +37,15 @@
  */
 
 /*
+ * Generic function to get the flags
+ * that a virtual page has been mapped with
+ *
+ * Must be provided in atheris/private/mm/vm.h
+ *
+ * uint16_t atheris::vm::GetFlags(atheris::vm::AddressSpace*, uint64_t)
+ */
+
+/*
  * Generic function to get the current
  * address space
  *

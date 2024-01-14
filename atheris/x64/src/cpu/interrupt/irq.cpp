@@ -14,7 +14,7 @@ namespace atheris
     {
         extern "C" void CommonIRQHandler(cpu::Context* context)
         {
-            ::x64::cpu::apic::SendEOI();
+            x64::cpu::apic::SendEOI();
             if (context->BaseFrame.vector == ::atheris::cpu::smp::IPI::Panic)
             {
                 int id = atheris::cpu::core::id;

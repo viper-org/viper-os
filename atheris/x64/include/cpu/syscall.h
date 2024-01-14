@@ -1,11 +1,14 @@
 #ifndef VIPEROS_ATHERIS_X64_CPU_SYSCALL_H
 #define VIPEROS_ATHERIS_X64_CPU_SYSCALL_H 1
 
-namespace x64
+namespace atheris
 {
-    namespace cpu
+    namespace x64
     {
-        void EnableSyscall();
+        namespace cpu
+        {
+            void EnableSyscall();
+        }
     }
 }
 

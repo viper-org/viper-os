@@ -1,5 +1,7 @@
 #include <cpu/context.h>
 
+#include <mm/vm.h>
+
 #include <echis/core/exception/exception.h>
 
 namespace atheris
@@ -15,6 +17,10 @@ namespace atheris
                     exceptionType = echis::exception::DIV;
                     break;
                 case 14:
+                    if (!atheris::vm::HandlePageFault(context))
+                    {
+                        return;
+                    }
                     exceptionType = echis::exception::SEG;
                     break;
                 case 6:

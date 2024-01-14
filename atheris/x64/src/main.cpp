@@ -6,13 +6,16 @@
 #include <echis/driver/framebuffer.h>
 #include <echis/driver/console.h>
 
-namespace x64
+namespace atheris
 {
-    extern "C" void kernel_init()
+    namespace x64
     {
-        cpu::gdt::Install();
-        cpu::interrupt::Install();
+        extern "C" void kernel_init()
+        {
+            cpu::gdt::Install();
+            cpu::interrupt::Install();
 
-        echis::kernel_main();
+            echis::kernel_main();
+        }
     }
 }

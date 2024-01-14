@@ -19,7 +19,7 @@ namespace atheris
                 uint64_t newPml4;
                 int id;
                 void(*timerHandler)();
-                ::x64::cpu::tss::TSSDescriptor tssDesc;
+                x64::cpu::tss::TSSDescriptor tssDesc;
 
                 static CoreLocal* Get();
             };

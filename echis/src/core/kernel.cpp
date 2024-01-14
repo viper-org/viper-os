@@ -57,7 +57,7 @@ namespace echis
         proc.getMainThread()->getUserStack().size = pmm::GetPageSize();
         proc.getMainThread()->getUserStack().top  = reinterpret_cast<uint64_t>(vm::GetPages(&proc.getAddressSpace(),
                                                                  1,
-                                                                 atheris::vm::flags::present | atheris::vm::flags::write | atheris::vm::flags::user)) + pmm::GetPageSize();
+                                                                 atheris::vm::flags::write | atheris::vm::flags::user)) + pmm::GetPageSize();
     }
 
     void kernel_main()

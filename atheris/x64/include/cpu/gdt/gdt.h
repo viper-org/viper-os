@@ -3,33 +3,36 @@
 
 #include <stdint.h>
 
-namespace x64
+namespace atheris
 {
-    namespace cpu
+    namespace x64
     {
-        namespace gdt
+        namespace cpu
         {
-            struct [[gnu::packed]] Descriptor
+            namespace gdt
             {
-                uint16_t limit;
-                uint16_t baseLow;
-                uint8_t  baseMid;
-                uint8_t  access;
-                uint8_t  flags;
-                uint8_t  baseHigh;
+                struct [[gnu::packed]] Descriptor
+                {
+                    uint16_t limit;
+                    uint16_t baseLow;
+                    uint8_t  baseMid;
+                    uint8_t  access;
+                    uint8_t  flags;
+                    uint8_t  baseHigh;
 
-                Descriptor(uint32_t base, uint16_t limit, uint8_t access, uint8_t flags);
-                Descriptor();
-            };
+                    Descriptor(uint32_t base, uint16_t limit, uint8_t access, uint8_t flags);
+                    Descriptor();
+                };
 
-            struct [[gnu::packed]] Pointer
-            {
-                uint16_t limit;
-                Descriptor* base;
-            };
+                struct [[gnu::packed]] Pointer
+                {
+                    uint16_t limit;
+                    Descriptor* base;
+                };
 
-            void Install();
-            void APInstall();
+                void Install();
+                void APInstall();
+            }
         }
     }
 }

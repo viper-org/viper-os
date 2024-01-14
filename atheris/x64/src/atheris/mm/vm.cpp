@@ -12,6 +12,7 @@
 
 namespace atheris
 {
+    using namespace x64;
     namespace pm
     {
         extern limine_memmap_response* memoryMap;
@@ -19,8 +20,6 @@ namespace atheris
 
     namespace vm
     {
-        using namespace x64;
-
         extern "C" char _kernel_start[];
         extern "C" char _kernel_end[];
 
@@ -54,6 +53,7 @@ namespace atheris
 
         void AddressSpace::switchTo()
         {
+            currentAddressSpace = this;
             x64::cpu::WriteCR<3>(pml4);
         }
 
@@ -169,6 +169,54 @@ namespace atheris
         void* GetVirtualAddress(echis::pmm::physaddr physaddr)
         {
             return reinterpret_cast<void*>(PhysToVirt(physaddr));
+        }
+
+        uint16_t GetFlags(AddressSpace* addressSpace, uint64_t virtualAddress)
+        {
+            if (addressSpace == nullptr)
+            {
+                addressSpace = currentAddressSpace;
+            }
+
+            virtualAddress  &= ~0xfff;
+
+            uint64_t shift = 48;
+            uint64_t* pt = reinterpret_cast<uint64_t*>(PhysToVirt(ValidatePageTable(addressSpace->pml4)));
+            uint64_t index;
+            for (int i = 0; i < 4; ++i)
+            {
+                shift -= 9;
+                index = (virtualAddress >> shift) & 0x1ff;
+                if (i == 3)
+                {
+                    break;
+                }
+
+                if (!(pt[index] & flags::present) && !(pt[index] & flags::lazy))
+                {
+                   return 0;
+                }
+
+                pt = reinterpret_cast<uint64_t*>(PhysToVirt(ValidatePageTable(pt[index])));
+            }
+
+            return pt[index] & 0xfff;
+        }
+
+        bool HandlePageFault(x64::cpu::Context* context)
+        {
+            if (auto faultingAddress = context->ControlRegisters.cr2)
+            {
+                uint16_t flags = GetFlags(nullptr, faultingAddress);
+                if (flags & flags::lazy)
+                {
+                    flags &= ~flags::lazy;
+                    flags |=  flags::present;
+                    MapPage(nullptr, echis::pmm::GetPage(), faultingAddress, flags);
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

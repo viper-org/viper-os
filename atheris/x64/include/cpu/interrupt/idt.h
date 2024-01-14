@@ -3,34 +3,37 @@
 
 #include <stdint.h>
 
-namespace x64
+namespace atheris
 {
-    namespace cpu
+    namespace x64
     {
-        namespace interrupt
+        namespace cpu
         {
-            struct [[gnu::packed]] Descriptor
+            namespace interrupt
             {
-                Descriptor(uint64_t isr, uint8_t flags, uint8_t ist);
-                Descriptor();
+                struct [[gnu::packed]] Descriptor
+                {
+                    Descriptor(uint64_t isr, uint8_t flags, uint8_t ist);
+                    Descriptor();
 
-                uint16_t offsetLow;
-                uint16_t kernelCS;
-                uint8_t  ist;
-                uint8_t  attributes;
-                uint16_t offsetMid;
-                uint32_t offsetHigh;
-                uint32_t reserved;
-            };
+                    uint16_t offsetLow;
+                    uint16_t kernelCS;
+                    uint8_t  ist;
+                    uint8_t  attributes;
+                    uint16_t offsetMid;
+                    uint32_t offsetHigh;
+                    uint32_t reserved;
+                };
 
-            struct [[gnu::packed]] Pointer
-            {
-                uint16_t limit;
-                Descriptor* base;
-            };
+                struct [[gnu::packed]] Pointer
+                {
+                    uint16_t limit;
+                    Descriptor* base;
+                };
 
-            void Install();
-            void APInstall();
+                void Install();
+                void APInstall();
+            }
         }
     }
 }

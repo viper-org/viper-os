@@ -5,39 +5,42 @@
 
 #include <stdint.h>
 
-namespace x64
+namespace atheris
 {
-    namespace cpu
+    namespace x64
     {
-        namespace apic
+        namespace cpu
         {
-            struct [[gnu::packed]] ICR
+            namespace apic
             {
-                uint8_t vector;
-                uint64_t flags : 12;
-                uint64_t reserved : 36;
-                uint8_t destination;
-            };
-
-            void Init();
-            void InitTimer();
-            echis::pmm::physaddr GetPhysicalAddress();
-            int GetID();
-
-            namespace IPIMode
-            {
-                enum IPIMode
+                struct [[gnu::packed]] ICR
                 {
-                    Single          = 0b00,
-                    Self            = 0b01,
-                    BroadcastAll    = 0b10,
-                    BroadcastOthers = 0b11
+                    uint8_t vector;
+                    uint64_t flags : 12;
+                    uint64_t reserved : 36;
+                    uint8_t destination;
                 };
+
+                void Init();
+                void InitTimer();
+                echis::pmm::physaddr GetPhysicalAddress();
+                int GetID();
+
+                namespace IPIMode
+                {
+                    enum IPIMode
+                    {
+                        Single          = 0b00,
+                        Self            = 0b01,
+                        BroadcastAll    = 0b10,
+                        BroadcastOthers = 0b11
+                    };
+                }
+
+                void SendIPI(int id, int vector, IPIMode::IPIMode mode);
+
+                void SendEOI();
             }
-
-            void SendIPI(int id, int vector, IPIMode::IPIMode mode);
-
-            void SendEOI();
         }
     }
 }
