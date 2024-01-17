@@ -21,6 +21,7 @@ namespace echis
 
                 int read(void* buffer, size_t* count) override;
                 int write(const void* buffer, size_t count) override;
+                void close() override;
 
             private:
                 char* mData;

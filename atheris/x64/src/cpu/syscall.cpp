@@ -4,6 +4,7 @@
 #include <syscall/file/read.h>
 #include <syscall/file/write.h>
 #include <syscall/file/open.h>
+#include <syscall/file/close.h>
 
 #include <stdio.h>
 
@@ -43,6 +44,11 @@ namespace atheris
                     case 2: // open
                     {
                         frame->rax = echis::syscall::open(reinterpret_cast<const char*>(frame->rdi), frame->rsi);
+                        break;
+                    }
+                    case 3: // close
+                    {
+                        frame->rax = echis::syscall::close(frame->rdi);
                         break;
                     }
                     default:

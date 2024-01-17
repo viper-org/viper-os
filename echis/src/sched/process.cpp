@@ -90,5 +90,17 @@ namespace echis
             }
             return -1;
         }
+
+        int Process::closeFileDescription(int fd)
+        {
+            if (mFds[fd].vfsNode == nullptr)
+            {
+                return -1;
+            }
+            mFds[fd].vfsNode->close();
+            mFds[fd].flags = 0;
+            mFds[fd].vfsNode = nullptr;
+            return 0;
+        }
     }
 }

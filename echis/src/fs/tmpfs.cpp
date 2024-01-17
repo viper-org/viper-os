@@ -101,6 +101,10 @@ namespace echis
                 return 0;
             }
 
+            void Node::close()
+            { // Nothing to do here
+            }
+
             Filesystem::Filesystem()
                 : vfs::Filesystem("tmp")
             {

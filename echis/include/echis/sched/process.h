@@ -61,6 +61,7 @@ namespace echis
             FileDescriptor& getFd(int n);
 
             int addOpenFileDescription(fs::vfs::Node* node, OpenMode::OpenMode mode);
+            int closeFileDescription(int fd);
 
         private:
             int mPid;

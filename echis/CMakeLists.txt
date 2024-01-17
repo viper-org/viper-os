@@ -27,6 +27,7 @@ set(SOURCES
     "src/syscall/file/read.cpp"
     "src/syscall/file/write.cpp"
     "src/syscall/file/open.cpp"
+    "src/syscall/file/close.cpp"
 
 
     "src/std/container/string.cpp"
@@ -67,6 +68,7 @@ set(HEADERS
     "include/echis/syscall/file/read.h"
     "include/echis/syscall/file/write.h"
     "include/echis/syscall/file/open.h"
+    "include/echis/syscall/file/close.h"
 
 
     "include/echis/std/container/atomic.h"
