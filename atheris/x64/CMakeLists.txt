@@ -118,7 +118,7 @@ set(COMPILER_OPTIONS
 
 set(CMAKE_CXX_COMPILER x86_64-elf-g++)
     
-execute_process(COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/get_limine_header.sh)
+execute_process(COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/get_limine_header.sh ${CMAKE_CURRENT_SOURCE_DIR})
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
 

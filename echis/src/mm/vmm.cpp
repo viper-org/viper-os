@@ -77,5 +77,52 @@ namespace echis
 
             addressSpace->freeList = newNode;
         }
+
+        void MarkUsed(atheris::vm::AddressSpace* addressSpace, void* base, uint64_t count)
+        {
+            if (count == 0 || base == nullptr)
+            {
+                return;
+            }
+            uint64_t address = reinterpret_cast<uint64_t>(base);
+
+            const auto removeFromFreeList = [addressSpace](atheris::vm::VMNode* current, atheris::vm::VMNode* previous) {
+                if (previous)
+                {
+                    previous->next = current->next;
+                }
+                else
+                {
+                    addressSpace->freeList = current->next;
+                }
+            };
+
+            atheris::vm::VMNode* current  = addressSpace->freeList;
+            atheris::vm::VMNode* previous = nullptr;
+            while (current != nullptr)
+            {
+                if (address >= current->base && (address + count * pmm::GetPageSize()) <= (current->base + current->pages * pmm::GetPageSize()))
+                {
+                    if (address == current->base && (address + count * pmm::GetPageSize()) == (current->base + current->pages * pmm::GetPageSize()))
+                    {
+                        removeFromFreeList(current, previous);
+                        return;
+                    }
+
+                    atheris::vm::VMNode* top = new atheris::vm::VMNode;
+                    top->pages = (current->base + current->pages * pmm::GetPageSize()) - (address + count * pmm::GetPageSize()) / pmm::GetPageSize();
+                    top->base = address + count * pmm::GetPageSize();
+                    top->next = addressSpace->freeList;
+                    addressSpace->freeList = top;
+
+                    current->pages = (address - current->base) / pmm::GetPageSize();
+                    return;
+                }
+                
+
+                previous = current;
+                current = current->next;
+            }
+        }
     }
 }

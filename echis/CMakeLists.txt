@@ -14,6 +14,7 @@ set(SOURCES
 
     "src/fs/vfs.cpp"
     "src/fs/tmpfs.cpp"
+    "src/fs/devfs.cpp"
     "src/fs/initrd.cpp"
 
     "src/ldr/elf.cpp"
@@ -24,10 +25,14 @@ set(SOURCES
     "src/driver/impl/framebuffer.cpp"
     "src/driver/impl/console.cpp"
 
+
     "src/syscall/file/read.cpp"
     "src/syscall/file/write.cpp"
     "src/syscall/file/open.cpp"
     "src/syscall/file/close.cpp"
+    "src/syscall/file/ioctl.cpp"
+
+    "src/syscall/mem/mmap.cpp"
 
 
     "src/std/container/string.cpp"
@@ -55,6 +60,7 @@ set(HEADERS
 
     "include/echis/fs/vfs.h"
     "include/echis/fs/tmpfs.h"
+    "include/echis/fs/devfs.h"
     "include/echis/fs/initrd.h"
 
     "include/echis/ldr/elf.h"
@@ -65,10 +71,14 @@ set(HEADERS
     "include/echis/driver/impl/framebuffer.h"
     "include/echis/driver/impl/console.h"
 
+
     "include/echis/syscall/file/read.h"
     "include/echis/syscall/file/write.h"
     "include/echis/syscall/file/open.h"
     "include/echis/syscall/file/close.h"
+    "include/echis/syscall/file/ioctl.h"
+
+    "include/echis/syscall/mem/mmap.h"
 
 
     "include/echis/std/container/atomic.h"

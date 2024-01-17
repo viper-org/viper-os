@@ -26,9 +26,32 @@ int close(int fd)
     return ret;
 }
 
+int ioctl(int fd, unsigned long request, char* arg)
+{
+    int ret;
+    asm volatile("syscall" : "=a"(ret) : "a"(4), "D"(fd), "S"(request), "d"(arg));
+    return ret;
+}
+
+void* mmap(size_t length)
+{
+    void* ret;
+    asm volatile("syscall" : "=a"(ret) : "a"(5), "D"(length));
+    return ret;
+}
+
 void print(const char* message)
 {
     asm volatile("syscall" :: "a"(69), "D"(message));
+}
+
+void memset(void* s, int c, size_t n)
+{
+    char* p = s;
+    for (size_t i = 0; i < n; ++i)
+    {
+        p[i] = c;
+    }
 }
 
 #define READ  1
@@ -36,16 +59,15 @@ void print(const char* message)
 
 void _start(void)
 {
-    int fd = open("tmp:test.txt", READ | WRITE);
+    int fd = open("dev:fb", WRITE);
+    unsigned long vert;
+    ioctl(fd, 1, &vert);
+    unsigned long pitch;
+    ioctl(fd, 2, &pitch);
 
-    char newMessage[] = "This was written from userspace";
-    write(fd, newMessage, 33);
-
-    char buf[33];
-    read(fd, buf, 33);
-
-    print(buf);
-
+    void* buffer = mmap(vert * pitch);
+    memset(buffer, 0, vert * pitch);
+    write(fd, buffer, vert * pitch);
     
     while(1) asm("pause");
 }

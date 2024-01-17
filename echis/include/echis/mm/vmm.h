@@ -9,6 +9,8 @@ namespace echis
     {
         void* GetPages (atheris::vm::AddressSpace* addressSpace, uint64_t count, uint16_t flags);
         void  FreePages(atheris::vm::AddressSpace* addressSpace, void* pages, uint64_t count);
+
+        void MarkUsed(atheris::vm::AddressSpace* addressSpace, void* base, uint64_t count);
     }
 }
 

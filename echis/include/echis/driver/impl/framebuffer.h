@@ -24,6 +24,11 @@ namespace echis
          * the background color
          */
         static void DrawBitmap(void* bitmap, uint32_t x, uint32_t y, uint32_t sizeX, uint32_t sizeY, uint32_t foreground, uint32_t background);
+
+        static void*    GetBase();
+        static uint64_t GetHoriz();
+        static uint64_t GetVert();
+        static uint64_t GetPitch();
     };
 }
 

@@ -1,3 +1,4 @@
+#include "mm/vmm.h"
 #include <ldr/elf.h>
 
 #include <mm/pmm.h>
@@ -69,6 +70,8 @@ namespace echis
                 memcpy(reinterpret_cast<char*>(vaddr), fileOffset, phdr->p_filesz);
                 char* bss = reinterpret_cast<char*>(vaddr) + phdr->p_filesz;
                 memset(bss, 0, phdr->p_memsz - phdr->p_filesz);
+                
+                vm::MarkUsed(addressSpace, reinterpret_cast<void*>(vaddr), size);
             }
 
             return Executable {

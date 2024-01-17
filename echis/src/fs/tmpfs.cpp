@@ -105,6 +105,11 @@ namespace echis
             { // Nothing to do here
             }
 
+            int Node::ioctl(unsigned long, char*)
+            { // Only device files can be ioctl'd
+                return 0;
+            }
+
             Filesystem::Filesystem()
                 : vfs::Filesystem("tmp")
             {

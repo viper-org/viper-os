@@ -54,4 +54,22 @@ namespace echis
             index -= sizeX * 4;
         }
     }
+
+
+    void* framebufferImpl::GetBase()
+    {
+        return screen.base;
+    }
+    uint64_t framebufferImpl::GetHoriz()
+    {
+        return screen.horiz;
+    }
+    uint64_t framebufferImpl::GetVert()
+    {
+        return screen.vert;
+    }
+    uint64_t framebufferImpl::GetPitch()
+    {
+        return screen.pitch;
+    }
 }

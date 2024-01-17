@@ -22,6 +22,7 @@ namespace echis
                 int read(void* buffer, size_t* count) override;
                 int write(const void* buffer, size_t count) override;
                 void close() override;
+                int ioctl(unsigned long request, char* arg) override;
 
             private:
                 char* mData;

@@ -5,6 +5,9 @@
 #include <syscall/file/write.h>
 #include <syscall/file/open.h>
 #include <syscall/file/close.h>
+#include <syscall/file/ioctl.h>
+
+#include <syscall/mem/mmap.h>
 
 #include <stdio.h>
 
@@ -49,6 +52,16 @@ namespace atheris
                     case 3: // close
                     {
                         frame->rax = echis::syscall::close(frame->rdi);
+                        break;
+                    }
+                    case 4: // ioctl
+                    {
+                        frame->rax = echis::syscall::ioctl(frame->rdi, frame->rsi, reinterpret_cast<char*>(frame->rdx));
+                        break;
+                    }
+                    case 5: // mmap
+                    {
+                        frame->rax = reinterpret_cast<uint64_t>(echis::syscall::mmap(frame->rdi));
                         break;
                     }
                     default:

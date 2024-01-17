@@ -1,4 +1,3 @@
-#include "ldr/elf.h"
 #include <mm/pmm.h>
 #include <mm/heap.h>
 #include <mm/vmm.h>
@@ -7,9 +6,12 @@
 #include <sched/sched.h>
 
 #include <fs/tmpfs.h>
+#include <fs/devfs.h>
 #include <fs/initrd.h>
 
-#include <driver/console.h>
+#include <driver/framebuffer.h>
+
+#include <ldr/elf.h>
 
 #include <atheris/driver/framebuffer.h>
 #include <atheris/driver/console.h>
@@ -75,6 +77,9 @@ namespace echis
         
         fs::tmpfs::Init();
         fs::initrd::Init();
+        fs::devfs::Init();
+
+        framebuffer::SetupDeviceFile();
 
         sched::Process proc(0);
         SetupTestUserProc(proc);

@@ -34,6 +34,9 @@ namespace echis
          * the background color
          */
         void DrawBitmap(void* bitmap, uint32_t x, uint32_t y, uint32_t sizeX, uint32_t sizeY, uint32_t foreground, uint32_t background);
+
+
+        void SetupDeviceFile();
     }
 }
 

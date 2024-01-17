@@ -20,6 +20,7 @@ namespace echis
                 virtual int  read(void* buffer, size_t* count) = 0;
                 virtual int  write(const void* buffer, size_t count) = 0;
                 virtual void close() = 0;
+                virtual int  ioctl(unsigned long request, char* arg) = 0;
 
                 Filesystem* getParent() const;
                 const vpr::string& getPath() const;
