@@ -25,6 +25,7 @@ set(SOURCES
     "src/driver/impl/console.cpp"
 
     "src/syscall/file/read.cpp"
+    "src/syscall/file/write.cpp"
     "src/syscall/file/open.cpp"
 
 
@@ -64,6 +65,7 @@ set(HEADERS
     "include/echis/driver/impl/console.h"
 
     "include/echis/syscall/file/read.h"
+    "include/echis/syscall/file/write.h"
     "include/echis/syscall/file/open.h"
 
 

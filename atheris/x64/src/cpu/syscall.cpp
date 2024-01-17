@@ -2,6 +2,7 @@
 #include <cpu/asm.h>
 
 #include <syscall/file/read.h>
+#include <syscall/file/write.h>
 #include <syscall/file/open.h>
 
 #include <stdio.h>
@@ -32,6 +33,11 @@ namespace atheris
                     case 0: // read
                     {
                         frame->rax = echis::syscall::read(frame->rdi, reinterpret_cast<void*>(frame->rsi), frame->rdx);
+                        break;
+                    }
+                    case 1: //write
+                    {
+                        frame->rax = echis::syscall::write(frame->rdi, reinterpret_cast<const void*>(frame->rsi), frame->rdx);
                         break;
                     }
                     case 2: // open

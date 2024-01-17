@@ -14,6 +14,11 @@ size_t read(int fd, void* buf, size_t count)
     return ret;
 }
 
+void write(int fd, const void* buf, size_t count) // technically returns size_t but who cares
+{
+    asm volatile("syscall" :: "a"(1), "D"(fd), "S"(buf), "d"(count));
+}
+
 void print(const char* message)
 {
     asm volatile("syscall" :: "a"(69), "D"(message));
@@ -22,8 +27,13 @@ void print(const char* message)
 void _start(void)
 {
     int fd = open("tmp:test.txt", 1);
-    char buf[20];
-    read(fd, buf, 20);
+
+    char newMessage[] = "This was written from userspace";
+    write(fd, newMessage, 33);
+
+    char buf[33];
+    read(fd, buf, 33);
+
     print(buf);
     while(1) asm("pause");
 }
