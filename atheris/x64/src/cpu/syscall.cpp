@@ -1,6 +1,9 @@
 #include <cpu/syscall.h>
 #include <cpu/asm.h>
 
+#include <syscall/file/read.h>
+#include <syscall/file/open.h>
+
 #include <stdio.h>
 
 namespace atheris
@@ -22,9 +25,24 @@ namespace atheris
                 WriteMSR(MSR::IA32_LSTAR, reinterpret_cast<uint64_t>(syscall_handler));
             }
 
-            extern "C" void syscall_dispatcher(char* message)
+            extern "C" void syscall_dispatcher(SyscallFrame* frame)
             {
-                printf("%#%s", 0x00ffff, message);
+                switch(frame->rax) // rax contains the syscall number
+                {
+                    case 0: // read
+                    {
+                        frame->rax = echis::syscall::read(frame->rdi, reinterpret_cast<void*>(frame->rsi), frame->rdx);
+                        break;
+                    }
+                    case 2: // open
+                    {
+                        frame->rax = echis::syscall::open(reinterpret_cast<const char*>(frame->rdi), frame->rsi);
+                        break;
+                    }
+                    default:
+                        printf("%#%s", 0x00ffff, frame->rdi);
+                        break;
+                }
             }
         }
     }

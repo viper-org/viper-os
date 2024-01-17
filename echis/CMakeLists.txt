@@ -24,6 +24,9 @@ set(SOURCES
     "src/driver/impl/framebuffer.cpp"
     "src/driver/impl/console.cpp"
 
+    "src/syscall/file/read.cpp"
+    "src/syscall/file/open.cpp"
+
 
     "src/std/container/string.cpp"
 
@@ -45,6 +48,7 @@ set(HEADERS
     "include/echis/mm/vmm.h"
 
     "include/echis/sched/process.h"
+    "include/echis/sched/processFd.h"
     "include/echis/sched/sched.h"
 
     "include/echis/fs/vfs.h"
@@ -58,6 +62,9 @@ set(HEADERS
 
     "include/echis/driver/impl/framebuffer.h"
     "include/echis/driver/impl/console.h"
+
+    "include/echis/syscall/file/read.h"
+    "include/echis/syscall/file/open.h"
 
 
     "include/echis/std/container/atomic.h"

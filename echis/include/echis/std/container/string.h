@@ -19,7 +19,7 @@ namespace vpr
 
         bool operator==(const string& other) const;
         char operator[](int index) const;
-        vpr::string& operator=(const vpr::string& other) = default;
+        string& operator=(const string& other);
 
     private:
         char* mBuffer;

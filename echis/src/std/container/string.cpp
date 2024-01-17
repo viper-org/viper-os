@@ -32,24 +32,25 @@ namespace vpr
     }
 
     string::string(const string& other)
+        : mSize(other.mSize)
     {
-        mBuffer = new char[other.mSize + 1];
-
-        memcpy(mBuffer, other.mBuffer, other.mSize);
-        mBuffer[other.mSize] = '\0';
-
-        mSize = other.mSize;
+        mBuffer = new char[mSize + 1];
+        memcpy(mBuffer, other.mBuffer, mSize + 1);
     }
 
     string::string(string&& other)
         : mBuffer(std::move(other.mBuffer))
         , mSize(std::move(other.mSize))
     {
+        other.mBuffer = nullptr;
+        other.mSize = 0;
     }
 
     string::~string()
     {
         delete[] mBuffer;
+        mBuffer = nullptr;
+        mSize = 0;
     }
 
     
@@ -72,5 +73,19 @@ namespace vpr
     char string::operator[](int index) const
     {
         return mBuffer[index];
+    }
+
+    string& string::operator=(const string& other)
+    {
+        if (mBuffer)
+        {
+            delete[] mBuffer;
+        }
+
+        mSize = other.mSize;
+        mBuffer = new char[mSize + 1];
+        memcpy(mBuffer, other.mBuffer, mSize + 1);
+
+        return *this;
     }
 }

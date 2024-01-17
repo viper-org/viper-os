@@ -22,6 +22,53 @@ namespace echis
             {
             }
 
+            Node::Node(Node&& other)
+                : mData(other.mData)
+                , mSize(other.mSize)
+                , mCapacity(other.mCapacity)
+            {
+                other.mData = nullptr;
+                other.mSize = 0;
+                other.mCapacity = 0;
+            }
+
+            Node& Node::operator=(const Node& other)
+            {
+                if (mCapacity >= other.mCapacity)
+                {
+                    memcpy(mData, other.mData, other.mSize);
+                    mSize = other.mSize;
+                }
+                else
+                {
+                    delete[] mData;
+                    mData = new char[other.mCapacity];
+                    memcpy(mData, other.mData, other.mSize);
+                    mSize = other.mSize;
+                    mCapacity = other.mCapacity;
+                }
+                mPath = other.mPath;
+                return *this;
+            }
+
+            Node& Node::operator=(Node&& other)
+            {
+                if (mData)
+                {
+                    delete mData;
+                }
+                mData = other.mData;
+                mSize = other.mSize;
+                mCapacity = other.mCapacity;
+                mPath = std::move(other.mPath);
+
+                other.mData = nullptr;
+                other.mSize = 0;
+                other.mCapacity = 0;
+
+                return *this;
+            }
+
             Node::~Node()
             {
                 if (mData)

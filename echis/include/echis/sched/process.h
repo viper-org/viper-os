@@ -1,6 +1,8 @@
 #ifndef VIPEROS_ECHIS_SCHED_PROCESS_H
 #define VIPEROS_ECHIS_SCHED_PROCESS_H 1
 
+#include <sched/processFd.h>
+
 #include <atheris/mm/vm.h>
 
 #include <stddef.h>
@@ -14,6 +16,8 @@ namespace echis
 {
     namespace sched
     {
+        constexpr int MAX_FD = 16;
+
         class Process;
 
         class Thread
@@ -54,11 +58,15 @@ namespace echis
             int getPid() const;
             Thread* getMainThread();
             atheris::vm::AddressSpace& getAddressSpace();
+            FileDescriptor& getFd(int n);
+
+            int addOpenFileDescription(fs::vfs::Node* node, OpenMode::OpenMode mode);
 
         private:
             int mPid;
             Thread mMainThread;
             atheris::vm::AddressSpace mAddressSpace;
+            FileDescriptor mFds[MAX_FD];
         };
     }
 }

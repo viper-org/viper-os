@@ -156,7 +156,7 @@ irq_frame_assembler:
 
     iretq
 
-exception_err_stub    0
+exception_no_err_stub    0
 exception_no_err_stub  1
 exception_no_err_stub  2
 exception_no_err_stub  3

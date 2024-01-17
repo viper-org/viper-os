@@ -14,6 +14,9 @@ namespace echis
             public:
                 Node() = default;
                 Node(const vpr::string& path);
+                Node(Node&& other);
+                Node& operator=(const Node& other);
+                Node& operator=(Node&& other);
                 ~Node();
 
                 int read(void* buffer, size_t* count) override;

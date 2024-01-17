@@ -8,7 +8,6 @@ syscall_handler:
     
     pushq %rcx
     pushq %r11
-
     pushq %rbx
     pushq %rbp
     pushq %r12
@@ -16,7 +15,19 @@ syscall_handler:
     pushq %r14
     pushq %r15
 
+    pushq %rax
+    pushq %rdi
+    pushq %rsi
+    pushq %rdx
+    pushq %r10
+    pushq %r9
+    pushq %r8
+
+    movq %rsp, %rdi
     call syscall_dispatcher
+
+    addq $0x30, %rsp
+    popq %rax
 
     popq %r15
     popq %r14
@@ -24,7 +35,6 @@ syscall_handler:
     popq %r12
     popq %rbp
     popq %rbx
-
     popq %r11
     popq %rcx
 

@@ -21,6 +21,14 @@ namespace vpr
         {
         }
 
+        vector(const vector& other)
+            : mSize(other.mSize)
+            , mCapacity(other.mCapacity)
+        {
+            mData = new T[mCapacity];
+            memcpy(mData, other.mData, mSize * sizeof(T));
+        }
+
         vector(vector&& other)
             : mData(std::move(other.mData))
             , mSize(std::move(other.mSize))
@@ -182,11 +190,14 @@ namespace vpr
             else
             {
                 T* newData = new T[mCapacity * 2];
-                memcpy(newData, mData, mSize * sizeof(T));
+                for (size_t i = 0; i < mSize; ++i)
+                {
+                    newData[i] = std::move(mData[i]);
+                }
                 delete[] mData;
                 mData = newData;
                 mData[mSize++] = value;
-                ++mCapacity;
+                mCapacity *= 2;
             }
         }
 

@@ -71,5 +71,24 @@ namespace echis
         {
             return mAddressSpace;
         }
+
+        FileDescriptor& Process::getFd(int n)
+        {
+            return mFds[n];
+        }
+
+        int Process::addOpenFileDescription(fs::vfs::Node* node, OpenMode::OpenMode mode)
+        {
+            for (int i = 0; i < MAX_FD; ++i)
+            {
+                if (mFds[i].vfsNode == nullptr)
+                {
+                    mFds[i].vfsNode = node;
+                    mFds[i].flags   = mode;
+                    return i;
+                }
+            }
+            return -1;
+        }
     }
 }
