@@ -110,6 +110,11 @@ namespace echis
                 return 0;
             }
 
+            size_t Node::size()
+            {
+                return mSize;
+            }
+
             Filesystem::Filesystem()
                 : vfs::Filesystem("tmp")
             {

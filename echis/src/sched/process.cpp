@@ -1,5 +1,10 @@
 #include <sched/process.h>
 
+#include <mm/pmm.h>
+#include <mm/vmm.h>
+
+#include <ldr/elf.h>
+
 #include <atheris/sched/user.h>
 
 namespace echis
@@ -121,6 +126,37 @@ namespace echis
                 mFds[fd].pipe = nullptr;
             }
             return 0;
+        }
+
+
+        Process* Process::Create(const char* path)
+        {
+            Process* proc = new Process(0);
+
+            fs::vfs::Node* node = fs::vfs::lookup(path);
+            char* buffer = new char[node->size()];
+            size_t count = node->size();
+            node->read(buffer, &count, 0);
+
+            elf::Executable exec = elf::Load(buffer, &proc->getAddressSpace());
+            proc->getMainThread()->setStartingAddress(exec.entryPoint);
+
+            delete[] buffer;
+
+            pmm::physaddr stackPage = pmm::GetPage();
+            atheris::vm::MapPage(&proc->getAddressSpace(),
+                                stackPage,
+                                0xFFFFFF0000000000,
+                                atheris::vm::flags::present | atheris::vm::flags::write);
+            proc->getMainThread()->getKernelStack().size = pmm::GetPageSize();
+            proc->getMainThread()->getKernelStack().top  = 0xFFFFFF0000000000 + pmm::GetPageSize();
+
+            proc->getMainThread()->getUserStack().size = pmm::GetPageSize();
+            proc->getMainThread()->getUserStack().top  = reinterpret_cast<uint64_t>(vm::GetPages(&proc->getAddressSpace(),
+                                                                    1,
+                                                                    atheris::vm::flags::write | atheris::vm::flags::user)) + pmm::GetPageSize();
+
+            return proc;
         }
     }
 }

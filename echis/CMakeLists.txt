@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.26)
 set(SOURCES
     "src/core/kernel.cpp"
     "src/core/exception/exception.cpp"
-    "src/core/test_user_program.s"
 
     "src/mm/pmm.cpp"
     "src/mm/heap.cpp"

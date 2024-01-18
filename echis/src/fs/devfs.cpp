@@ -76,6 +76,11 @@ namespace echis
                 return mIoctl(request, arg);
             }
 
+            size_t DeviceNode::size()
+            {
+                return 0;
+            }
+
             DeviceFilesystem::DeviceFilesystem()
                 : vfs::Filesystem("dev")
             {

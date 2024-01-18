@@ -65,6 +65,8 @@ namespace echis
             int addOpenFileDescription(vpr::shared_ptr<Pipe> pipe);
             int closeFileDescription(int fd);
 
+            static Process* Create(const char* path);
+
         private:
             int mPid;
             Thread mMainThread;
