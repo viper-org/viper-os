@@ -5,6 +5,8 @@
 
 #include <fs/vfs.h>
 
+#include <std/container/ptr.h>
+
 #include <stdint.h>
 
 namespace echis
@@ -23,7 +25,7 @@ namespace echis
         struct FileDescriptor
         {
             fs::vfs::Node* vfsNode;
-            Pipe* pipe;
+            vpr::shared_ptr<Pipe> pipe;
             uint8_t flags;
             size_t seek;
         };

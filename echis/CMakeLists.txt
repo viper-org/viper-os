@@ -93,6 +93,7 @@ set(HEADERS
     "include/echis/std/container/ring.h"
     "include/echis/std/container/string.h"
     "include/echis/std/container/vector.h"
+    "include/echis/std/container/ptr.h"
     "include/echis/std/thread/mutex.h"
 
 

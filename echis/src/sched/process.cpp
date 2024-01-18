@@ -92,7 +92,7 @@ namespace echis
             return -1;
         }
 
-        int Process::addOpenFileDescription(Pipe* pipe)
+        int Process::addOpenFileDescription(vpr::shared_ptr<Pipe> pipe)
         {
             for (int i = 0; i < MAX_FD; ++i)
             {
@@ -118,7 +118,6 @@ namespace echis
             mFds[fd].vfsNode = nullptr;
             if (mFds[fd].pipe)
             {
-                delete mFds[fd].pipe;
                 mFds[fd].pipe = nullptr;
             }
             return 0;

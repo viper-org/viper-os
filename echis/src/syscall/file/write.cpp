@@ -16,7 +16,7 @@ namespace echis
                 {
                     return 0;
                 }
-                sched::WritePipe* writePipe = static_cast<sched::WritePipe*>(file.pipe);
+                sched::WritePipe* writePipe = static_cast<sched::WritePipe*>(file.pipe.get());
                 
                 return writePipe->write(buf, count);
             }

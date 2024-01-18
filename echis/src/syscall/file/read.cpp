@@ -17,7 +17,7 @@ namespace echis
                 {
                     return 0;
                 }
-                sched::ReadPipe* readPipe = static_cast<sched::ReadPipe*>(file.pipe);
+                sched::ReadPipe* readPipe = static_cast<sched::ReadPipe*>(file.pipe.get());
                 
                 return readPipe->read(buf, count);
             }

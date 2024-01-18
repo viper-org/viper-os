@@ -62,7 +62,7 @@ namespace echis
             FileDescriptor& getFd(int n);
 
             int addOpenFileDescription(fs::vfs::Node* node, OpenMode::OpenMode mode);
-            int addOpenFileDescription(Pipe* pipe);
+            int addOpenFileDescription(vpr::shared_ptr<Pipe> pipe);
             int closeFileDescription(int fd);
 
         private:
