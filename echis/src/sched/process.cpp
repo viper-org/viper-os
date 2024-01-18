@@ -81,10 +81,26 @@ namespace echis
         {
             for (int i = 0; i < MAX_FD; ++i)
             {
-                if (mFds[i].vfsNode == nullptr)
+                if (mFds[i].vfsNode == nullptr && mFds[i].pipe == nullptr)
                 {
                     mFds[i].vfsNode = node;
+                    mFds[i].pipe    = nullptr;
                     mFds[i].flags   = mode;
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        int Process::addOpenFileDescription(Pipe* pipe)
+        {
+            for (int i = 0; i < MAX_FD; ++i)
+            {
+                if (mFds[i].vfsNode == nullptr && mFds[i].pipe == nullptr)
+                {
+                    mFds[i].pipe    = pipe;
+                    mFds[i].vfsNode = nullptr;
+                    mFds[i].flags   = 0;
                     return i;
                 }
             }
@@ -100,6 +116,11 @@ namespace echis
             mFds[fd].vfsNode->close();
             mFds[fd].flags = 0;
             mFds[fd].vfsNode = nullptr;
+            if (mFds[fd].pipe)
+            {
+                delete mFds[fd].pipe;
+                mFds[fd].pipe = nullptr;
+            }
             return 0;
         }
     }

@@ -10,6 +10,7 @@ CMakeFiles
 _deps
 ovmf
 limine
+initrd
 
 compile_commands.json
 CMakeCache.txt

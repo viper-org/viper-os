@@ -48,3 +48,10 @@ size_t seek(int fd, size_t offset)
     asm volatile("syscall" : "=a"(ret) : "a"(6), "D"(fd), "S"(offset));
     return ret;
 }
+
+int pipe(int fds[2])
+{
+    int ret;
+    asm volatile("syscall" : "=a"(ret) : "a"(7), "D"(fds));
+    return ret;
+}

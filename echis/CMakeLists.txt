@@ -10,6 +10,7 @@ set(SOURCES
     "src/mm/vmm.cpp"
 
     "src/sched/process.cpp"
+    "src/sched/pipe.cpp"
     "src/sched/sched.cpp"
 
     "src/fs/vfs.cpp"
@@ -35,6 +36,8 @@ set(SOURCES
 
     "src/syscall/mem/mmap.cpp"
 
+    "src/syscall/proc/pipe.cpp"
+
 
     "src/std/container/string.cpp"
 
@@ -57,6 +60,7 @@ set(HEADERS
 
     "include/echis/sched/process.h"
     "include/echis/sched/processFd.h"
+    "include/echis/sched/pipe.h"
     "include/echis/sched/sched.h"
 
     "include/echis/fs/vfs.h"
@@ -81,6 +85,8 @@ set(HEADERS
     "include/echis/syscall/file/seek.h"
 
     "include/echis/syscall/mem/mmap.h"
+
+    "include/echis/syscall/proc/pipe.h"
 
 
     "include/echis/std/container/atomic.h"

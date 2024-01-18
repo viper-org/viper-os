@@ -10,6 +10,8 @@
 
 #include <syscall/mem/mmap.h>
 
+#include <syscall/proc/pipe.h>
+
 #include <stdio.h>
 
 namespace atheris
@@ -68,6 +70,11 @@ namespace atheris
                     case 6: // seek
                     {
                         frame->rax = echis::syscall::seek(frame->rdi, frame->rsi);
+                        break;
+                    }
+                    case 7: // pipe
+                    {
+                        frame->rax = echis::syscall::pipe(reinterpret_cast<int*>(frame->rdi));
                         break;
                     }
                     default:

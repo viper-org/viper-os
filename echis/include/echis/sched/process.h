@@ -2,6 +2,7 @@
 #define VIPEROS_ECHIS_SCHED_PROCESS_H 1
 
 #include <sched/processFd.h>
+#include <sched/pipe.h>
 
 #include <atheris/mm/vm.h>
 
@@ -61,6 +62,7 @@ namespace echis
             FileDescriptor& getFd(int n);
 
             int addOpenFileDescription(fs::vfs::Node* node, OpenMode::OpenMode mode);
+            int addOpenFileDescription(Pipe* pipe);
             int closeFileDescription(int fd);
 
         private:
