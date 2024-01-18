@@ -22,6 +22,7 @@ namespace echis
         {
             fs::vfs::Node* vfsNode;
             uint8_t flags;
+            size_t seek;
         };
     }
 }

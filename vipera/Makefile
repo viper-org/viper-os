@@ -1,3 +1,3 @@
-all: test.c Makefile
+all:
 	mkdir -p build
-	gcc -nostdlib -nostdinc -pie test.c -fno-stack-protector -o build/test.exe
+	make -C tty

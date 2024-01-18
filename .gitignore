@@ -3,6 +3,7 @@
 Makefile
 *.tar
 *.exe
+*.o
 
 .cache
 CMakeFiles
@@ -14,4 +15,4 @@ compile_commands.json
 CMakeCache.txt
 viperos-*
 limine.h
-!vipera/Makefile
+!vipera/**/Makefile

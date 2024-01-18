@@ -57,14 +57,14 @@ namespace echis
                 return *this;
             }
 
-            int DeviceNode::read(void* buffer, size_t* count)
+            int DeviceNode::read(void* buffer, size_t* count, size_t seek)
             {
-                return mRead(buffer, count);
+                return mRead(buffer, count, seek);
             }
 
-            int DeviceNode::write(const void* buffer, size_t count)
+            int DeviceNode::write(const void* buffer, size_t count, size_t seek)
             {
-                return mWrite(buffer, count);
+                return mWrite(buffer, count, seek);
             }
 
             void DeviceNode::close()

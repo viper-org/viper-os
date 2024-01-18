@@ -1,4 +1,4 @@
-#include <syscall/file/read.h>
+#include <syscall/file/seek.h>
 
 #include <sched/sched.h>
 
@@ -6,12 +6,12 @@ namespace echis
 {
     namespace syscall
     {
-        size_t read(int fd, void* buf, size_t count)
+        size_t seek(int fd, size_t offset)
         {
             sched::FileDescriptor& file = sched::Current()->getParent()->getFd(fd);
-
-            file.vfsNode->read(buf, &count, file.seek);
-            return count;
+            file.seek = offset;
+            
+            return offset;
         }
     }
 }

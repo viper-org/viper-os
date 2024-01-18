@@ -37,10 +37,10 @@ namespace echis
 
     void SetupTestUserProc(sched::Process& proc)
     {
-        fs::vfs::Node* node = fs::vfs::lookup("tmp:test.exe");
+        fs::vfs::Node* node = fs::vfs::lookup("tmp:tty");
         char* buffer = new char[0x4000];
         size_t count = 0x4000;
-        node->read(buffer, &count);
+        node->read(buffer, &count, 0);
 
         elf::Executable exec = elf::Load(buffer, &proc.getAddressSpace());
         proc.getMainThread()->setStartingAddress(exec.entryPoint);

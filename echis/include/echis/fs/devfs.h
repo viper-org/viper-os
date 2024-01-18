@@ -9,8 +9,8 @@ namespace echis
     {
         namespace devfs
         {
-            using ReadFn  = int(*)(void*, size_t*);
-            using WriteFn = int(*)(const void*, size_t);
+            using ReadFn  = int(*)(void*, size_t*, size_t);
+            using WriteFn = int(*)(const void*, size_t, size_t);
             using IoctlFn = int(*)(unsigned long, char*);
 
             class DeviceNode : public vfs::Node
@@ -22,8 +22,8 @@ namespace echis
                 DeviceNode& operator=(const DeviceNode& other);
                 DeviceNode& operator=(DeviceNode&& other);
 
-                int read(void* buffer, size_t* count) override;
-                int write(const void* buffer, size_t count) override;
+                int read(void* buffer, size_t* count, size_t seek) override;
+                int write(const void* buffer, size_t count, size_t seek) override;
                 void close() override;
                 int ioctl(unsigned long request, char* arg) override;
 

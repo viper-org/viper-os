@@ -77,26 +77,26 @@ namespace echis
                 }
             }
 
-            int Node::read(void* buffer, size_t* count)
+            int Node::read(void* buffer, size_t* count, size_t seek)
             {
                 if (*count >= mSize)
                 {
                     *count = mSize;
                 }
 
-                memcpy(buffer, mData, *count);
+                memcpy(buffer, mData + seek, *count);
                 return 0;
             }
 
-            int Node::write(const void* buffer, size_t count)
+            int Node::write(const void* buffer, size_t count, size_t seek)
             {
-                if (mCapacity < count)
+                if (mCapacity - seek < count)
                 {
                     delete[] mData;
-                    mData = new char[count];
-                    mCapacity = count;
+                    mData = new char[count + seek];
+                    mCapacity = count + seek;
                 }
-                memcpy(mData, buffer, count);
+                memcpy(mData + seek, buffer, count);
                 mSize = count;
                 return 0;
             }

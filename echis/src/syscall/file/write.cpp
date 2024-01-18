@@ -10,7 +10,7 @@ namespace echis
         {
             sched::FileDescriptor& file = sched::Current()->getParent()->getFd(fd);
 
-            if (file.vfsNode->write(buf, count) == -1)
+            if (file.vfsNode->write(buf, count, file.seek) == -1)
             {
                 return 0;
             }

@@ -17,8 +17,8 @@ namespace echis
                 Node() = default;
                 Node(const vpr::string& path, Filesystem* parent);
 
-                virtual int  read(void* buffer, size_t* count) = 0;
-                virtual int  write(const void* buffer, size_t count) = 0;
+                virtual int  read(void* buffer, size_t* count, size_t seek) = 0;
+                virtual int  write(const void* buffer, size_t count, size_t seek) = 0;
                 virtual void close() = 0;
                 virtual int  ioctl(unsigned long request, char* arg) = 0;
 

@@ -6,6 +6,7 @@
 #include <syscall/file/open.h>
 #include <syscall/file/close.h>
 #include <syscall/file/ioctl.h>
+#include <syscall/file/seek.h>
 
 #include <syscall/mem/mmap.h>
 
@@ -62,6 +63,11 @@ namespace atheris
                     case 5: // mmap
                     {
                         frame->rax = reinterpret_cast<uint64_t>(echis::syscall::mmap(frame->rdi));
+                        break;
+                    }
+                    case 6: // seek
+                    {
+                        frame->rax = echis::syscall::seek(frame->rdi, frame->rsi);
                         break;
                     }
                     default:

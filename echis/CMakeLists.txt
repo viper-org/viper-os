@@ -31,6 +31,7 @@ set(SOURCES
     "src/syscall/file/open.cpp"
     "src/syscall/file/close.cpp"
     "src/syscall/file/ioctl.cpp"
+    "src/syscall/file/seek.cpp"
 
     "src/syscall/mem/mmap.cpp"
 
@@ -77,6 +78,7 @@ set(HEADERS
     "include/echis/syscall/file/open.h"
     "include/echis/syscall/file/close.h"
     "include/echis/syscall/file/ioctl.h"
+    "include/echis/syscall/file/seek.h"
 
     "include/echis/syscall/mem/mmap.h"
 

@@ -25,15 +25,15 @@ namespace echis
         }
 
 
-        int DeviceRead(void*, size_t* count)
+        int DeviceRead(void*, size_t* count, size_t)
         {
             *count = 0;
             return -1;
         }
 
-        int DeviceWrite(const void* buffer, size_t count)
+        int DeviceWrite(const void* buffer, size_t count, size_t seek)
         {
-            if (count != framebufferImpl::GetVert() * framebufferImpl::GetPitch())
+            if (count != framebufferImpl::GetVert() * framebufferImpl::GetPitch() || seek != 0)
             {
                 return -1;
             }

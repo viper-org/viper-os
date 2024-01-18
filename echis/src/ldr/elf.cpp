@@ -59,6 +59,10 @@ namespace echis
 
                 uint64_t vaddr = phdr->p_vaddr + 0x400000;
                 uint32_t size = util::AlignUp(phdr->p_memsz, pmm::GetPageSize());
+                if ((vaddr & ~0xfff) != ((vaddr + phdr->p_memsz) & ~0xfff)) // If it crosses a page boundary
+                {
+                    size += 1;
+                }
                 for (uint32_t j = 0; j < size; j += pmm::GetPageSize())
                 {
                     atheris::vm::MapPage(addressSpace,

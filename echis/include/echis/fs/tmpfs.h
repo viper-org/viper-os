@@ -19,8 +19,8 @@ namespace echis
                 Node& operator=(Node&& other);
                 ~Node();
 
-                int read(void* buffer, size_t* count) override;
-                int write(const void* buffer, size_t count) override;
+                int read(void* buffer, size_t* count, size_t seek) override;
+                int write(const void* buffer, size_t count, size_t seek) override;
                 void close() override;
                 int ioctl(unsigned long request, char* arg) override;
 

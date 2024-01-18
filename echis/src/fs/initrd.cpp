@@ -53,7 +53,7 @@ namespace echis
                     vfs::create(name);
                     vfs::Node* node = vfs::lookup(name);
                     size_t size = ParseSize(header->size);
-                    node->write(reinterpret_cast<char*>(header) + 512, size);
+                    node->write(reinterpret_cast<char*>(header) + 512, size, 0);
 
                     header = reinterpret_cast<TARHeader*>(reinterpret_cast<uint64_t>(header) + ((size + 511) / 512 + 1) * 512);
                 }
