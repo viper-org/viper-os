@@ -18,7 +18,7 @@ namespace vpr
             {
                 obj->next = mPointer;
                 mTail->next = obj;
-                mPointer = obj;
+                mTail = obj;
             }
             else
             {

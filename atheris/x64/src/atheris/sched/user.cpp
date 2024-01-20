@@ -25,15 +25,17 @@ namespace atheris
 
         void PrepareThread(echis::sched::Thread* thread)
         {
+            atheris::vm::AddressSpace* prev = atheris::vm::AddressSpace::Current();
             thread->getParent()->getAddressSpace().switchTo();
             prepare_thread(reinterpret_cast<uint64_t>(UserInit), &thread->getContext(), thread->getKernelStack().top, thread);
-            //prepare_thread(thread->getKernelStack().top, thread);
-            //thread->getContext()->rip = reinterpret_cast<uint64_t>(UserInit);
-            //thread->getContext()->rdi = reinterpret_cast<uint64_t>(thread);
+            prev->switchTo();
         }
 
         void SwitchContext(ThreadContext** oldContext, ThreadContext* newContext)
         {
+            x64::cpu::tss::SetRSP0(echis::sched::Current()->getKernelStack().top);
+            cpu::core::CoreLocal::Get()->kernelStack = echis::sched::Current()->getKernelStack().top;
+            
             cpu::core::CoreLocal::Get()->newPml4 = echis::sched::Current()->getParent()->getAddressSpace().pml4;
             switch_context(oldContext, newContext);
         }

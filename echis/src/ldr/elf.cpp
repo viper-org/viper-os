@@ -44,6 +44,7 @@ namespace echis
 
         Executable Load(void* addr, atheris::vm::AddressSpace* addressSpace)
         {
+            atheris::vm::AddressSpace* prev = atheris::vm::AddressSpace::Current();
             addressSpace->switchTo();
 
             char* buffer = reinterpret_cast<char*>(addr);
@@ -78,6 +79,7 @@ namespace echis
                 vm::MarkUsed(addressSpace, reinterpret_cast<void*>(vaddr), size);
             }
 
+            prev->switchTo();
             return Executable {
                 .entryPoint = ehdr->e_entry + 0x400000
             };

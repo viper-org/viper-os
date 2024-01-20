@@ -14,6 +14,7 @@ void screen_init()
     
     clear_screen();
     flush();
+    font_init();
 }
 
 

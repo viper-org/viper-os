@@ -48,6 +48,7 @@ namespace atheris
                 IA32_EFER      = 0xC0000080,
                 IA32_STAR      = 0xC0000081,
                 IA32_LSTAR     = 0xC0000082,
+                IA32_SFMASK    = 0xC0000084,
                 GSBase         = 0xC0000101,
             };
             void WriteMSR(MSR msr, uint64_t value);

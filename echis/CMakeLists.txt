@@ -36,6 +36,7 @@ set(SOURCES
     "src/syscall/mem/mmap.cpp"
 
     "src/syscall/proc/pipe.cpp"
+    "src/syscall/proc/spawn.cpp"
 
 
     "src/std/container/string.cpp"
@@ -86,6 +87,7 @@ set(HEADERS
     "include/echis/syscall/mem/mmap.h"
 
     "include/echis/syscall/proc/pipe.h"
+    "include/echis/syscall/proc/spawn.h"
 
 
     "include/echis/std/container/atomic.h"

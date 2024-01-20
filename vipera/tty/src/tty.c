@@ -38,21 +38,16 @@ void puts(const char* str, uint32_t fg)
 void _start(void)
 {
     screen_init();
-    puts("Hello from terminal emulator\n", 0x00ff00);
 
     int fds[2];
     pipe(fds);
 
-    write(fds[1], "hi", 2);
-    char buf[2];
+    spawn("tmp:test");
     while(1)
     {
-        size_t count = read(fds[0], buf, 1);
-        for (size_t i = 0; i < count; ++i)
-        {
-            putchar(buf[i], 0xffffff);
-        }
-        flush();
+        char c;
+        while(read(fds[0], &c, 1) == 0);
+        putchar(c, 0xffffff);
     }
     
     while(1) asm("pause");

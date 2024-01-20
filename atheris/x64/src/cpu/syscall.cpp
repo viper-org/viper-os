@@ -11,6 +11,7 @@
 #include <syscall/mem/mmap.h>
 
 #include <syscall/proc/pipe.h>
+#include <syscall/proc/spawn.h>
 
 #include <stdio.h>
 
@@ -31,6 +32,7 @@ namespace atheris
                 WriteMSR(MSR::IA32_EFER,  efer);
                 WriteMSR(MSR::IA32_STAR,  ((uint64_t)0x8 << 32) | ((uint64_t)0x13 << 48));
                 WriteMSR(MSR::IA32_LSTAR, reinterpret_cast<uint64_t>(syscall_handler));
+                WriteMSR(MSR::IA32_SFMASK, 0x200); // Disable interrupts
             }
 
             extern "C" void syscall_dispatcher(SyscallFrame* frame)
@@ -75,6 +77,11 @@ namespace atheris
                     case 7: // pipe
                     {
                         frame->rax = echis::syscall::pipe(reinterpret_cast<int*>(frame->rdi));
+                        break;
+                    }
+                    case 8: // spawn
+                    {
+                        frame->rax = echis::syscall::spawn(reinterpret_cast<const char*>(frame->rdi));
                         break;
                     }
                     default:

@@ -55,3 +55,10 @@ int pipe(int fds[2])
     asm volatile("syscall" : "=a"(ret) : "a"(7), "D"(fds));
     return ret;
 }
+
+int spawn(const char* path)
+{
+    int ret;
+    asm volatile("syscall" : "=a"(ret) : "a"(8), "D"(path));
+    return ret;
+}

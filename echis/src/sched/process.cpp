@@ -7,6 +7,10 @@
 
 #include <atheris/sched/user.h>
 
+#include <std/thread/mutex.h>
+
+#include <string.h>
+
 namespace echis
 {
     namespace sched
@@ -56,8 +60,9 @@ namespace echis
         {
         }
 
-        Process::Process(uint64_t startAddress)
-            : mMainThread(Thread(*this, startAddress))
+        Process::Process(int pid, uint64_t startAddress)
+            : mPid(pid)
+            , mMainThread(Thread(*this, startAddress))
             , mAddressSpace(atheris::vm::AddressSpace::Create())
         {
         }
@@ -80,6 +85,11 @@ namespace echis
         FileDescriptor& Process::getFd(int n)
         {
             return mFds[n];
+        }
+
+        void Process::copyFileDescriptionsFrom(Process* other)
+        {
+            memcpy(mFds, other->mFds, sizeof(mFds));
         }
 
         int Process::addOpenFileDescription(fs::vfs::Node* node, OpenMode::OpenMode mode)
@@ -128,10 +138,32 @@ namespace echis
             return 0;
         }
 
+        
+        vpr::mutex stackMutex;
+        static uint64_t GetNextKernelStack()
+        {
+            static uint64_t kernelStack = 0xFFFFFF0000000000;
+            vpr::lock_guard<vpr::mutex> lock(stackMutex);
+
+            uint64_t nextStack = kernelStack;
+            kernelStack -= 0x1000;
+            return nextStack;
+        }
+
+        vpr::mutex pidMutex;
+        static int GetNextPid()
+        {
+            static int pid = 0;
+            vpr::lock_guard<vpr::mutex> lock(pidMutex);
+
+            int nextPid = pid;
+            ++pid;
+            return nextPid;
+        }
 
         Process* Process::Create(const char* path)
         {
-            Process* proc = new Process(0);
+            Process* proc = new Process(GetNextPid(), 0);
 
             fs::vfs::Node* node = fs::vfs::lookup(path);
             char* buffer = new char[node->size()];
@@ -144,12 +176,13 @@ namespace echis
             delete[] buffer;
 
             pmm::physaddr stackPage = pmm::GetPage();
+            uint64_t kernelStack = GetNextKernelStack();
             atheris::vm::MapPage(&proc->getAddressSpace(),
                                 stackPage,
-                                0xFFFFFF0000000000,
+                                kernelStack,
                                 atheris::vm::flags::present | atheris::vm::flags::write);
             proc->getMainThread()->getKernelStack().size = pmm::GetPageSize();
-            proc->getMainThread()->getKernelStack().top  = 0xFFFFFF0000000000 + pmm::GetPageSize();
+            proc->getMainThread()->getKernelStack().top  = kernelStack + pmm::GetPageSize();
 
             proc->getMainThread()->getUserStack().size = pmm::GetPageSize();
             proc->getMainThread()->getUserStack().top  = reinterpret_cast<uint64_t>(vm::GetPages(&proc->getAddressSpace(),

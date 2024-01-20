@@ -54,13 +54,14 @@ namespace echis
         {
         public:
             Process();
-            Process(uint64_t startAddress);
+            Process(int pid, uint64_t startAddress);
 
             int getPid() const;
             Thread* getMainThread();
             atheris::vm::AddressSpace& getAddressSpace();
             FileDescriptor& getFd(int n);
 
+            void copyFileDescriptionsFrom(Process* other);
             int addOpenFileDescription(fs::vfs::Node* node, OpenMode::OpenMode mode);
             int addOpenFileDescription(vpr::shared_ptr<Pipe> pipe);
             int closeFileDescription(int fd);
