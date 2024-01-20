@@ -19,6 +19,8 @@ set(SOURCES
 
     "src/ldr/elf.cpp"
 
+    "src/event/write.cpp"
+
     "src/driver/framebuffer.cpp"
     "src/driver/console.cpp"
 
@@ -32,6 +34,7 @@ set(SOURCES
     "src/syscall/file/close.cpp"
     "src/syscall/file/ioctl.cpp"
     "src/syscall/file/seek.cpp"
+    "src/syscall/file/poll.cpp"
 
     "src/syscall/mem/mmap.cpp"
 
@@ -70,6 +73,8 @@ set(HEADERS
 
     "include/echis/ldr/elf.h"
 
+    "include/echis/event/write.h"
+
     "include/echis/driver/framebuffer.h"
     "include/echis/driver/console.h"
 
@@ -83,6 +88,7 @@ set(HEADERS
     "include/echis/syscall/file/close.h"
     "include/echis/syscall/file/ioctl.h"
     "include/echis/syscall/file/seek.h"
+    "include/echis/syscall/file/poll.h"
 
     "include/echis/syscall/mem/mmap.h"
 

@@ -11,6 +11,9 @@ namespace echis
 
         void AddProcess(Process* process);
 
+        void BlockCurrent();
+        void UnblockThread(Thread* thread);
+
         Thread* Current();
     }
 }

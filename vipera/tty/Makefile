@@ -1,7 +1,7 @@
 CC=gcc
 LD=ld
 
-CFLAGS=-nostdlib -nostdinc -fno-stack-protector -pie -Iinclude
+CFLAGS=-nostdlib -nostdinc -g -fno-stack-protector -pie -Iinclude
 LDFLAGS=-nostdlib -pie
 
 CFILES:=$(shell find src -name '*.c')

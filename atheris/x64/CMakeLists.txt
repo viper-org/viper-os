@@ -37,9 +37,11 @@ set(SOURCES
     "src/atheris/cpu/init.cpp"
 
     "src/atheris/sched/user.cpp"
+    "src/atheris/sched/idle.cpp"
     "src/atheris/sched/enter_usermode.s"
     "src/atheris/sched/prepare_thread.s"
     "src/atheris/sched/switch_context.s"
+    "src/atheris/sched/idle_process.s"
 
     "src/atheris/fs/initrd.cpp"
 )
@@ -75,6 +77,7 @@ set(HEADERS
     "include/atheris/private/cpu/init.h"
 
     "include/atheris/private/sched/user.h"
+    "include/atheris/private/sched/idle.h"
 
     "include/atheris/private/fs/initrd.h"
 

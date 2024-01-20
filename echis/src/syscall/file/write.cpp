@@ -1,5 +1,7 @@
 #include <syscall/file/write.h>
 
+#include <event/write.h>
+
 #include <sched/sched.h>
 
 namespace echis
@@ -10,6 +12,7 @@ namespace echis
         {
             sched::FileDescriptor& file = sched::Current()->getParent()->getFd(fd);
 
+            size_t ret = count;
             if (file.pipe)
             {
                 if (file.pipe->getType() != sched::Pipe::Type::Write)
@@ -18,14 +21,14 @@ namespace echis
                 }
                 sched::WritePipe* writePipe = static_cast<sched::WritePipe*>(file.pipe.get());
                 
-                return writePipe->write(buf, count);
+                ret = writePipe->write(buf, count);
+                event::WriteEvent(writePipe);
+                return ret;
             }
 
-            if (file.vfsNode->write(buf, count, file.seek) == -1)
-            {
-                return 0;
-            }
-            return count;
+            file.vfsNode->write(buf, count, file.seek);
+            event::WriteEvent(file.vfsNode);
+            return ret;
         }
     }
 }

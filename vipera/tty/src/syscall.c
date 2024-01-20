@@ -62,3 +62,10 @@ int spawn(const char* path)
     asm volatile("syscall" : "=a"(ret) : "a"(8), "D"(path));
     return ret;
 }
+
+int poll(int fd)
+{
+    int ret;
+    asm volatile("syscall" : "=a"(ret) : "a"(9), "D"(fd));
+    return ret;
+}

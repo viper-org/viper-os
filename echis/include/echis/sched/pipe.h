@@ -34,6 +34,8 @@ namespace echis
 
             size_t write(const void* buffer, size_t count);
 
+            bool empty();
+
         private:
             char* mBuffer;
             size_t mSize;
@@ -46,6 +48,8 @@ namespace echis
             ReadPipe(WritePipe* writeEnd);
 
             size_t read(void* buffer, size_t count);
+
+            WritePipe* getWriteEnd();
 
         private:
             WritePipe* mWriteEnd;

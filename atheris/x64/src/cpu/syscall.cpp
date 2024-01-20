@@ -7,6 +7,7 @@
 #include <syscall/file/close.h>
 #include <syscall/file/ioctl.h>
 #include <syscall/file/seek.h>
+#include <syscall/file/poll.h>
 
 #include <syscall/mem/mmap.h>
 
@@ -82,6 +83,11 @@ namespace atheris
                     case 8: // spawn
                     {
                         frame->rax = echis::syscall::spawn(reinterpret_cast<const char*>(frame->rdi));
+                        break;
+                    }
+                    case 9: // poll
+                    {
+                        frame->rax = echis::syscall::poll(frame->rdi);
                         break;
                     }
                     default:

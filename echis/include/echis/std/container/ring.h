@@ -32,12 +32,15 @@ namespace vpr
         {
             if (mPointer->next == mPointer)
             {
+                mPointer->next = nullptr;
                 mPointer = nullptr;
                 mTail = nullptr;
             }
             else
             {
-                mPointer = mPointer->next;
+                T* temp = mPointer->next;
+                mPointer->next = nullptr;
+                mPointer = temp;
                 mTail->next = mPointer;
             }
         }
@@ -54,10 +57,9 @@ namespace vpr
 
         T* next()
         {
-            T* ret = mPointer;
+            mTail = mPointer;
             mPointer = mPointer->next;
-            //mTail->next = mPointer;
-            return ret;
+            return mTail;
         }
 
     private:

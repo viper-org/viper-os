@@ -1,4 +1,5 @@
 #include <sched/process.h>
+#include <sched/sched.h>
 
 #include <mm/pmm.h>
 #include <mm/vmm.h>
@@ -53,6 +54,11 @@ namespace echis
         atheris::sched::ThreadContext*& Thread::getContext()
         {
             return mContext;
+        }
+
+        void Thread::unblock()
+        {
+            sched::UnblockThread(this);
         }
 
 

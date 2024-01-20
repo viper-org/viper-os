@@ -40,6 +40,8 @@ namespace echis
             Stack& getKernelStack();
             atheris::sched::ThreadContext*& getContext();
 
+            void unblock();
+
             Thread* next; // For intrusive circular linked list in scheduler
 
         private:
@@ -48,6 +50,8 @@ namespace echis
             Stack mKernelStack;
             atheris::sched::ThreadContext* mContext;
             uint64_t mStart;
+
+            int mWaitingFd;
         };
 
         class Process

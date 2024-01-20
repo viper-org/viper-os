@@ -43,12 +43,11 @@ void _start(void)
     pipe(fds);
 
     spawn("tmp:test");
+    char c;
     while(1)
     {
-        char c;
-        while(read(fds[0], &c, 1) == 0);
+        poll(fds[0]);
+        while(read(fds[0], &c, 1))
         putchar(c, 0xffffff);
     }
-    
-    while(1) asm("pause");
 }

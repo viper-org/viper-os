@@ -42,6 +42,11 @@ namespace echis
             return count;
         }
 
+        bool WritePipe::empty()
+        {
+            return mSize == 0;
+        }
+
 
         ReadPipe::ReadPipe(WritePipe* writeEnd)
             : Pipe(Type::Read)
@@ -67,6 +72,11 @@ namespace echis
             }
 
             return count;
+        }
+
+        WritePipe* ReadPipe::getWriteEnd()
+        {
+            return mWriteEnd;
         }
 
 

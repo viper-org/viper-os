@@ -1,8 +1,9 @@
-#include "atheris/private/driver/timer.h"
-#include "atheris/private/sched/user.h"
 #include <sched/sched.h>
 
 #include <atheris/sched/user.h>
+#include <atheris/sched/idle.h>
+
+#include <atheris/driver/timer.h>
 
 #include <std/container/ring.h>
 
@@ -28,6 +29,25 @@ namespace echis
             threads.push(process->getMainThread());
         }
 
+        void BlockCurrent()
+        {
+            Thread* oldThread = threads.current();
+            threads.remove();
+            if (auto current = threads.current())
+            {
+                atheris::sched::SwitchContext(&oldThread->getContext(), current->getContext());
+            }
+            else
+            {
+                atheris::sched::StartIdleProcess();
+            }
+        }
+
+        void UnblockThread(Thread* thread)
+        {
+            threads.push(thread);
+        }
+
         Thread* Current()
         {
             return threads.current();
@@ -38,6 +58,11 @@ namespace echis
             if (++quantum >= MAX_QUANTUM)
             {
                 quantum = 0;
+                if (!threads.current())
+                {
+                    return;
+                }
+
                 if (threads.peek() != threads.current())
                 {
                     Thread* oldThread = threads.next();

@@ -1,4 +1,3 @@
-#include "sched/pipe.h"
 #include <syscall/file/read.h>
 
 #include <sched/sched.h>
@@ -11,6 +10,7 @@ namespace echis
         {
             sched::FileDescriptor& file = sched::Current()->getParent()->getFd(fd);
 
+            size_t ret = count;
             if (file.pipe)
             {
                 if (file.pipe->getType() != sched::Pipe::Type::Read)
@@ -19,11 +19,14 @@ namespace echis
                 }
                 sched::ReadPipe* readPipe = static_cast<sched::ReadPipe*>(file.pipe.get());
                 
-                return readPipe->read(buf, count);
+                ret = readPipe->read(buf, count);
+            }
+            else
+            {
+                file.vfsNode->read(buf, &count, file.seek);
             }
 
-            file.vfsNode->read(buf, &count, file.seek);
-            return count;
+            return ret;
         }
     }
 }
