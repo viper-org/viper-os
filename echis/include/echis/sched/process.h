@@ -21,6 +21,8 @@ namespace echis
 
         class Process;
 
+        using SignalHandler = void(*)(int);
+
         class Thread
         {
         public:
@@ -39,6 +41,7 @@ namespace echis
             Stack& getUserStack();
             Stack& getKernelStack();
             atheris::sched::ThreadContext*& getContext();
+            SignalHandler& getSignalHandler(int signum);
 
             void unblock();
 
@@ -50,6 +53,7 @@ namespace echis
             Stack mKernelStack;
             atheris::sched::ThreadContext* mContext;
             uint64_t mStart;
+            SignalHandler mSignalHandlers[32];
 
             int mWaitingFd;
         };

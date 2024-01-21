@@ -13,6 +13,7 @@
 
 #include <syscall/proc/pipe.h>
 #include <syscall/proc/spawn.h>
+#include <syscall/proc/sigaction.h>
 
 #include <stdio.h>
 
@@ -88,6 +89,11 @@ namespace atheris
                     case 9: // poll
                     {
                         frame->rax = echis::syscall::poll(frame->rdi);
+                        break;
+                    }
+                    case 10: // sigaction
+                    {
+                        frame->rax = echis::syscall::sigaction(frame->rdi, reinterpret_cast<echis::syscall::SignalHandler>(frame->rsi));
                         break;
                     }
                     default:

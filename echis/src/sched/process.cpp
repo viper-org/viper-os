@@ -56,6 +56,11 @@ namespace echis
             return mContext;
         }
 
+        SignalHandler& Thread::getSignalHandler(int signum)
+        {
+            return mSignalHandlers[signum];
+        }
+
         void Thread::unblock()
         {
             sched::UnblockThread(this);

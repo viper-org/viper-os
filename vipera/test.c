@@ -17,9 +17,24 @@ int spawn(const char* path)
     return 0;
 }
 
+int sigaction(int signum, void(*handler)(int))
+{
+    int ret;
+    asm volatile("syscall" :: "a"(10), "D"(signum), "S"(handler));
+    return ret;
+}
+
+void sigsegv_handler(int a)
+{
+    puts("SIGSEGV Received.\n");
+    while(1) asm("pause");
+}
+
 void _start()
 {
-    puts("Hello from program!\n");
-    puts("Testaaaaaaa\n");
+    sigaction(11, sigsegv_handler);
+    //puts("Hello from program!\n");
+    //puts("Testaaaaaaa\n");
+    *(char*)(0x123456789) = 'a';
     while(1) asm("pause");
 }

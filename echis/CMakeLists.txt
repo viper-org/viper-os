@@ -21,6 +21,8 @@ set(SOURCES
 
     "src/event/write.cpp"
 
+    "src/signal/signal.cpp"
+
     "src/driver/framebuffer.cpp"
     "src/driver/console.cpp"
 
@@ -40,6 +42,7 @@ set(SOURCES
 
     "src/syscall/proc/pipe.cpp"
     "src/syscall/proc/spawn.cpp"
+    "src/syscall/proc/sigaction.cpp"
 
 
     "src/std/container/string.cpp"
@@ -75,6 +78,8 @@ set(HEADERS
 
     "include/echis/event/write.h"
 
+    "include/echis/signal/signal.h"
+
     "include/echis/driver/framebuffer.h"
     "include/echis/driver/console.h"
 
@@ -94,6 +99,7 @@ set(HEADERS
 
     "include/echis/syscall/proc/pipe.h"
     "include/echis/syscall/proc/spawn.h"
+    "include/echis/syscall/proc/sigaction.h"
 
 
     "include/echis/std/container/atomic.h"

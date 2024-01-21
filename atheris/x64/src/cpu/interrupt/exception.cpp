@@ -2,6 +2,8 @@
 
 #include <mm/vm.h>
 
+#include <echis/signal/signal.h>
+
 #include <echis/core/exception/exception.h>
 
 namespace atheris
@@ -51,7 +53,21 @@ namespace atheris
                 case 30:
                     exceptionType = echis::exception::ARC;
             }
-            echis::exception::raise(exceptionType, context->BaseFrame.error_code);
+            if ((context->BaseFrame.cs & 0x3) == 0x3) // We came from user-space
+            {
+                if (exceptionType == echis::exception::SEG)
+                {
+                    echis::signal::DeliverToCurrent(echis::signal::SIGSEGV);
+                }
+                else
+                {
+                    echis::exception::raise(exceptionType, context->BaseFrame.error_code);
+                }
+            }
+            else
+            {
+                echis::exception::raise(exceptionType, context->BaseFrame.error_code);
+            }
         }
     }
 }
