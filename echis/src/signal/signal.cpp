@@ -37,10 +37,10 @@ namespace echis
             {
                 if (signal.signum != Signal::NONE)
                 {
-                    uint64_t top = 0x7fff'ffff'ffff;
+                    uint64_t top = 0x7fff'ffff'e000;
                     atheris::vm::MapPage(&thread->getParent()->getAddressSpace(),
                                          pmm::GetPage(),
-                                         top,
+                                         top - pmm::GetPageSize(),
                                          atheris::vm::flags::present | atheris::vm::flags::write | atheris::vm::flags::user);
 
                     thread->getSignalHandlerStack().size = pmm::GetPageSize();

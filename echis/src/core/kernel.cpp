@@ -43,7 +43,7 @@ namespace echis
 
         atheris::cpu::Init();
 
-        atheris::cpu::smp::Init();
+        //atheris::cpu::smp::Init();
         atheris::timer::Init();
         
         fs::tmpfs::Init();

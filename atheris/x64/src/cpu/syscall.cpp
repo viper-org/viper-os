@@ -18,6 +18,7 @@
 #include <syscall/proc/spawn.h>
 #include <syscall/proc/sigaction.h>
 #include <syscall/proc/raise.h>
+#include <syscall/proc/exit.h>
 
 #include <stdio.h>
 
@@ -103,6 +104,11 @@ namespace atheris
                     case 11: // raise
                     {
                         frame->rax = echis::syscall::raise(frame->rdi);
+                        break;
+                    }
+                    case 12: // exit
+                    {
+                        echis::syscall::exit(frame->rdi);
                         break;
                     }
                     default:

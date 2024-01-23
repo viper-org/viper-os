@@ -14,6 +14,8 @@ namespace echis
         void BlockCurrent();
         void UnblockThread(Thread* thread);
 
+        void EndCurrent(int status);
+
         Thread* Current();
     }
 }

@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include <sched/sched.h>
 
 #include <atheris/sched/user.h>
@@ -46,6 +47,12 @@ namespace echis
         void UnblockThread(Thread* thread)
         {
             threads.push(thread);
+        }
+
+        void EndCurrent(int)
+        {
+            BlockCurrent();
+            // TODO(critical): clean up process
         }
 
         Thread* Current()

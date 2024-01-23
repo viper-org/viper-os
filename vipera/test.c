@@ -31,6 +31,11 @@ int raise(int sig)
     return ret;
 }
 
+void exit(int status)
+{
+    asm volatile("syscall" :: "a"(12), "D"(status));
+}
+
 void sigusr1_handler(int a)
 {
     puts("SIGUSR1 Received.\n");
@@ -40,5 +45,5 @@ void _start()
 {
     sigaction(10, sigusr1_handler);
     raise(10);
-    while(1) asm("pause");
+    exit(42);
 }

@@ -11,6 +11,7 @@ namespace atheris
 
         void SignalHandler(SavedUserContext context, void(*handler)(int))
         {
+            echis::sched::Current()->getParent()->getAddressSpace().switchTo();
             enter_signal_handler(&context, handler, echis::sched::Current()->getSignalHandlerStack().top);
         }
         

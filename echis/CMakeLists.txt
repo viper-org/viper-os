@@ -44,6 +44,7 @@ set(SOURCES
     "src/syscall/proc/spawn.cpp"
     "src/syscall/proc/sigaction.cpp"
     "src/syscall/proc/raise.cpp"
+    "src/syscall/proc/exit.cpp"
 
 
     "src/std/container/string.cpp"
@@ -102,6 +103,7 @@ set(HEADERS
     "include/echis/syscall/proc/spawn.h"
     "include/echis/syscall/proc/sigaction.h"
     "include/echis/syscall/proc/raise.h"
+    "include/echis/syscall/proc/exit.h"
 
 
     "include/echis/std/container/atomic.h"
