@@ -76,3 +76,10 @@ int sigaction(int signum, void(*handler)(int))
     asm volatile("syscall" :: "a"(10), "D"(signum), "S"(handler));
     return ret;
 }
+
+int wait(int pid)
+{
+    int ret;
+    asm volatile("syscall" : "=a"(ret) : "a"(13), "D"(pid));
+    return ret;
+}

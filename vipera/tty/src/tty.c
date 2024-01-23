@@ -42,7 +42,9 @@ void _start(void)
     int fds[2];
     pipe(fds);
 
-    spawn("tmp:test");
+    int child = spawn("tmp:test");
+    wait(child);
+    puts("Child exited\n", 0x00ffff);
     char c;
     while(1)
     {

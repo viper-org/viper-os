@@ -3,6 +3,8 @@
 
 #include <sched/process.h>
 
+#include <std/container/ring.h>
+
 namespace echis
 {
     namespace sched

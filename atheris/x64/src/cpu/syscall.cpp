@@ -19,6 +19,7 @@
 #include <syscall/proc/sigaction.h>
 #include <syscall/proc/raise.h>
 #include <syscall/proc/exit.h>
+#include <syscall/proc/wait.h>
 
 #include <stdio.h>
 
@@ -109,6 +110,11 @@ namespace atheris
                     case 12: // exit
                     {
                         echis::syscall::exit(frame->rdi);
+                        break;
+                    }
+                    case 13: // wait
+                    {
+                        frame->rax = echis::syscall::wait(frame->rdi);
                         break;
                     }
                     default:

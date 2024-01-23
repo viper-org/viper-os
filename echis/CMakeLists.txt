@@ -20,6 +20,7 @@ set(SOURCES
     "src/ldr/elf.cpp"
 
     "src/event/write.cpp"
+    "src/event/exit.cpp"
 
     "src/signal/signal.cpp"
 
@@ -45,6 +46,7 @@ set(SOURCES
     "src/syscall/proc/sigaction.cpp"
     "src/syscall/proc/raise.cpp"
     "src/syscall/proc/exit.cpp"
+    "src/syscall/proc/wait.cpp"
 
 
     "src/std/container/string.cpp"
@@ -79,6 +81,7 @@ set(HEADERS
     "include/echis/ldr/elf.h"
 
     "include/echis/event/write.h"
+    "include/echis/event/exit.h"
 
     "include/echis/signal/signal.h"
 
@@ -104,6 +107,7 @@ set(HEADERS
     "include/echis/syscall/proc/sigaction.h"
     "include/echis/syscall/proc/raise.h"
     "include/echis/syscall/proc/exit.h"
+    "include/echis/syscall/proc/wait.h"
 
 
     "include/echis/std/container/atomic.h"

@@ -1,4 +1,3 @@
-#include "stdio.h"
 #include <sched/sched.h>
 
 #include <atheris/sched/user.h>
