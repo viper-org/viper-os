@@ -215,6 +215,7 @@ namespace atheris
                     flags &= ~flags::lazy;
                     flags |=  flags::present;
                     MapPage(nullptr, echis::pmm::GetPage(), faultingAddress, flags);
+                    context->ControlRegisters.cr2 = 0;
                     return false;
                 }
             }

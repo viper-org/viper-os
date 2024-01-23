@@ -7,10 +7,20 @@ namespace echis
     {
         enum Signal
         {
-            SIGSEGV=11
+            NONE=-1,
+            SIGUSR1=10,
+            SIGSEGV=11,
+        };
+
+        struct PendingSignalObject
+        {
+            Signal signum;
         };
 
         void DeliverToCurrent(Signal signal);
+        PendingSignalObject* CheckIncoming();
+
+        void(*GetHandler(PendingSignalObject*))(int);
     }
 }
 

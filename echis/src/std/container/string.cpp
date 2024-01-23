@@ -1,8 +1,7 @@
 #include <std/container/string.h>
+#include <std/utility.h>
 
 #include <string.h>
-
-#include <utility>
 
 namespace vpr
 {
@@ -39,8 +38,8 @@ namespace vpr
     }
 
     string::string(string&& other)
-        : mBuffer(std::move(other.mBuffer))
-        , mSize(std::move(other.mSize))
+        : mBuffer(vpr::move(other.mBuffer))
+        , mSize(vpr::move(other.mSize))
     {
         other.mBuffer = nullptr;
         other.mSize = 0;

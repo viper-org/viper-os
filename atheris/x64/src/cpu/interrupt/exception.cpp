@@ -2,6 +2,8 @@
 
 #include <mm/vm.h>
 
+#include <sched/signal.h>
+
 #include <echis/signal/signal.h>
 
 #include <echis/core/exception/exception.h>
@@ -57,6 +59,11 @@ namespace atheris
             {
                 if (exceptionType == echis::exception::SEG)
                 {
+                    if (context->ControlRegisters.cr2 == 0x516) // SIG - return from signal handler
+                    {
+                        sched::ReturnFromSignalHandler(context->BaseFrame.rsp);
+                    }
+
                     echis::signal::DeliverToCurrent(echis::signal::SIGSEGV);
                 }
                 else
@@ -67,6 +74,21 @@ namespace atheris
             else
             {
                 echis::exception::raise(exceptionType, context->BaseFrame.error_code);
+            }
+
+            if (auto signal = echis::signal::CheckIncoming())
+            {
+                sched::SavedUserContext userContext = {
+                    context->BaseFrame.rip, context->BaseFrame.rsp, context->BaseFrame.rbp, context->BaseFrame.rflags,
+                    context->GeneralRegisters.rax, context->GeneralRegisters.rbx, context->GeneralRegisters.rcx,
+                    context->GeneralRegisters.rdx, context->GeneralRegisters.rsi, context->GeneralRegisters.rdi,
+                    context->GeneralRegisters.r8, context->GeneralRegisters.r9, context->GeneralRegisters.r10,
+                    context->GeneralRegisters.r11, context->GeneralRegisters.r12, context->GeneralRegisters.r13,
+                    context->GeneralRegisters.r14, context->GeneralRegisters.r15
+                };
+                void(*handler)(int) = echis::signal::GetHandler(signal);
+                signal->signum = echis::signal::NONE;
+                sched::SignalHandler(userContext, handler);
             }
         }
     }

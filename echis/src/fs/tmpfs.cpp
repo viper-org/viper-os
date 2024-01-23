@@ -60,7 +60,7 @@ namespace echis
                 mData = other.mData;
                 mSize = other.mSize;
                 mCapacity = other.mCapacity;
-                mPath = std::move(other.mPath);
+                mPath = vpr::move(other.mPath);
 
                 other.mData = nullptr;
                 other.mSize = 0;

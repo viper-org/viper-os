@@ -1,5 +1,8 @@
+#include "atheris/private/sched/signal.h"
 #include <cpu/syscall.h>
 #include <cpu/asm.h>
+
+#include <echis/signal/signal.h>
 
 #include <syscall/file/read.h>
 #include <syscall/file/write.h>
@@ -14,6 +17,7 @@
 #include <syscall/proc/pipe.h>
 #include <syscall/proc/spawn.h>
 #include <syscall/proc/sigaction.h>
+#include <syscall/proc/raise.h>
 
 #include <stdio.h>
 
@@ -96,9 +100,28 @@ namespace atheris
                         frame->rax = echis::syscall::sigaction(frame->rdi, reinterpret_cast<echis::syscall::SignalHandler>(frame->rsi));
                         break;
                     }
+                    case 11: // raise
+                    {
+                        frame->rax = echis::syscall::raise(frame->rdi);
+                        break;
+                    }
                     default:
                         printf("%#%s", 0x00ffff, frame->rdi);
                         break;
+                }
+
+                if (auto signal = echis::signal::CheckIncoming())
+                {
+                    sched::SavedUserContext context = {
+                        frame->rip, frame->rsp, frame->rbp, frame->rflags,
+                        frame->rax, frame->rbx, 0,          frame->rdi,
+                        frame->rsi, frame->rdi, frame->r8, frame->r9,
+                        frame->r10, 0,          frame->r12, frame->r13,
+                        frame->r14, frame->r15
+                    };
+                    void(*handler)(int) = echis::signal::GetHandler(signal);
+                    signal->signum = echis::signal::NONE;
+                    sched::SignalHandler(context, handler);
                 }
             }
         }

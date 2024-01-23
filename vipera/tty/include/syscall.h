@@ -16,5 +16,6 @@ size_t seek(int fd, size_t offset);
 int pipe(int fds[2]);
 int spawn(const char* path);
 int poll(int fd);
+int sigaction(int signum, void(*handler)(int));
 
 #endif // VIPEROS_VIPERA_TTY_SYSCALL_H

@@ -23,7 +23,7 @@ namespace echis
             }
 
             DeviceNode::DeviceNode(DeviceNode&& other)
-                : vfs::Node(std::move(other.mPath), other.mParent)
+                : vfs::Node(vpr::move(other.mPath), other.mParent)
                 , mRead(other.mRead)
                 , mWrite(other.mWrite)
                 , mIoctl(other.mIoctl)
@@ -48,7 +48,7 @@ namespace echis
                 mWrite = other.mWrite;
                 mIoctl = other.mIoctl;
                 
-                mPath = std::move(other.mPath);
+                mPath = vpr::move(other.mPath);
 
                 other.mRead = nullptr;
                 other.mWrite = nullptr;

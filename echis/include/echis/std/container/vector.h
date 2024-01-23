@@ -1,9 +1,10 @@
 #ifndef VIPEROS_ECHIS_STD_CONTAINER_VECTOR_H
 #define VIPEROS_ECHIS_STD_CONTAINER_VECTOR_H 1
 
+#include <std/utility.h>
+
 #include <stddef.h>
 #include <string.h>
-#include <utility>
 
 namespace vpr
 {
@@ -30,9 +31,9 @@ namespace vpr
         }
 
         vector(vector&& other)
-            : mData(std::move(other.mData))
-            , mSize(std::move(other.mSize))
-            , mCapacity(std::move(other.mCapacity))
+            : mData(vpr::move(other.mData))
+            , mSize(vpr::move(other.mSize))
+            , mCapacity(vpr::move(other.mCapacity))
         {
             other.mData     = nullptr;
             other.mSize     = 0;
@@ -192,7 +193,7 @@ namespace vpr
                 T* newData = new T[mCapacity * 2];
                 for (size_t i = 0; i < mSize; ++i)
                 {
-                    newData[i] = std::move(mData[i]);
+                    newData[i] = vpr::move(mData[i]);
                 }
                 delete[] mData;
                 mData = newData;

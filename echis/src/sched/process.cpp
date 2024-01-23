@@ -46,6 +46,11 @@ namespace echis
             return mUserStack;
         }
 
+        Thread::Stack& Thread::getSignalHandlerStack()
+        {
+            return mSignalHandlerStack;
+        }
+
         Thread::Stack& Thread::getKernelStack()
         {
             return mKernelStack;
@@ -59,6 +64,11 @@ namespace echis
         SignalHandler& Thread::getSignalHandler(int signum)
         {
             return mSignalHandlers[signum];
+        }
+
+        vpr::vector<signal::PendingSignalObject>& Thread::getPendingSignals()
+        {
+            return mPendingSignals;
         }
 
         void Thread::unblock()

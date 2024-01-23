@@ -69,3 +69,10 @@ int poll(int fd)
     asm volatile("syscall" : "=a"(ret) : "a"(9), "D"(fd));
     return ret;
 }
+
+int sigaction(int signum, void(*handler)(int))
+{
+    int ret;
+    asm volatile("syscall" :: "a"(10), "D"(signum), "S"(handler));
+    return ret;
+}

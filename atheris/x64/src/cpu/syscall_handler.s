@@ -11,7 +11,6 @@ syscall_handler:
     pushq %rcx
     pushq %r11
 
-    pushq %rbp
     pushq %rbx
     pushq %rbp
     pushq %r12
@@ -44,7 +43,6 @@ syscall_handler:
     popq %r12
     popq %rbp
     popq %rbx
-    popq %rbp
 
     popq %r11
     popq %rcx

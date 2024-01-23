@@ -4,7 +4,11 @@
 #include <sched/processFd.h>
 #include <sched/pipe.h>
 
+#include <signal/signal.h>
+
 #include <atheris/mm/vm.h>
+
+#include <std/container/vector.h>
 
 #include <stddef.h>
 
@@ -39,9 +43,12 @@ namespace echis
             uint64_t getStartingAddress() const;
             void setStartingAddress(uint64_t newStart);
             Stack& getUserStack();
+            Stack& getSignalHandlerStack();
             Stack& getKernelStack();
             atheris::sched::ThreadContext*& getContext();
+
             SignalHandler& getSignalHandler(int signum);
+            vpr::vector<signal::PendingSignalObject>& getPendingSignals();
 
             void unblock();
 
@@ -50,10 +57,13 @@ namespace echis
         private:
             Process* mParent;
             Stack mUserStack;
+            Stack mSignalHandlerStack;
             Stack mKernelStack;
             atheris::sched::ThreadContext* mContext;
             uint64_t mStart;
+
             SignalHandler mSignalHandlers[32];
+            vpr::vector<signal::PendingSignalObject> mPendingSignals;
 
             int mWaitingFd;
         };
