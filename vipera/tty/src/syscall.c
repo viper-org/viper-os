@@ -83,3 +83,10 @@ int wait(int pid)
     asm volatile("syscall" : "=a"(ret) : "a"(13), "D"(pid));
     return ret;
 }
+
+int movfd(int oldfd, int newfd)
+{
+    int ret;
+    asm volatile("syscall" : "=a"(ret) : "a"(14), "D"(oldfd), "S"(newfd));
+    return ret;
+}

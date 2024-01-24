@@ -10,6 +10,8 @@ int   framebuffer_fd = -1;
 void screen_init()
 {
     framebuffer_fd = open("dev:fb", WRITE);
+    framebuffer_fd = movfd(framebuffer_fd, 15); // 0, 1, 2 are reserved
+
     back_buffer = mmap(get_vert() * get_pitch());
     
     clear_screen();

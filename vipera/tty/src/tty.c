@@ -35,16 +35,17 @@ void puts(const char* str, uint32_t fg)
         putchar(*str++, fg);
 }
 
-void _start(void)
+void setup_pipes(int fds[2])
 {
-    screen_init();
-
-    int fds[2];
     pipe(fds);
+    // move the read end to 13 so 0 can be used for stdin
+    // move write end to 1 for stdout
+    fds[0] = movfd(fds[0], 13);
+    fds[1] = movfd(fds[1], 1);
+}
 
-    int child = spawn("tmp:test");
-    wait(child);
-    puts("Child exited\n", 0x00ffff);
+void mainloop(int fds[2])
+{
     char c;
     while(1)
     {
@@ -52,4 +53,14 @@ void _start(void)
         while(read(fds[0], &c, 1))
         putchar(c, 0xffffff);
     }
+}
+
+void _start(void)
+{
+    screen_init();
+
+    int fds[2];
+    setup_pipes(fds);
+    int child = spawn("tmp:test");
+    mainloop(fds);
 }

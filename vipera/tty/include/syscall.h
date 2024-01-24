@@ -18,5 +18,6 @@ int spawn(const char* path);
 int poll(int fd);
 int sigaction(int signum, void(*handler)(int));
 int wait(int pid);
+int movfd(int oldfd, int newfd);
 
 #endif // VIPEROS_VIPERA_TTY_SYSCALL_H

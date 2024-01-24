@@ -11,12 +11,13 @@
 #include <syscall/file/ioctl.h>
 #include <syscall/file/seek.h>
 #include <syscall/file/poll.h>
+#include <syscall/file/movfd.h>
 
 #include <syscall/mem/mmap.h>
 
 #include <syscall/proc/pipe.h>
 #include <syscall/proc/spawn.h>
-#include <syscall/proc/sigaction.h>
+#include <syscall/proc/signal.h>
 #include <syscall/proc/raise.h>
 #include <syscall/proc/exit.h>
 #include <syscall/proc/wait.h>
@@ -99,7 +100,7 @@ namespace atheris
                     }
                     case 10: // sigaction
                     {
-                        frame->rax = echis::syscall::sigaction(frame->rdi, reinterpret_cast<echis::syscall::SignalHandler>(frame->rsi));
+                        frame->rax = reinterpret_cast<uint64_t>(echis::syscall::signal(frame->rdi, reinterpret_cast<echis::syscall::SignalHandler>(frame->rsi)));
                         break;
                     }
                     case 11: // raise
@@ -115,6 +116,11 @@ namespace atheris
                     case 13: // wait
                     {
                         frame->rax = echis::syscall::wait(frame->rdi);
+                        break;
+                    }
+                    case 14: // movfd
+                    {
+                        frame->rax = echis::syscall::movfd(frame->rdi, frame->rsi);
                         break;
                     }
                     default:

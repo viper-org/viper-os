@@ -38,12 +38,13 @@ set(SOURCES
     "src/syscall/file/ioctl.cpp"
     "src/syscall/file/seek.cpp"
     "src/syscall/file/poll.cpp"
+    "src/syscall/file/movfd.cpp"
 
     "src/syscall/mem/mmap.cpp"
 
     "src/syscall/proc/pipe.cpp"
     "src/syscall/proc/spawn.cpp"
-    "src/syscall/proc/sigaction.cpp"
+    "src/syscall/proc/signal.cpp"
     "src/syscall/proc/raise.cpp"
     "src/syscall/proc/exit.cpp"
     "src/syscall/proc/wait.cpp"
@@ -99,12 +100,13 @@ set(HEADERS
     "include/echis/syscall/file/ioctl.h"
     "include/echis/syscall/file/seek.h"
     "include/echis/syscall/file/poll.h"
+    "include/echis/syscall/file/movfd.h"
 
     "include/echis/syscall/mem/mmap.h"
 
     "include/echis/syscall/proc/pipe.h"
     "include/echis/syscall/proc/spawn.h"
-    "include/echis/syscall/proc/sigaction.h"
+    "include/echis/syscall/proc/signal.h"
     "include/echis/syscall/proc/raise.h"
     "include/echis/syscall/proc/exit.h"
     "include/echis/syscall/proc/wait.h"

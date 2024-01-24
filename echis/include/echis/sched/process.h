@@ -77,8 +77,9 @@ namespace echis
             int getPid() const;
             Thread* getMainThread();
             atheris::vm::AddressSpace& getAddressSpace();
-            FileDescriptor& getFd(int n);
 
+            FileDescriptor& getFd(int n);
+            int moveFileDescription(int oldfd, int newfd);
             void copyFileDescriptionsFrom(Process* other);
             int addOpenFileDescription(fs::vfs::Node* node, OpenMode::OpenMode mode);
             int addOpenFileDescription(vpr::shared_ptr<Pipe> pipe);

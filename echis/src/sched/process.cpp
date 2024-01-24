@@ -108,6 +108,18 @@ namespace echis
             return mFds[n];
         }
 
+        int Process::moveFileDescription(int oldfd, int newfd)
+        {
+            if (mFds[newfd].vfsNode || mFds[newfd].pipe) // fd already exists
+            {
+                return -1;
+            }
+            mFds[newfd] = vpr::move(mFds[oldfd]);
+            mFds[oldfd].vfsNode = nullptr;
+            mFds[oldfd].pipe    = nullptr;
+            return newfd;
+        }
+
         void Process::copyFileDescriptionsFrom(Process* other)
         {
             memcpy(mFds, other->mFds, sizeof(mFds));

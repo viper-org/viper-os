@@ -8,6 +8,7 @@ void font_init()
     if (fontFd == -1)
     {
         fontFd = open("tmp:font.bmp", READ);
+        fontFd = movfd(fontFd, 14); // 0, 1, 2 are reserved
     }
 }
 

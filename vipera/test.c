@@ -1,3 +1,7 @@
+#include <sys/unistd.h>
+#include <stdlib.h>
+#include <signal.h>
+
 unsigned long strlen(const char* data)
 {
     unsigned long ret = 0;
@@ -6,34 +10,9 @@ unsigned long strlen(const char* data)
     return ret;
 }
 
-void puts(const char* message)
+int puts(const char* message)
 {
-    asm volatile("syscall" :: "a"(1), "D"(3), "S"(message), "d"(strlen(message)));
-}
-
-int spawn(const char* path)
-{
-    asm volatile("syscall" :: "a"(8), "D"(path));
-    return 0;
-}
-
-int sigaction(int signum, void(*handler)(int))
-{
-    int ret;
-    asm volatile("syscall" : "=a"(ret) : "a"(10), "D"(signum), "S"(handler));
-    return ret;
-}
-
-int raise(int sig)
-{
-    int ret;
-    asm volatile("syscall" : "=a"(ret) : "a"(11), "D"(sig));
-    return ret;
-}
-
-void exit(int status)
-{
-    asm volatile("syscall" :: "a"(12), "D"(status));
+    return write(1, message, strlen(message));
 }
 
 void sigusr1_handler(int a)
@@ -43,7 +22,7 @@ void sigusr1_handler(int a)
 
 void _start()
 {
-    sigaction(10, sigusr1_handler);
-    raise(10);
+    signal(SIGUSR1, sigusr1_handler);
+    raise(SIGUSR1);
     exit(42);
 }
