@@ -20,9 +20,10 @@ void sigusr1_handler(int a)
     puts("SIGUSR1 Received.\n");
 }
 
-void _start()
+int main()
 {
     signal(SIGUSR1, sigusr1_handler);
     raise(SIGUSR1);
-    exit(42);
+    
+    return 43;
 }

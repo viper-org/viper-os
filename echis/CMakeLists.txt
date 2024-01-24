@@ -49,6 +49,8 @@ set(SOURCES
     "src/syscall/proc/exit.cpp"
     "src/syscall/proc/wait.cpp"
 
+    "src/syscall/info/sysconf.cpp"
+
 
     "src/std/container/string.cpp"
 
@@ -110,6 +112,8 @@ set(HEADERS
     "include/echis/syscall/proc/raise.h"
     "include/echis/syscall/proc/exit.h"
     "include/echis/syscall/proc/wait.h"
+
+    "include/echis/syscall/info/sysconf.h"
 
 
     "include/echis/std/container/atomic.h"

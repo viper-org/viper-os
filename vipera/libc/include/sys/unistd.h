@@ -18,12 +18,18 @@ _Noreturn void _exit(int);
 off_t lseek(int, off_t, int);
 int pipe(int[2]);
 ssize_t read(int, void *, size_t);
+long sysconf(int);
 ssize_t write(int, const void *, size_t);
 
 
 #define SEEK_SET 0
 #define SEEK_CUR 1
 #define SEEK_END 2
+
+#define _SC_PAGE_SIZE 0
+#define _SC_PAGESIZE 0
+
+#define NULL ((void *) 0)
 
 #ifdef __cplusplus
 }

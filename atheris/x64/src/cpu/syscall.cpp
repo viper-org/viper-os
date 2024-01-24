@@ -22,6 +22,8 @@
 #include <syscall/proc/exit.h>
 #include <syscall/proc/wait.h>
 
+#include <syscall/info/sysconf.h>
+
 #include <stdio.h>
 
 namespace atheris
@@ -121,6 +123,11 @@ namespace atheris
                     case 14: // movfd
                     {
                         frame->rax = echis::syscall::movfd(frame->rdi, frame->rsi);
+                        break;
+                    }
+                    case 15: // sysconf
+                    {
+                        frame->rax = echis::syscall::sysconf(frame->rdi);
                         break;
                     }
                     default:

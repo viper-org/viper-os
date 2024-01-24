@@ -7,15 +7,14 @@ ASFLAGS=
 ARFLAGS=rcs
 
 CFILES:=$(shell find src -name '*.c')
-ASFILES:=$(shell find src -name '*.s')
-OBJS:=$(CFILES:.c=.o) $(ASFILES:.s=.o)
+OBJS:=$(CFILES:.c=.o)
 HEADERS:=$(shell echo ${CFILES:.c=.d})
 
 TARGET=../lib/libc.a
 
 .PHONY: all
 
-all: $(TARGET)
+all: $(TARGET) src/crt0.o
 
 -include $(HEADERS)
 %.o: %.c

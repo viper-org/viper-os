@@ -20,6 +20,12 @@ _Noreturn void _Exit(int exit_code);
 int atexit(void (*func)(void));
 int at_quick_exit(void (*func)(void));
 
+
+typedef unsigned long size_t;
+
+void *malloc(size_t size);
+void free(void *ptr);
+
 #ifdef VIPEROS_VIPERA_LIBCPP_CSTDLIB
 }
 #endif

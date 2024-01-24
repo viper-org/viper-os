@@ -22,6 +22,7 @@ extern "C" {
 #define SYS_exit 12
 #define SYS_wait 13
 #define SYS_movfd 14
+#define SYS_sysconf 15
 
 #ifdef __cplusplus
 }
