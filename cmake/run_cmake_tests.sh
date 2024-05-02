@@ -1,1 +1,0 @@
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=true -Darch=tests .
