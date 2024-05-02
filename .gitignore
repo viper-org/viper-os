@@ -1,0 +1,11 @@
+viper-lang/
+viper-lang-build/
+compiler/
+framework/
+limine/
+ovmf/
+
+*.o
+*.log
+*.hdd
+*.elf
