@@ -1,6 +1,9 @@
 override VPR=../viper-lang-build/compiler/viper
 override LD=ld
 
+override VPRFLAGS += \
+	-Iinclude
+
 override LDFLAGS += \
 	-m elf_x86_64 \
 	-nostdlib \
@@ -13,7 +16,7 @@ override LDFLAGS += \
 override KERNEL=atheris.elf
 
 override VPRFILES:=$(shell find -L src -type f -name '*.vpr')
-override OBJ:=$(VPRFILES:.vpr=.vpr.o)
+override OBJ:=$(VPRFILES:.vpr=.o)
 
 .PHONY: all
 all: $(KERNEL)
@@ -21,8 +24,8 @@ all: $(KERNEL)
 $(KERNEL): Makefile linker.ld $(OBJ)
 	$(LD) $(OBJ) $(LDFLAGS) -o $@
 
-%.vpr.o: %.vpr Makefile
-	$(VPR) $< -o $@
+%.o: %.vpr Makefile
+	$(VPR) $(VPRFLAGS) $< -o $@
 
 .PHONY: clean
 clean:

@@ -48,6 +48,7 @@ limine:
 		LDFLAGS="$(HOST_LDFLAGS)" \
 		LIBS="$(HOST_LIBS)"
 
+.PHONY: viper-lang
 viper-lang:
 	cd viper-lang && git pull
 	mkdir -p viper-lang-build

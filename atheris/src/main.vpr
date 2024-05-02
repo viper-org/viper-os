@@ -1,3 +1,13 @@
+#include "limine.vh"
+
+global framebuffer_request: struct limine_framebuffer_request = struct limine_framebuffer_request {
+    LIMINE_FRAMEBUFFER_REQUEST, 0, nullptr
+};
+
 func @_start() -> void {
+    let response: struct limine_framebuffer_response* = framebuffer_request.response;
+    let framebuffer: struct limine_framebuffer* = *response->framebuffers;
+    let address: i32* = (i32*)framebuffer->address + 10000;
+    *address = 0xff0000;
     while(true) {}
 }
