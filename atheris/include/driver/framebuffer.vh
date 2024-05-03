@@ -1,0 +1,1 @@
+func @PutPixel(x: i32, y: i32, color: i32) -> void;
