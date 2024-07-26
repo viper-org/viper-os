@@ -7,12 +7,18 @@ set(SOURCES
 
     "source/cpu/gdt.cpp"
     "source/cpu/gdt_install.s"
+    "source/cpu/idt.cpp"
+    "source/cpu/interrupt_table.s"
+    "source/cpu/exception.cpp"
 )
 
 set(HEADERS
     "include/limine.h"
 
     "include/driver/port.h"
+
+    "include/cpu/gdt.h"
+    "include/cpu/idt.h"
 )
 
 set(LINKER_OPTIONS

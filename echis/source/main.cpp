@@ -6,10 +6,12 @@ namespace echis
 {
     void KernelMain()
     {
-        driver::debugcon::WriteFormatted("Hello%c %s", ',', "World");
-        
+        driver::debugcon::WriteFormatted("Hello%c %s", ',', "World\n");
+
         int test = 1234;
-        driver::debugcon::WriteFormatted("\n%i", test);
-        driver::debugcon::WriteFormatted("\n%p", &test);
+        int b= 0;
+        driver::debugcon::WriteFormatted("%i\n", test);
+        driver::debugcon::WriteFormatted("%p\n", &test);
+        int c = test / b;
     }
 }
