@@ -1,11 +1,10 @@
-viper-lang/
-viper-lang-build/
-compiler/
-framework/
-limine/
-ovmf/
+CMakeFiles/
+.cache/
 
-*.o
+*.cmake
+Makefile
+*.txt
+*.json
 *.log
-*.hdd
-*.elf
+
+!CMakeLists.txt
