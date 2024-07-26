@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.8)
 
 set(SOURCES
     "source/boot/start.cpp"
+
+    "source/atheris/driver/debugcon.cpp"
 )
 
 set(HEADERS

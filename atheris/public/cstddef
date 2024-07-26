@@ -1,0 +1,14 @@
+#ifndef VIPEROS_ATHERIS_PUBLIC_CSTDDEF
+#define VIPEROS_ATHERIS_PUBLIC_CSTDDEF 1
+
+extern "C"
+{
+    namespace std
+    {
+#include <stddef.h>
+
+        using nullptr_t = decltype(nullptr);
+    }
+}
+
+#endif // VIPEROS_ATHERIS_PUBLIC_CSTDDEF
