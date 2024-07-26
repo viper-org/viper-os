@@ -1,17 +1,17 @@
 #ifndef VIPEROS_ATHERIS_PUBLIC_ATHERIS_DRIVER_DEBUGCON_H
 #define VIPEROS_ATHERIS_PUBLIC_ATHERIS_DRIVER_DEBUGCON_H 1
 
-#include <cstddef>
-
 namespace atheris
 {
     namespace driver
     {
         namespace debugcon
         {
+            /*
+             * Writes a single character to a display
+             * or serial output
+             */
             void WriteChar(char c);
-            void WriteString(const char* data, std::size_t size);
-            void Write(const char* data);
         }
     }
 }

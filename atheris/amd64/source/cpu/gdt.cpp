@@ -1,6 +1,6 @@
 #include <cpu/gdt.h>
 
-#include <atheris/driver/debugcon.h>
+#include <echis/driver/debugcon.h>
 
 namespace atheris
 {
@@ -44,7 +44,7 @@ namespace atheris
 
                     gdt_install(&gdtr);
 
-                    atheris::driver::debugcon::Write("Installed GDT\n");
+                    echis::driver::debugcon::Write("Installed GDT\n");
                 }
             }
         }

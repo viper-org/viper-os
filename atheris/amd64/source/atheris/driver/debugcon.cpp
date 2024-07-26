@@ -14,23 +14,6 @@ namespace atheris
             {
                 COM1.write(c);
             }
-
-            void WriteString(const char* data, std::size_t size)
-            {
-                for (std::size_t i = 0; i < size; ++i)
-                {
-                    WriteChar(data[i]);
-                }
-            }
-
-            void Write(const char* data)
-            {
-                std::size_t i = 0;
-                while(data[i])
-                {
-                    WriteChar(data[i++]);
-                }
-            }
         }
     }
 }
