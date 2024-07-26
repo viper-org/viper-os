@@ -4,9 +4,15 @@ set(SOURCES
     "source/boot/start.cpp"
 
     "source/atheris/driver/debugcon.cpp"
+
+    "source/cpu/gdt.cpp"
+    "source/cpu/gdt_install.s"
 )
 
 set(HEADERS
+    "include/limine.h"
+
+    "include/driver/port.h"
 )
 
 set(LINKER_OPTIONS
@@ -43,7 +49,7 @@ set(COMPILER_OPTIONS
     "-mcmodel=kernel"
 )
 
-set(CMAKE_CXX_COMPILER x86_64-elf-g++)    
+set(CMAKE_CXX_COMPILER x86_64-elf-g++)
 
 execute_process(COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/get_limine_header.sh ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -51,7 +57,6 @@ source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
 
 add_executable(viperos-amd64 ${SOURCES} ${HEADERS})
 target_include_directories(viperos-amd64 PUBLIC include)
-target_compile_features(viperos-amd64 PUBLIC cxx_std_20)
 
 target_link_libraries(viperos-amd64 PRIVATE echis)
 target_link_options(viperos-amd64 PRIVATE ${LINKER_OPTIONS})

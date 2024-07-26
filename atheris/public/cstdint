@@ -1,0 +1,9 @@
+#ifndef VIPEROS_ATHERIS_PUBLIC_CSTDINT
+#define VIPEROS_ATHERIS_PUBLIC_CSTDINT 1
+
+namespace std
+{
+#include <stdint.h>
+}
+
+#endif // VIPEROS_ATHERIS_PUBLIC_CSTDINT
