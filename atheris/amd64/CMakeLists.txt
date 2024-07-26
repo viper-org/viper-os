@@ -5,11 +5,15 @@ set(SOURCES
 
     "source/atheris/driver/debugcon.cpp"
 
+    "source/atheris/mm/vm.cpp"
+
     "source/cpu/gdt.cpp"
     "source/cpu/gdt_install.s"
     "source/cpu/idt.cpp"
     "source/cpu/interrupt_table.s"
     "source/cpu/exception.cpp"
+
+    "source/mm/pm.cpp"
 )
 
 set(HEADERS
@@ -19,6 +23,8 @@ set(HEADERS
 
     "include/cpu/gdt.h"
     "include/cpu/idt.h"
+
+    "include/mm/pm.h"
 )
 
 set(LINKER_OPTIONS

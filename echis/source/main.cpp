@@ -1,5 +1,7 @@
 #include <main.h>
 
+#include <mm/physical.h>
+
 #include <driver/debugcon.h>
 
 namespace echis
@@ -8,10 +10,7 @@ namespace echis
     {
         driver::debugcon::WriteFormatted("Hello%c %s", ',', "World\n");
 
-        int test = 1234;
-        int b= 0;
-        driver::debugcon::WriteFormatted("%i\n", test);
-        driver::debugcon::WriteFormatted("%p\n", &test);
-        int c = test / b;
+        auto pages = mm::physical::GetPages(6);
+        mm::physical::FreePages(pages, 6);
     }
 }
