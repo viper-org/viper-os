@@ -11,6 +11,8 @@ namespace echis
         {
             void WriteString(const char* data, std::size_t size);
             void Write(const char* data);
+
+            void WriteFormatted(const char* format, ...);
         }
     }
 }

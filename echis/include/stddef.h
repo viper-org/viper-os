@@ -1,5 +1,5 @@
-#ifndef VIPEROS_ATHERIS_PUBLIC_STDDEF_H
-#define VIPEROS_ATHERIS_PUBLIC_STDDEF_H 1
+#ifndef VIPEROS_ECHIS_STDDEF_H
+#define VIPEROS_ECHIS_STDDEF_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,4 +14,4 @@ typedef decltype((char*)0-(char*)0) ptrdiff_t;
 }
 #endif
 
-#endif // VIPEROS_ATHERIS_PUBLIC_STDDEF_H
+#endif // VIPEROS_ECHIS_STDDEF_H

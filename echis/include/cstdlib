@@ -1,0 +1,9 @@
+#ifndef VIPEROS_ECHIS_CSTDLIB
+#define VIPEROS_ECHIS_CSTDLIB 1
+
+namespace std
+{
+#include <stdlib.h>
+}
+
+#endif // VIPEROS_ECHIS_CSTDLIB

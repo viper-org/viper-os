@@ -4,6 +4,8 @@ set(SOURCES
     "source/main.cpp"
 
     "source/driver/debugcon.cpp"
+
+    "source/libc/stdlib.cpp"
 )
 
 set(HEADERS
