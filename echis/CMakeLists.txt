@@ -6,6 +6,7 @@ set(SOURCES
     "source/driver/debugcon.cpp"
 
     "source/mm/physical.cpp"
+    "source/mm/heap.cpp"
 
     "source/libc/stdlib.cpp"
     "source/libc/string.cpp"
@@ -18,6 +19,7 @@ set(HEADERS
     "include/echis/driver/debugcon.h"
 
     "include/echis/mm/physical.h"
+    "include/echis/mm/heap.h"
 
     "include/echis/util/math.h"
     "include/echis/util/debug.h"
