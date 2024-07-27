@@ -29,6 +29,11 @@ namespace atheris
                     }
                 }
             }
+
+            limine_memmap_response* GetMemoryMap()
+            {
+                return MemmapRequest.response;
+            }
         }
     }
 }

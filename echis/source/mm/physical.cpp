@@ -1,9 +1,8 @@
 #include <mm/physical.h>
 
 #include <util/math.h>
+#include <util/debug.h>
 
-#define ECHIS_PMM_DEBUG_LOG_ALLOC
-#define ECHIS_PMM_DEBUG_LOG_FREE
 #if defined(ECHIS_PMM_DEBUG_LOG_ALLOC) || defined(ECHIS_PMM_DEBUG_LOG_FREE)
 #include <driver/debugcon.h>
 #endif

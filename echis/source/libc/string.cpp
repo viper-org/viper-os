@@ -3,10 +3,10 @@
 void* memset(void* dest, int ch, size_t count)
 {
     char* p = reinterpret_cast<char*>(dest);
-    for (int i = 0; i < ch; ++i)
+    for (size_t i = 0; i < count; ++i)
     {
-        p[i] = count;
+        p[i] = ch;
     }
 
-    return dest;
+    return p;
 }

@@ -25,7 +25,13 @@ set(HEADERS
     "include/cpu/idt.h"
 
     "include/mm/pm.h"
-)
+
+
+    "include/atheris/private/driver/debugcon.h"
+
+    "include/atheris/private/mm/pm.h"
+    "include/atheris/private/mm/vm.h"
+)   
 
 set(LINKER_OPTIONS
     "-Wl,-melf_x86_64"
@@ -74,6 +80,8 @@ target_link_libraries(viperos-amd64 PRIVATE echis)
 target_link_options(viperos-amd64 PRIVATE ${LINKER_OPTIONS})
 target_compile_options(viperos-amd64 PRIVATE ${COMPILER_OPTIONS})
 target_include_directories(viperos-amd64 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../public)
+
+target_compile_definitions(viperos-amd64 PRIVATE $<$<CONFIG:Debug>:ATHERIS_DEBUG_LOG_ALL>)
 
 target_compile_options(echis PRIVATE ${COMPILER_OPTIONS})
 target_include_directories(echis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../public)

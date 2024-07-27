@@ -7,7 +7,29 @@ namespace atheris
 {
     namespace vm
     {
+        namespace flags
+        {
+            enum flags : uint16_t
+            {
+                present = (1 << 0),
+                write   = (1 << 1),
+            };
+        }
+
+        struct AddressSpace
+        {
+            pm::physaddr pml4;
+
+            void switchTo();
+        };
+
         void* GetVirtualAddress(pm::physaddr physAddress);
+
+        
+        void Init();
+
+        void MapPage(AddressSpace* addressSpace, pm::physaddr phys, uint64_t virt, uint16_t flags);
+        void MapPages(AddressSpace* addressSpace, pm::physaddr phys, uint64_t virt, uint16_t flags, uint32_t pageCount);
     }
 }
 
