@@ -77,5 +77,6 @@ target_include_directories(viperos-amd64 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../
 
 target_compile_options(echis PRIVATE ${COMPILER_OPTIONS})
 target_include_directories(echis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../public)
+target_include_directories(echis PRIVATE include)
 
 add_custom_command(TARGET viperos-amd64 POST_BUILD COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/build_iso.sh)
