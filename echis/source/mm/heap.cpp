@@ -1,6 +1,7 @@
 #include <mm/heap.h>
 #include <mm/physical.h>
 
+#include <util/debug.h>
 #include <util/math.h>
 
 #include <atheris/mm/vm.h>
@@ -68,6 +69,9 @@ namespace echis
                     if (current->size == count || ((current->size - count) < sizeof(Header) + 1))
                     {
                         removeFromFreeList(current, previous);
+#if defined(ECHIS_HEAP_DEBUG_LOG_ALLOC)
+                        driver::debugcon::WriteFormatted("[HEAP] Allocating %d bytes at %p", count, current+1);
+#endif
                         return current + 1;
                     }
 
@@ -82,6 +86,9 @@ namespace echis
                     freeList = newHeader;
 
                     current->size = count;
+#if defined(ECHIS_HEAP_DEBUG_LOG_ALLOC)
+                    driver::debugcon::WriteFormatted("[HEAP] Allocating %d bytes at %p\n", count, current+1);
+#endif
                     return current + 1;
                 }
                 previous = current;
@@ -101,6 +108,10 @@ namespace echis
             Header* header = reinterpret_cast<Header*>(mem) - 1;
             header->next = freeList;
             freeList = header;
+
+#if defined(ECHIS_HEAP_DEBUG_LOG_ALLOC)
+            driver::debugcon::WriteFormatted("[HEAP] Freeing %d bytes at %p\n", header->size, mem);
+#endif
         }
     }
 }

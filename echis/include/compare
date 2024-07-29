@@ -1,0 +1,72 @@
+#ifndef VIPEROS_ECHIS_COMPARE
+#define VIPEROS_ECHIS_COMPARE 1
+
+namespace std
+{
+    class strong_ordering
+    {
+    public:
+        template <class T>
+        friend constexpr bool operator==(strong_ordering v, T u) noexcept
+        {
+            return v.mValue == u;
+        }
+
+        template <class T>
+        friend constexpr bool operator!=(strong_ordering v, T u) noexcept
+        {
+            return v.mValue != u;
+        }
+
+        template <class T>
+        friend constexpr bool operator<(strong_ordering v, T u) noexcept
+        {
+            return v.mValue < u;
+        }
+
+        template <class T>
+        friend constexpr bool operator>(strong_ordering v, T u) noexcept
+        {
+            return v.mValue > u;
+        }
+
+        template <class T>
+        friend constexpr bool operator<=(strong_ordering v, T u) noexcept
+        {
+            return v.mValue <= u;
+        }
+
+        template <class T>
+        friend constexpr bool operator>=(strong_ordering v, T u) noexcept
+        {
+            return v.mValue >= u;
+        }
+
+        template <class T>
+        friend constexpr bool operator<=>(strong_ordering v, T u) noexcept
+        {
+            return v.mValue <=> u;
+        }
+
+
+        static const strong_ordering less;
+        static const strong_ordering equivalent;
+        static const strong_ordering equal;
+        static const strong_ordering greater;
+
+    private:
+        constexpr strong_ordering(int x)
+            : mValue(x)
+        {
+        }
+
+        int mValue;
+    };
+
+    inline constexpr strong_ordering strong_ordering::less(-1);
+    inline constexpr strong_ordering strong_ordering::equivalent(0);
+    inline constexpr strong_ordering strong_ordering::equal(0);
+    inline constexpr strong_ordering strong_ordering::greater(1);
+}
+
+#endif // VIPEROS_ECHIS_COMPARE

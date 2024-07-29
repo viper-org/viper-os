@@ -8,6 +8,9 @@ set(SOURCES
     "source/mm/physical.cpp"
     "source/mm/heap.cpp"
 
+    "source/fs/vfs.cpp"
+    "source/fs/testfs.cpp"
+
     "source/libc/stdlib.cpp"
     "source/libc/string.cpp"
     "source/libc/new.cpp"
@@ -20,6 +23,9 @@ set(HEADERS
 
     "include/echis/mm/physical.h"
     "include/echis/mm/heap.h"
+
+    "include/echis/fs/vfs.h"
+    "include/echis/fs/testfs.h"
 
     "include/echis/util/math.h"
     "include/echis/util/debug.h"

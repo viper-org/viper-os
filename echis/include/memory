@@ -1,0 +1,156 @@
+#ifndef VIPEROS_ECHIS_MEMORY
+#define VIPEROS_ECHIS_MEMORY 1
+
+#include <cstddef>
+
+namespace std
+{
+    template <class T>
+    class shared_ptr
+    {
+    template <class>
+    friend class shared_ptr;
+    public:
+        constexpr shared_ptr()
+            : mBase(nullptr)
+            , mReferences(nullptr)
+        {
+        }
+        
+        constexpr shared_ptr(nullptr_t)
+            : shared_ptr()
+        {
+        }
+
+        template <class Y>
+        explicit shared_ptr(Y* ptr)
+            : mBase(ptr)
+            , mReferences(new long(1))
+        {
+        }
+
+        shared_ptr(const shared_ptr& r)
+            : mBase(r.mBase)
+            , mReferences(r.mReferences)
+        {
+            if (mReferences)
+                ++(*mReferences);
+        }
+
+        shared_ptr(shared_ptr&& r)
+            : mBase(r.mBase)
+            , mReferences(r.mReferences)
+        {
+            r.mBase = nullptr;
+            r.mReferences = nullptr;
+        }
+
+        template <class Y>
+        shared_ptr(const shared_ptr<Y>& r)
+            : mBase(r.mBase)
+            , mReferences(r.mReferences)
+        {
+            ++(*mReferences);
+        }
+
+        template <class Y>
+        shared_ptr(shared_ptr<Y>&& r)
+            : mBase(r.mBase)
+            , mReferences(r.mReferences)
+        {
+            r.mBase = nullptr;
+            r.mReferences = nullptr;
+        }
+
+        ~shared_ptr()
+        {
+            if (mReferences)
+            {
+                --(*mReferences);
+                if (*mReferences == 0)
+                {
+                    delete mBase;
+                    delete mReferences;
+                }
+            }
+        }
+
+
+        shared_ptr& operator=(const shared_ptr& r)
+        {
+            mBase = r.mBase;
+            mReferences = r.mReferences;
+            ++(*mReferences);
+            return *this;
+        }
+
+        shared_ptr& operator=(shared_ptr&& r)
+        {
+            mBase = r.mBase;
+            mReferences = r.mReferences;
+            r.mBase = nullptr;
+            r.mReferences = nullptr;
+            return *this;
+        }
+
+        template <class Y>
+        shared_ptr& operator=(const shared_ptr<Y>& r)
+        {
+            mBase = r.mBase;
+            mReferences = r.mReferences;
+            ++(*mReferences);
+            return *this;
+        }
+
+        template <class Y>
+        shared_ptr& operator=(shared_ptr<Y>&& r)
+        {
+            mBase = r.mBase;
+            mReferences = r.mReferences;
+            r.mBase = nullptr;
+            r.mReferences = nullptr;
+            return *this;
+        }
+
+
+        T* get() const
+        {
+            return mBase;
+        }
+
+        T& operator*() const
+        {
+            return *mBase;
+        }
+
+        T* operator->() const
+        {
+            return mBase;
+        }
+
+        long use_count() const
+        {
+            return *mReferences;
+        }
+
+        bool unique() const
+        {
+            return (*mReferences) == 1;
+        }
+
+
+    protected:
+        T* mBase;
+        long* mReferences;
+    };
+
+
+    template <class Y, class... Args>
+    shared_ptr<Y> make_shared(Args&&... args)
+    {
+        Y* p = new Y(args...);
+        return shared_ptr<Y>(p);
+    }
+}
+
+#endif // VIPEROS_ECHIS_MEMORY

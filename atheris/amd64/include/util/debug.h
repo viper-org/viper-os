@@ -3,7 +3,7 @@
 
 #if defined(ATHERIS_DEBUG_LOG_ALL)
 
-#define ATHERIS_VM_LOG_MAPPINGS
+//#define ATHERIS_VM_LOG_MAPPINGS
 
 #endif
 

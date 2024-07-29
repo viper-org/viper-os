@@ -1,0 +1,378 @@
+#ifndef VIPEROS_ECHIS_VECTOR
+#define VIPEROS_ECHIS_VECTOR
+
+#include <compare>
+#include <cstddef>
+#include <utility>
+
+namespace std 
+{
+	template <class T>
+	class vector
+	{
+	public:
+		template <class U>
+		class base_iterator
+		{
+		public:
+			using difference_type = signed long long int;
+			using value_type = U;
+			using pointer = value_type*;
+			using reference = value_type&;
+
+			constexpr base_iterator()
+				: mData(nullptr)
+			{
+			}
+
+			constexpr base_iterator(pointer data)
+				: mData(data)
+			{
+			}
+
+			constexpr base_iterator(const base_iterator& other)
+				: mData(other.mData)
+			{
+			}
+
+			constexpr base_iterator& operator=(const base_iterator& other)
+			{
+				mData = other.mData;
+				return *this;
+			}
+
+			constexpr base_iterator& operator+=(difference_type n)
+			{
+				mData += n;
+				return *this;
+			}
+
+			constexpr base_iterator& operator++()
+			{
+				mData++;
+				return *this;
+			}
+
+			constexpr base_iterator operator++(int)
+			{
+				return base_iterator(mData++);
+			}
+
+			constexpr base_iterator& operator-=(difference_type n)
+			{
+				mData -= n;
+				return *this;
+			}
+
+			constexpr base_iterator& operator--()
+			{
+				mData--;
+				return *this;
+			}
+
+			constexpr base_iterator operator--(int)
+			{
+				return base_iterator(mData--);
+			}
+
+			constexpr base_iterator operator+(difference_type n)
+			{
+				return base_iterator(mData + n);
+			}
+
+			constexpr friend base_iterator operator+(difference_type n, base_iterator it)
+			{
+				return base_iterator(n + it.mData);
+			}
+
+			constexpr base_iterator operator-(difference_type n)
+			{
+				return base_iterator(mData - n);
+			}
+
+			constexpr difference_type operator-(base_iterator other)
+			{
+				return mData - other.mData;
+			}
+
+			constexpr reference operator[](difference_type n)
+			{
+				return mData[n];
+			}
+
+			constexpr reference operator*()
+			{
+				return *mData;
+			}
+
+			constexpr pointer operator->()
+			{
+				return mData;
+			}
+
+			constexpr auto operator<=>(const base_iterator& other) const
+			{
+				return mData <=> other.mData;
+			}
+
+            constexpr bool operator==(const base_iterator& other) const
+            {
+                return mData == other.mData;
+            }
+
+            constexpr bool operator!=(const base_iterator& other) const
+            {
+                return mData != other.mData;
+            }
+
+		private:
+			U* mData;
+		};
+
+	public:
+		using iterator = base_iterator<T>;
+		using const_iterator = base_iterator<const T>;
+
+		constexpr vector() noexcept
+			: mData(nullptr)
+			, mSize(0)
+			, mCapacity(0)
+		{
+		}
+
+		constexpr explicit vector(std::size_t count)
+			: mSize(count)
+			, mCapacity(count)
+		{
+			mData = new T[mCapacity];
+		}
+
+		constexpr vector(const vector& other)
+			: mSize(other.mSize)
+			, mCapacity(other.mCapacity)
+		{
+			mData = new T[mCapacity];
+
+			for (std::size_t i = 0; i < mSize; i++)
+			{
+				mData[i] = other.mData[i];
+			}
+		}
+
+		constexpr vector(vector&& other)
+			: mData(other.mData)
+			, mSize(other.mSize)
+			, mCapacity(other.mCapacity)
+		{
+			other.mData = nullptr;
+			other.mSize = 0;
+			other.mCapacity = 0;
+		}
+
+		constexpr ~vector()
+		{
+			delete[] mData;
+		}
+
+		constexpr vector& operator=(const vector& other)
+		{
+			delete[] mData;
+			mData = new T[other.mCapacity];
+			mSize = other.mSize;
+			mCapacity = other.mCapacity;
+
+			for (std::size_t i = 0; i < mSize; i++)
+			{
+				mData[i] = other.mData[i];
+			}
+
+			return *this;
+		}
+
+		vector& operator=(vector&& other)
+		{
+			delete[] mData;
+			mData = other.mData;
+			mSize = other.mSize;
+			mCapacity = other.mCapacity;
+
+			other.mData = nullptr;
+			other.mSize = 0;
+			other.mCapacity = 0;
+		}
+
+		constexpr T& operator[](std::size_t pos)
+		{
+			return mData[pos];
+		}
+
+		constexpr const T& operator[](std::size_t pos) const
+		{
+			return mData[pos];
+		}
+
+		constexpr T& front()
+		{
+			return mData[0];
+		}
+
+		constexpr const T& front() const
+		{
+			return mData[0];
+		}
+
+		constexpr T& back()
+		{
+			return mData[mSize - 1];
+		}
+
+		constexpr const T& back() const
+		{
+			return mData[mSize - 1];
+		}
+
+		constexpr T* data()
+		{
+			return mData;
+		}
+
+		constexpr const T* data() const
+		{
+			return mData;
+		}
+
+		constexpr iterator begin() noexcept
+		{
+			return iterator(mData);
+		}
+
+		constexpr const_iterator begin() const noexcept
+		{
+			return const_iterator(mData);
+		}
+
+		constexpr const_iterator cbegin() const noexcept
+		{
+			return const_iterator(mData);
+		}
+
+		constexpr iterator end() noexcept
+		{
+			return iterator(mData + mSize);
+		}
+
+		constexpr const_iterator end() const noexcept
+		{
+			return const_iterator(mData + mSize);
+		}
+
+		constexpr const_iterator cend() const noexcept
+		{
+			return const_iterator(mData + mSize);
+		}
+
+		constexpr bool empty() const noexcept
+		{
+			return mSize == 0;
+		}
+
+		constexpr std::size_t size() const noexcept
+		{
+			return mSize;
+		}
+
+		constexpr std::size_t max_size() const noexcept
+		{
+			return static_cast<std::size_t>(-1) / sizeof(T);
+		}
+
+		constexpr void reserve(std::size_t new_cap)
+		{
+			if constexpr (new_cap > max_size())
+			{
+				//TODO: throw length_error
+				return;
+			}
+
+			if (new_cap <= mCapacity)
+			{
+				return; // there is already enough capacity for the reserve
+			}
+
+			realloc(new_cap);
+		}
+
+		constexpr std::size_t capacity() const noexcept
+		{
+			return mCapacity;
+		}
+
+		constexpr void shrink_to_fit()
+		{
+			realloc(mSize);
+		}
+
+		constexpr void clear() noexcept
+		{
+			mSize = 0;
+			realloc(mCapacity);
+		}
+
+		constexpr void push_back(const T& value)
+		{
+			check_capacity();
+
+			mData[mSize++] = value;
+		}
+
+		constexpr void push_back(T&& value)
+		{
+			check_capacity();
+
+			mData[mSize++] = std::move(value);
+		}
+
+		constexpr void pop_back()
+		{
+			mData[--mSize].~T();
+		}
+		
+	private:
+		T* mData;
+		std::size_t mSize;
+		std::size_t mCapacity;
+
+		constexpr void realloc(std::size_t new_cap)
+		{
+			T* newData = new T[new_cap];
+
+			if (mSize > 0)
+			{
+				for (std::size_t i = 0; i < mSize; i++)
+				{
+					newData[i] = std::move(mData[i]);
+				}
+			}
+
+			delete[] mData;
+			mData = newData;
+			mCapacity = new_cap;
+		}
+
+		constexpr void check_capacity(std::size_t elementCount = 1)
+		{
+			if (mSize + elementCount > mCapacity)
+			{
+				std::size_t capacity = mCapacity * 2;
+				if (capacity < elementCount)
+				{
+					capacity += elementCount;
+				}
+
+				realloc(capacity);
+			}
+		}
+	};
+}
+
+#endif // VIPEROS_ECHIS_VECTOR
