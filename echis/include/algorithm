@@ -1,0 +1,29 @@
+#ifndef VIPEROS_ECHIS_ALGORITHM
+#define VIPEROS_ECHIS_ALGORITHM 1
+
+namespace std
+{
+    template <class InputIt, class T>
+    constexpr InputIt find(InputIt first, InputIt last, const T& value)
+    {
+        while(first != last)
+        {
+            if (*first == value) return first;
+            ++first;
+        }
+        return last;
+    }
+
+    template <class InputIt, class UnaryPred>
+    constexpr InputIt find_if(InputIt first, InputIt last, UnaryPred p)
+    {
+        while (first != last)
+        {
+            if (p(*first)) return first;
+            ++first;
+        }
+        return last;
+    }
+}
+
+#endif // VIPEROS_ECHIS_ALGORITHM

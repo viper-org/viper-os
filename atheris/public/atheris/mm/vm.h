@@ -20,6 +20,16 @@
  */
 
 /*
+ * Generic function that initializes kernel virtual
+ * memory allocator free list(adding all allowed
+ * addresses)
+ *
+ * Must be provided in atheris/private/mm/vm.h
+ *
+ * void atheris::vm::InitAllocator(std::list<echis::vm::VMAllocNode>& freeList)
+ */
+
+/*
  * Generic function to map a single page with
  * specified flags
  *
@@ -56,6 +66,9 @@
  * Must be provided in atheris/private/mm/vm.h
  *
  * struct atheris::vm::AddressSpace
+ * {
+ *      std::list<echis::vm::VMAllocNode> nodes;
+ * }
  */
 
 #include <atheris/private/mm/vm.h>

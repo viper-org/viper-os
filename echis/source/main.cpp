@@ -1,6 +1,7 @@
 #include <main.h>
 
 #include <mm/heap.h>
+#include <mm/vm/alloc.h>
 
 #include <driver/debugcon.h>
 
@@ -14,6 +15,11 @@ namespace echis
     {
         atheris::vm::Init();
         mm::Init();
+
+        vm::alloc::Init();
+        mm::MarkMemUsed();
+        auto pages = vm::alloc::GetKernelPages(4, atheris::vm::flags::present | atheris::vm::flags::write);
+        driver::debugcon::WriteFormatted("VMM Allocated 4 pages at %p\n", pages); 
 
         fs::test::TestVFilesystem::Init();
         auto node = fs::LookupPathName("/");

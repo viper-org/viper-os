@@ -3,6 +3,10 @@
 
 #include <atheris/mm/pm.h>
 
+#include <echis/mm/vm/node.h>
+
+#include <list>
+
 namespace atheris
 {
     namespace vm
@@ -19,6 +23,7 @@ namespace atheris
         struct AddressSpace
         {
             pm::physaddr pml4;
+            std::list<echis::vm::VMAllocNode> nodes;
 
             void switchTo();
         };
@@ -27,6 +32,7 @@ namespace atheris
 
         
         void Init();
+        void InitAllocator(std::list<echis::vm::VMAllocNode>& freeList);
 
         void MapPage(AddressSpace* addressSpace, pm::physaddr phys, uint64_t virt, uint16_t flags);
         void MapPages(AddressSpace* addressSpace, pm::physaddr phys, uint64_t virt, uint16_t flags, uint32_t pageCount);

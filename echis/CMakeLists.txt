@@ -8,6 +8,8 @@ set(SOURCES
     "source/mm/physical.cpp"
     "source/mm/heap.cpp"
 
+    "source/mm/vm/alloc.cpp"
+
     "source/fs/vfs.cpp"
     "source/fs/testfs.cpp"
 
@@ -23,6 +25,9 @@ set(HEADERS
 
     "include/echis/mm/physical.h"
     "include/echis/mm/heap.h"
+
+    "include/echis/mm/vm/node.h"
+    "include/echis/mm/vm/alloc.h"
 
     "include/echis/fs/vfs.h"
     "include/echis/fs/testfs.h"
