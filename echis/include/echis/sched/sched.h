@@ -12,6 +12,8 @@ namespace echis
         void AddProcess(Process&& process);
 
         void Start();
+
+        void Yield();
     }
 }
 

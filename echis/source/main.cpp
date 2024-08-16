@@ -16,7 +16,7 @@ namespace echis
     void TestThreadThing()
     {
         driver::debugcon::Write("hello from thread\n");
-        while(1) asm("pause");
+        while(1) sched::Yield();
     }
     
     void KernelMain()
@@ -47,9 +47,13 @@ namespace echis
 
 
         sched::Init();
-        sched::Process proc;
-        proc.getMainThread()->getExecStart() = reinterpret_cast<std::uint64_t>(TestThreadThing);
-        sched::AddProcess(std::move(proc));
+        auto addproc = [](){
+            sched::Process proc1;
+            proc1.getMainThread()->getExecStart() = reinterpret_cast<std::uint64_t>(TestThreadThing);
+            sched::AddProcess(std::move(proc1));
+        };
+        addproc();
+        addproc();
         sched::Start();
     }
 }

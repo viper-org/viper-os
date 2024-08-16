@@ -31,5 +31,14 @@ namespace echis
             atheris::sched::ThreadContext* old; // unused
             atheris::sched::SwitchContext(&old, threadList->current()->getContext());
         }
+
+        
+        void Yield()
+        {
+            if (threadList->peek() == threadList->current()) return;
+
+            auto old = threadList->next();
+            atheris::sched::SwitchContext(&old->getContext(), threadList->current()->getContext());
+        }
     }
 }
