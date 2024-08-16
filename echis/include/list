@@ -60,11 +60,13 @@ namespace std
             mSize = other.mSize;
 
             node* n = other.mHead;
-            while (n)
+            while (n && n != &other.mOnePastEnd)
             {
                 push_back(n->v);
                 n = n->next;
             }
+
+            return *this;
         }
 
         list& operator=(list&& other)
@@ -77,8 +79,10 @@ namespace std
 
             other.mHead = nullptr;
             other.mTail = nullptr;
-            other.mOnePastEnd = nullptr;
+            other.mOnePastEnd.prev = nullptr;
             other.mSize = 0;
+
+            return *this;
         }
 
         T& front()
@@ -253,12 +257,16 @@ namespace std
         void clearAll()
         {
             node* elem = mHead;
-            while(elem)
+            while(elem && elem != &mOnePastEnd)
             {
                 node* temp = elem;
                 elem = elem->next;
                 delete temp;
             }
+            mHead = nullptr;
+            mTail = nullptr;
+            mOnePastEnd.prev = nullptr;
+            mSize = 0;
         }
 
         node* mHead;

@@ -26,6 +26,8 @@ namespace atheris
             std::list<echis::vm::VMAllocNode> nodes;
 
             void switchTo();
+
+            static AddressSpace Create();
         };
 
         void* GetVirtualAddress(pm::physaddr physAddress);

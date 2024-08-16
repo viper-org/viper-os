@@ -13,6 +13,9 @@ set(SOURCES
     "source/fs/vfs.cpp"
     "source/fs/testfs.cpp"
 
+    "source/sched/proc.cpp"
+    "source/sched/sched.cpp"
+
     "source/libc/stdlib.cpp"
     "source/libc/string.cpp"
     "source/libc/new.cpp"
@@ -31,6 +34,9 @@ set(HEADERS
 
     "include/echis/fs/vfs.h"
     "include/echis/fs/testfs.h"
+
+    "include/echis/sched/proc.h"
+    "include/echis/sched/sched.h"
 
     "include/echis/util/math.h"
     "include/echis/util/debug.h"

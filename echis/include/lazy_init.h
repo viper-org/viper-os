@@ -22,6 +22,11 @@ public:
         new (mBuffer) T(std::move(v));
     }
 
+    void default_init()
+    {
+        new (mBuffer) T;
+    }
+
     T& operator*()
     {
         return *reinterpret_cast<T*>(mBuffer);

@@ -9,7 +9,7 @@ namespace echis
     {
         struct VMAllocNode
         {
-            std::uint32_t numPages;
+            std::uint64_t numPages;
             std::uint64_t base;
         };
     }

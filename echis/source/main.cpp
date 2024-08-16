@@ -7,10 +7,18 @@
 
 #include <fs/testfs.h>
 
+#include <sched/sched.h>
+
 #include <atheris/mm/vm.h>
 
 namespace echis
 {
+    void TestThreadThing()
+    {
+        driver::debugcon::Write("hello from thread\n");
+        while(1) asm("pause");
+    }
+    
     void KernelMain()
     {
         atheris::vm::Init();
@@ -36,5 +44,12 @@ namespace echis
         char buffer[11];
         file->read(buffer, 11);
         driver::debugcon::WriteString(buffer, 11);
+
+
+        sched::Init();
+        sched::Process proc;
+        proc.getMainThread()->getExecStart() = reinterpret_cast<std::uint64_t>(TestThreadThing);
+        sched::AddProcess(std::move(proc));
+        sched::Start();
     }
 }

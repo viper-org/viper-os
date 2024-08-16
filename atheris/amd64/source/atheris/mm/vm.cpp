@@ -1,5 +1,3 @@
-#include "atheris/private/mm/vm.h"
-#include "echis/mm/vm/node.h"
 #include <atheris/mm/vm.h>
 
 #include <mm/pm.h>
@@ -186,6 +184,25 @@ namespace atheris
         {
             // maybe check that response is valid here
             return reinterpret_cast<void*>(hhdmRequest.response->offset + physAddress);
+        }
+
+
+        AddressSpace AddressSpace::Create()
+        {
+            AddressSpace ret;
+            ret.pml4 = echis::mm::physical::GetPage();
+
+            void* higherHalf       = reinterpret_cast<void*>(GetVirtualAddress(ret.pml4 + (256 * sizeof(uint64_t))));
+            void* kernelHigherHalf = reinterpret_cast<void*>(GetVirtualAddress(kernelAddressSpace->pml4 + (256 * sizeof(uint64_t))));
+
+            std::memcpy(higherHalf, kernelHigherHalf, 256 * sizeof(uint64_t));
+
+            echis::vm::VMAllocNode node;
+            node.base = 0x1000; // skip null page
+            node.numPages = NPAGES(0x00007FFFFFFFE000ull - 0x1000ull);
+            ret.nodes.push_back(node);
+
+            return ret;
         }
     }
 }
