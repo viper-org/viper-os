@@ -9,12 +9,15 @@ set(SOURCES
     "source/mm/heap.cpp"
 
     "source/mm/vm/alloc.cpp"
+    "source/mm/vm/lazyMap.cpp"
 
     "source/fs/vfs.cpp"
     "source/fs/testfs.cpp"
 
     "source/sched/proc.cpp"
     "source/sched/sched.cpp"
+
+    "source/exception/exception.cpp"
 
     "source/libc/stdlib.cpp"
     "source/libc/string.cpp"
@@ -31,12 +34,15 @@ set(HEADERS
 
     "include/echis/mm/vm/node.h"
     "include/echis/mm/vm/alloc.h"
+    "include/echis/mm/vm/lazyMap.h"
 
     "include/echis/fs/vfs.h"
     "include/echis/fs/testfs.h"
 
     "include/echis/sched/proc.h"
     "include/echis/sched/sched.h"
+
+    "include/echis/exception/exception.h"
 
     "include/echis/util/math.h"
     "include/echis/util/debug.h"

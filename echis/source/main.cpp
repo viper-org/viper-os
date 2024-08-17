@@ -26,6 +26,7 @@ namespace echis
 
         vm::alloc::Init();
         mm::MarkMemUsed();
+        *(char*)0x4000 = 2;
         auto pages = vm::alloc::GetKernelPages(4, atheris::vm::flags::present | atheris::vm::flags::write);
         driver::debugcon::WriteFormatted("VMM Allocated 4 pages at %p\n", pages); 
 
