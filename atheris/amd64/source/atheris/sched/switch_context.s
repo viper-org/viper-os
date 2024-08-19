@@ -5,6 +5,7 @@ switch_context:
     movq %rdi, %rax
     movq %rsi, %rdx
 
+    pushfq
     pushq %r15
     pushq %r14
     pushq %r13
@@ -25,4 +26,5 @@ switch_context:
     popq %r13
     popq %r14
     popq %r15
+    popfq
     ret

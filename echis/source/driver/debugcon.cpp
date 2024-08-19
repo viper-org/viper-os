@@ -28,12 +28,8 @@ namespace echis
                 }
             }
 
-
-            void WriteFormatted(const char* format, ...)
+            void WriteFormattedImpl(const char* format, va_list args)
             {
-                va_list args;
-                va_start(args, format);
-
                 std::size_t i = 0;
                 while(format[i])
                 {
@@ -84,6 +80,29 @@ namespace echis
                     }
                     ++i;
                 }
+            }
+
+
+            void WriteFormatted(const char* format, ...)
+            {
+                va_list args;
+                va_start(args, format);
+                WriteFormattedImpl(format, args);
+                va_end(args);
+            }
+
+
+            DRIVER_EXPORT void KeDebugLog(const char* data)
+            {
+                Write(data);
+            }
+
+            DRIVER_EXPORT void KeDebugLogFmt(const char* format, ...)
+            {
+                va_list args;
+                va_start(args, format);
+                WriteFormattedImpl(format, args);
+                va_end(args);
             }
         }
     }

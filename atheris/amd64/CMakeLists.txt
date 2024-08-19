@@ -3,7 +3,11 @@ cmake_minimum_required(VERSION 3.8)
 set(SOURCES
     "source/boot/start.cpp"
 
+    "source/driver/acpi.cpp"
+    "source/driver/hpet.cpp"
+
     "source/atheris/driver/debugcon.cpp"
+    "source/atheris/driver/timer.cpp"
 
     "source/atheris/mm/vm.cpp"
 
@@ -15,9 +19,12 @@ set(SOURCES
 
     "source/cpu/gdt.cpp"
     "source/cpu/gdt_install.s"
-    "source/cpu/idt.cpp"
-    "source/cpu/interrupt_table.s"
-    "source/cpu/exception.cpp"
+    "source/cpu/asm.cpp"
+    "source/cpu/interrupt/idt.cpp"
+    "source/cpu/interrupt/interrupt_table.s"
+    "source/cpu/interrupt/exception.cpp"
+    "source/cpu/interrupt/irq.cpp"
+    "source/cpu/interrupt/apic.cpp"
 
     "source/mm/pm.cpp"
 )
@@ -26,14 +33,19 @@ set(HEADERS
     "include/limine.h"
 
     "include/driver/port.h"
+    "include/driver/acpi.h"
+    "include/driver/hpet.h"
 
     "include/cpu/gdt.h"
-    "include/cpu/idt.h"
+    "include/cpu/asm.h"
+    "include/cpu/interrupt/idt.h"
+    "include/cpu/interrupt/apic.h"
 
     "include/mm/pm.h"
 
 
     "include/atheris/private/driver/debugcon.h"
+    "include/atheris/private/driver/timer.h"
 
     "include/atheris/private/mm/pm.h"
     "include/atheris/private/mm/vm.h"
@@ -91,10 +103,11 @@ target_link_options(viperos-amd64 PRIVATE ${LINKER_OPTIONS})
 target_compile_options(viperos-amd64 PRIVATE ${COMPILER_OPTIONS})
 target_include_directories(viperos-amd64 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../public)
 
-target_compile_definitions(viperos-amd64 PRIVATE $<$<CONFIG:Debug>:ATHERIS_DEBUG_LOG_ALL>)
+#target_compile_definitions(viperos-amd64 PRIVATE $<$<CONFIG:Debug>:ATHERIS_DEBUG_LOG_ALL>)
 
 target_compile_options(echis PRIVATE ${COMPILER_OPTIONS})
 target_include_directories(echis PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../public)
 target_include_directories(echis PRIVATE include)
 
+# TODO: Run this on updates to vipera so drivers can be reloaded
 add_custom_command(TARGET viperos-amd64 POST_BUILD COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/build_iso.sh)

@@ -1,4 +1,3 @@
-#include "atheris/private/mm/vm.h"
 #include "mm/vm/node.h"
 #include <mm/vm/alloc.h>
 
@@ -40,8 +39,6 @@ namespace echis
                 if (it->numPages == pageCount)
                 {
                     freeList.erase(it);
-
-                    //MapRegion(addressSpace, pageCount, base, flags);
                 }
                 else
                 {
@@ -49,7 +46,6 @@ namespace echis
                     it->base += pageCount * mm::physical::GetPageSize();
                 }
 
-                //MapRegion(addressSpace, pageCount, base, flags);
                 allocated.push_back({
                     pageCount, base, flags::LazyMapping, flags
                 });

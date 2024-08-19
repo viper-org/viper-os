@@ -14,6 +14,7 @@ namespace std
 		template <class U>
 		class base_iterator
 		{
+		friend class vector;
 		public:
 			using difference_type = signed long long int;
 			using value_type = U;
@@ -335,6 +336,18 @@ namespace std
 		constexpr void pop_back()
 		{
 			mData[--mSize].~T();
+		}
+
+
+		template <class U>
+		constexpr void erase(base_iterator<U> it)
+		{
+			std::size_t index = it.mData - mData;
+			for (; index < mSize-1; ++index)
+			{
+				mData[index] = std::move(mData[index+1]);
+			}
+			--mSize;
 		}
 		
 	private:

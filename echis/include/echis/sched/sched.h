@@ -13,6 +13,9 @@ namespace echis
 
         void Start();
 
+        void Block();
+        void Unblock(Thread* thread);
+
         void Yield();
     }
 }

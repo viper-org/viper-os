@@ -31,6 +31,7 @@ set(HEADERS
 
     "include/echis/driver/debugcon.h"
     "include/echis/driver/ldr/loader.h"
+    "include/echis/driver/export.h"
 
     "include/echis/mm/physical.h"
     "include/echis/mm/heap.h"
@@ -60,4 +61,4 @@ target_include_directories(echis PRIVATE include/echis)
 target_include_directories(echis PUBLIC include)
 target_compile_features(echis PUBLIC cxx_std_20)
 
-target_compile_definitions(echis PRIVATE $<$<CONFIG:Debug>:ECHIS_DEBUG_LOG_ALL>)
+#target_compile_definitions(echis PRIVATE $<$<CONFIG:Debug>:ECHIS_DEBUG_LOG_ALL>)

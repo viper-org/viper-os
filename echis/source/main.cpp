@@ -13,19 +13,11 @@
 
 #include <sched/sched.h>
 
+#include <atheris/driver/timer.h>
+
 #include <atheris/mm/vm.h>
 
 #include <limine.h>
-
-extern "C" void dosomething()
-{
-    echis::driver::debugcon::Write("kernel function getter working");
-}
-
-extern "C" void KeDebugLog(const char* msg)
-{
-    echis::driver::debugcon::Write(msg);
-}
  
 static volatile limine_module_request ModuleRequest = {
     .id = LIMINE_MODULE_REQUEST,
@@ -35,10 +27,32 @@ static volatile limine_module_request ModuleRequest = {
 
 namespace echis
 {
-    void TestThreadThing()
+    void TestThreadThing1()
     {
-        driver::debugcon::Write("hello from thread\n");
-        while(1) sched::Yield();
+        while(1)
+        {
+            driver::debugcon::WriteString("A", 1);
+            asm("pause");
+            asm("pause");
+            asm("pause");
+            asm("pause");
+            asm("pause");
+            asm("pause");
+        }
+    }
+    void TestThreadThing2()
+    {
+        sched::Block();
+        while(1)
+        {
+            driver::debugcon::WriteString("B", 1);
+            asm("pause");
+            asm("pause");
+            asm("pause");
+            asm("pause");
+            asm("pause");
+            asm("pause");
+        }
     }
     
     void KernelMain()
@@ -74,14 +88,16 @@ namespace echis
         node = fs::LookupPathName("/dev/sample");
         node->write(nullptr, 0);
 
+        atheris::timer::Init(10e6); // 10ms
+
         sched::Init();
-        auto addproc = [](){
+        auto addproc = [](void(*fn)()){
             sched::Process proc1;
-            proc1.getMainThread()->getExecStart() = reinterpret_cast<std::uint64_t>(TestThreadThing);
+            proc1.getMainThread()->getExecStart() = reinterpret_cast<std::uint64_t>(fn);
             sched::AddProcess(std::move(proc1));
         };
-        addproc();
-        addproc();
+        addproc(TestThreadThing1);
+        addproc(TestThreadThing2);
         sched::Start();
     }
 }

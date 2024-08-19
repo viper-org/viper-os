@@ -18,6 +18,7 @@ namespace atheris
             void* contextLoc = reinterpret_cast<void*>(thread->getKernelStack().top - sizeof(ThreadContext));
             thread->getContext() = new (contextLoc) ThreadContext;
             thread->getContext()->rip = thread->getExecStart();
+            thread->getContext()->rflags = 0x202;
         }
 
         void SwitchContext(ThreadContext** oldContext, ThreadContext* newContext)

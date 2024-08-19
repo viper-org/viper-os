@@ -26,6 +26,21 @@ void* memcpy(void* dest, const void* src, size_t count)
     return dest;
 }
 
+int memcmp(const void* lhs, const void* rhs, size_t count)
+{
+    const char* p1 = reinterpret_cast<const char*>(lhs);
+    const char* p2 = reinterpret_cast<const char*>(rhs);
+
+    while(count--)
+    {
+        if (*p1 != *p2) return *p1 - *p2;
+        ++p1;
+        ++p2;
+    }
+
+    return 0;
+}
+
 int strcmp(const char* lhs, const char* rhs)
 {
     while (*lhs && (*lhs == *rhs))
