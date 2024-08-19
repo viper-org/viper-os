@@ -12,6 +12,23 @@ namespace echis
             std::uint64_t numPages;
             std::uint64_t base;
         };
+
+        namespace flags
+        {
+            enum flags : std::uint16_t
+            {
+                LazyMapping
+            };
+        }
+
+        struct VMAllocatedRegion
+        {
+            std::uint64_t numPages;
+            std::uint64_t base;
+
+            std::uint16_t flags;
+            std::uint16_t mappingFlags;
+        };
     }
 }
 

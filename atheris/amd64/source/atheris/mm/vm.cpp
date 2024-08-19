@@ -1,3 +1,4 @@
+#include "atheris/private/mm/vm.h"
 #include <atheris/mm/vm.h>
 
 #include <mm/pm.h>
@@ -37,10 +38,12 @@ namespace atheris
         constexpr unsigned int PageSize = 0x1000;
 
         lazy_init<AddressSpace> kernelAddressSpace;
+        AddressSpace* activeAddressSpace;
 
         void AddressSpace::switchTo()
         {
             asm volatile("mov %0, %%cr3" :: "r"(pml4));
+            activeAddressSpace = this;
         }
 
         static inline pm::physaddr GetPageTableAddress(pm::physaddr pt)
@@ -60,7 +63,7 @@ namespace atheris
 
         static inline void CreateKernelPML4()
         {
-            kernelAddressSpace = AddressSpace();
+            kernelAddressSpace.default_init();
             kernelAddressSpace->pml4 = GetPageLevel();
         }
 
@@ -180,6 +183,36 @@ namespace atheris
         }
 
 
+        std::uint16_t GetFlags(AddressSpace* addressSpace, std::uint64_t address)
+        {
+            if (!addressSpace)
+            {
+                addressSpace = &kernelAddressSpace;
+            }
+
+            address &= ~0xfff;
+
+            std::uint64_t shift = 48;
+            std::uint64_t* pageTable = reinterpret_cast<std::uint64_t*>(GetVirtualAddress(GetPageTableAddress(addressSpace->pml4)));
+            std::uint64_t index;
+            for (int i = 0; i < 4; ++i)
+            {
+                shift -= 9;
+                index = (address >> shift) & 0x1FF;
+                if (i == 3) break;
+
+                if (!(pageTable[index] & flags::present))
+                {
+                    return 0;
+                }
+
+                pageTable = reinterpret_cast<std::uint64_t*>(GetVirtualAddress(GetPageTableAddress(pageTable[index])));
+            }
+
+            return pageTable[index] & 0xfff;
+        }
+
+
         void* GetVirtualAddress(pm::physaddr physAddress)
         {
             // maybe check that response is valid here
@@ -200,9 +233,19 @@ namespace atheris
             echis::vm::VMAllocNode node;
             node.base = 0x1000; // skip null page
             node.numPages = NPAGES(0x00007FFFFFFFE000ull - 0x1000ull);
-            ret.nodes.push_back(node);
+            ret.freeNodes.push_back(node);
 
             return ret;
+        }
+
+        AddressSpace* AddressSpace::Active()
+        {
+            return activeAddressSpace;
+        }
+
+        AddressSpace* AddressSpace::Kernel()
+        {
+            return &kernelAddressSpace;
         }
     }
 }

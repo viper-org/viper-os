@@ -1,3 +1,4 @@
+#include "atheris/private/mm/vm.h"
 #include "mm/vm/node.h"
 #include <mm/vm/alloc.h>
 
@@ -12,26 +13,13 @@ namespace echis
     {
         namespace alloc
         {
-            static lazy_init<std::list<VMAllocNode>> kernelFreeList;
-
             void Init()
             {
-                kernelFreeList = std::list<VMAllocNode>();
-                atheris::vm::InitAllocator(*kernelFreeList);
+                auto kernelAddressSpace = atheris::vm::AddressSpace::Kernel();
+                atheris::vm::InitAllocator(kernelAddressSpace->freeNodes);
             }
 
-            static inline void MapRegion(atheris::vm::AddressSpace* addressSpace, std::uint32_t pageCount, std::uint64_t virtualBase, std::uint16_t flags)
-            {
-                for (std::uint64_t i = 0; i < pageCount * mm::physical::GetPageSize(); i += mm::physical::GetPageSize())
-                    {
-                        atheris::vm::MapPage(addressSpace,
-                            mm::physical::GetPage(),
-                            virtualBase + i,
-                            flags);
-                    }
-            }
-
-            void* GetPagesImpl(atheris::vm::AddressSpace* addressSpace, std::list<VMAllocNode>& freeList, std::uint32_t pageCount, std::uint16_t flags)
+            void* GetPagesImpl(std::list<VMAllocNode>& freeList, std::list<VMAllocatedRegion>& allocated, std::uint32_t pageCount, std::uint16_t flags)
             {
                 if (pageCount == 0)
                 {
@@ -53,7 +41,7 @@ namespace echis
                 {
                     freeList.erase(it);
 
-                    MapRegion(addressSpace, pageCount, base, flags);
+                    //MapRegion(addressSpace, pageCount, base, flags);
                 }
                 else
                 {
@@ -61,22 +49,25 @@ namespace echis
                     it->base += pageCount * mm::physical::GetPageSize();
                 }
 
-                MapRegion(addressSpace, pageCount, base, flags);
+                //MapRegion(addressSpace, pageCount, base, flags);
+                allocated.push_back({
+                    pageCount, base, flags::LazyMapping, flags
+                });
                 return reinterpret_cast<void*>(base);
             }
 
             void* GetPages(atheris::vm::AddressSpace* addressSpace, std::uint32_t pageCount, std::uint16_t flags)
             {
-                return GetPagesImpl(addressSpace, addressSpace->nodes, pageCount, flags);
+                return GetPagesImpl(addressSpace->freeNodes, addressSpace->allocatedRegions, pageCount, flags);
             }
 
             void* GetKernelPages(std::uint32_t pageCount, std::uint16_t flags)
             {
-                return GetPagesImpl(nullptr, *kernelFreeList, pageCount, flags);
+                return GetPages(atheris::vm::AddressSpace::Kernel(), pageCount, flags);
             }
 
 
-            bool MarkUsedImpl(std::list<VMAllocNode>& freeList, std::uint64_t base, std::uint32_t pageCount)
+            bool DoMarkUsed(std::list<VMAllocNode>& freeList, std::uint64_t base, std::uint32_t pageCount)
             {
                 if (pageCount == 0) return true;
 
@@ -102,14 +93,26 @@ namespace echis
                 return true;
             }
 
+            bool MarkUsedImpl(std::list<VMAllocNode>& freeList, std::list<VMAllocatedRegion>& allocated, std::uint64_t base, std::uint32_t pageCount)
+            {
+                bool ret = DoMarkUsed(freeList, base, pageCount);
+                if (ret)
+                {
+                    allocated.push_back({
+                        pageCount, base, 0, 0
+                    });
+                }
+                return pageCount;
+            }
+
             bool MarkUsed(atheris::vm::AddressSpace* addressSpace, std::uint64_t base, std::uint32_t pageCount)
             {
-                return MarkUsedImpl(addressSpace->nodes, base, pageCount);
+                return MarkUsedImpl(addressSpace->freeNodes, addressSpace->allocatedRegions, base, pageCount);
             }
             
             bool MarkKernelUsed(std::uint64_t base, std::uint32_t pageCount)
             {
-                return MarkUsedImpl(*kernelFreeList, base, pageCount);
+                return MarkUsed(atheris::vm::AddressSpace::Kernel(), base, pageCount);
             }
         }
     }

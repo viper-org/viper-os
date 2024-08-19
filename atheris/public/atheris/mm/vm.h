@@ -48,6 +48,15 @@
  */
 
 /*
+ * Function that returns the flags that a page
+ * was mapped with(or zero if none)
+ *
+ * Must be provided in atheris/private/mm/vm.h
+ *
+ * std::uint16_t atheris::vm::GetFlags(atheris::vm::AddressSpace* addressSpace, std::uint64_t address)
+ */
+
+/*
  * Enum providing the allowed flags for page
  * mappings
  *
@@ -67,8 +76,27 @@
  *
  * struct atheris::vm::AddressSpace
  * {
- *      std::list<echis::vm::VMAllocNode> nodes;
+ *      std::list<echis::vm::VMAllocNode> freeNodes;
+ *      std::list<echis::vm::VMAllocatedRegion> allocatedRegions;
  * }
+ */
+
+/*
+ * Function that returns the active address space
+ * at the time of calling
+ *
+ * Must be provided in atheris/private/mm/vm.h
+ *
+ * atheris::vm::AddressSpace* atheris::vm::AddressSpace::Active()
+ */
+
+/*
+ * Function that returns the initial kernel
+ * address space used for system setup
+ *
+ * Must be provided in atheris/private/mm/vm.h
+ *
+ * atheris::vm::AddressSpace* atheris::vm::AddressSpace::Kernel()
  */
 
 #include <atheris/private/mm/vm.h>
