@@ -7,6 +7,10 @@ set(SOURCES
 
     "source/atheris/mm/vm.cpp"
 
+    "source/atheris/sched/sched.cpp"
+    "source/atheris/sched/prepare_thread.s"
+    "source/atheris/sched/switch_context.s"
+
     "source/cpu/gdt.cpp"
     "source/cpu/gdt_install.s"
     "source/cpu/idt.cpp"
