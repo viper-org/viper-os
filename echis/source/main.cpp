@@ -63,7 +63,7 @@ namespace echis
         driver::ldr::Init();
         for (auto i = 0; i < ModuleRequest.response->module_count; ++i)
         {
-            if (!std::strcmp(ModuleRequest.response->modules[i]->path, "/sample.elf"))
+            if (!std::strcmp(ModuleRequest.response->modules[i]->path, "/sample.vdrv"))
             {
                 auto hdr = driver::ldr::LoadDriver(ModuleRequest.response->modules[i]->address);
                 hdr.init();

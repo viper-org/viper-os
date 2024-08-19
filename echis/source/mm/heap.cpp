@@ -112,10 +112,6 @@ namespace echis
 
         void FreeMemory(void* mem)
         {
-            if (mem == (void*)0xFFFFFFFF800093AB)
-            {
-                int x = 4;
-            }
             if (!mem)
             {
                 return;
