@@ -23,11 +23,14 @@ namespace atheris
         struct AddressSpace
         {
             pm::physaddr pml4;
-            std::list<echis::vm::VMAllocNode> nodes;
+            std::list<echis::vm::VMAllocNode> freeNodes;
+            std::list<echis::vm::VMAllocatedRegion> allocatedRegions;
 
             void switchTo();
 
             static AddressSpace Create();
+            static AddressSpace* Active();
+            static AddressSpace* Kernel();
         };
 
         void* GetVirtualAddress(pm::physaddr physAddress);
@@ -38,6 +41,8 @@ namespace atheris
 
         void MapPage(AddressSpace* addressSpace, pm::physaddr phys, uint64_t virt, uint16_t flags);
         void MapPages(AddressSpace* addressSpace, pm::physaddr phys, uint64_t virt, uint16_t flags, uint32_t pageCount);
+
+        std::uint16_t GetFlags(AddressSpace* addressSpace, std::uint64_t address);
     }
 }
 

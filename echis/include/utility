@@ -10,6 +10,11 @@ namespace std
     {
         return static_cast<std::remove_reference_t<T>&&>(t);
     }
+
+    [[noreturn]] inline void unreachable()
+    {
+        __builtin_unreachable();
+    }
 }
 
 #endif // VIPEROS_ECHIS_UTILITY
