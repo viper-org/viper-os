@@ -10,6 +10,8 @@ typedef decltype(sizeof(0)) size_t;
 void* memset(void* dest, int ch, size_t count);
 void* memcpy(void* dest, const void* src, size_t count );
 
+int strcmp(const char* lhs, const char* rhs);
+
 size_t strlen(const char* s);
 
 #ifdef __cplusplus

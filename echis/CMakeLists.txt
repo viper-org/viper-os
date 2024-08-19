@@ -4,12 +4,14 @@ set(SOURCES
     "source/main.cpp"
 
     "source/driver/debugcon.cpp"
+    "source/driver/ldr/loader.cpp"
 
     "source/mm/physical.cpp"
     "source/mm/heap.cpp"
 
     "source/fs/vfs.cpp"
     "source/fs/testfs.cpp"
+    "source/fs/devfs.cpp"
 
     "source/libc/stdlib.cpp"
     "source/libc/string.cpp"
@@ -20,12 +22,14 @@ set(HEADERS
     "include/echis/main.h"
 
     "include/echis/driver/debugcon.h"
+    "include/echis/driver/ldr/loader.h"
 
     "include/echis/mm/physical.h"
     "include/echis/mm/heap.h"
 
     "include/echis/fs/vfs.h"
     "include/echis/fs/testfs.h"
+    "include/echis/fs/devfs.h"
 
     "include/echis/util/math.h"
     "include/echis/util/debug.h"

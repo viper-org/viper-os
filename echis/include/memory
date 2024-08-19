@@ -139,6 +139,17 @@ namespace std
         }
 
 
+        bool operator==(T* other) const
+        {
+            return mBase == other;
+        }
+
+        bool operator!() const
+        {
+            return !mBase;
+        }
+
+
     protected:
         T* mBase;
         long* mReferences;

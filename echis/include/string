@@ -126,6 +126,16 @@ namespace std
             return true;
         }
 
+        constexpr bool operator==(const char* other) const
+        {
+            if (other[mSize] != '\0') return false;
+            for (size_t i = 0; i < mSize; ++i)
+            {
+                if (other[i] != mBuffer[i]) return false;
+            }
+            return true;
+        }
+
     private:
         char* mBuffer;
         size_t mCapacity;

@@ -31,11 +31,15 @@ namespace echis
 
             virtual ~VirtualFilesystem();
             virtual int root(std::shared_ptr<VirtualNode>& vnode) = 0;
+            virtual int mount(const std::string& path) = 0;
 
             static void AddMountedFS(VirtualFilesystem* fs);
 
             VirtualFilesystem* next; // next filesystem
             VirtualNode* nodeCovered; // vnode where this FS is mounted
+
+        protected:
+            int defaultMount(const std::string& path);
         };
 
         struct VirtualNode

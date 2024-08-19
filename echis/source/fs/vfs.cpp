@@ -33,6 +33,18 @@ namespace echis
             }
         }
 
+        int VirtualFilesystem::defaultMount(const std::string& path)
+        {
+            std::shared_ptr<VirtualNode> node = LookupPathName(path);
+            if (!node || node->mountedVFS)
+            {
+                return -1;
+            }
+            nodeCovered = node.get();
+            node->mountedVFS = this;
+            return 0;
+        }
+
 
         VirtualNode::VirtualNode(VirtualFilesystem* fs, VNodeType type)
             : vfs(fs)
@@ -73,6 +85,10 @@ namespace echis
                 {
                     driver::debugcon::WriteFormatted("Path lookup component %s returned %d\n", buffer, err);
                     return nullptr;
+                }
+                if (currentNode->mountedVFS)
+                {
+                    currentNode->mountedVFS->root(currentNode);
                 }
 
                 bufferIndex = 0;

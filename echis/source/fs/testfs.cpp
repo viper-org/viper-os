@@ -30,6 +30,11 @@ namespace echis
                 return 0;
             }
 
+            int TestVFilesystem::mount(const std::string& path)
+            {
+                return defaultMount(path);
+            }
+
 
             TestNodeFile::TestNodeFile(std::string name)
                 : VirtualNode(&fs, VNodeType::File)

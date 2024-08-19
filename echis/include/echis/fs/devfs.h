@@ -1,7 +1,9 @@
-#ifndef VIPEROS_ECHIS_FS_TESTFS_H
-#define VIPEROS_ECHIS_FS_TESTFS_H 1
+#ifndef VIPEROS_ECHIS_FS_DEVFS_H
+#define VIPEROS_ECHIS_FS_DEVFS_H 1
 
 #include <fs/vfs.h>
+
+#include <driver/ldr/loader.h>
 
 #include <string>
 #include <vector>
@@ -10,28 +12,32 @@ namespace echis
 {
     namespace fs
     {
-        namespace test
+        namespace dev
         {
-            class TestVFilesystem : public VirtualFilesystem
+            class DevFilesystem : public VirtualFilesystem
             {
             public:
-                TestVFilesystem();
+                DevFilesystem();
 
                 virtual int root(std::shared_ptr<VirtualNode>& vnode) override;
                 virtual int mount(const std::string& path) override;
 
+                static void AddDevice(driver::ldr::DriverHeader* driver);
                 static void Init();
+                static VirtualFilesystem* Get();
 
             private:
+                void addDevice(driver::ldr::DriverHeader* driver);
+
                 std::shared_ptr<VirtualNode> mRootNode;
             };
 
-            class TestNodeFile : public VirtualNode
+            class DevNode : public VirtualNode
             {
-            friend class TestVFilesystem;
-            friend class TestNodeDir;
+            friend class DevFilesystem;
+            friend class DevfsRoot;
             public:
-                TestNodeFile(std::string name);
+                DevNode(driver::ldr::DriverHeader* driver);
 
                 virtual VNodeOpError read(void* buffer, std::size_t count) override;
                 virtual VNodeOpError write(const void* buffer, std::size_t count) override;
@@ -40,16 +46,13 @@ namespace echis
                 virtual VNodeOpError mkdir(const std::string& name, std::shared_ptr<VirtualNode>& vnode) override;
 
             private:
-                std::string mName;
-                char* mData;
-                std::size_t mSize;
+                driver::ldr::DriverHeader* mDriver;
             };
 
-            class TestNodeDir : public VirtualNode
+            class DevfsRoot : public VirtualNode
             {
-            friend class TestVFilesystem;
             public:
-                TestNodeDir(std::string name);
+                DevfsRoot();
 
                 virtual VNodeOpError read(void* buffer, std::size_t count) override;
                 virtual VNodeOpError write(const void* buffer, std::size_t count) override;
@@ -57,12 +60,13 @@ namespace echis
                 virtual VNodeOpError create(const std::string& name, std::shared_ptr<VirtualNode>& vnode) override;
                 virtual VNodeOpError mkdir(const std::string& name, std::shared_ptr<VirtualNode>& vnode) override;
 
+                void addDevice(driver::ldr::DriverHeader* driver);
+
             private:
-                std::string mName;
-                std::vector<std::shared_ptr<VirtualNode> > mContained;
+                std::vector<std::shared_ptr<DevNode> > mDrivers;
             };
         }
     }
 }
 
-#endif // VIPEROS_ECHIS_FS_TESTFS_H
+#endif // VIPEROS_ECHIS_FS_DEVFS_H

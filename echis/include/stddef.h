@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 typedef decltype(sizeof(0)) size_t;
+typedef long ssize_t;
 typedef decltype((char*)0-(char*)0) ptrdiff_t;
 
 #define NULL nullptr
