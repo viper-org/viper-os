@@ -2,6 +2,7 @@
 #define VIPEROS_ECHIS_LAZY_INIT_H 1
 
 #include <new>
+#include <utility>
 
 template <class T>
 class lazy_init
@@ -14,6 +15,16 @@ public:
     lazy_init(const T& v)
     {
         new (mBuffer) T(v);
+    }
+
+    lazy_init(T&& v)
+    {
+        new (mBuffer) T(std::move(v));
+    }
+
+    void default_init()
+    {
+        new (mBuffer) T;
     }
 
     T& operator*()

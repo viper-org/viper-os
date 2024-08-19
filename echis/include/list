@@ -1,0 +1,279 @@
+#ifndef VIPEROS_ECHIS_LIST
+#define VIPEROS_ECHIS_LIST 1
+
+#include <cstddef>
+
+namespace std
+{
+    template <class T>
+    class list
+    {
+        struct node
+        {
+            T v;
+            node* next;
+            node* prev;
+        };
+
+    public:
+        list()
+            : mHead(nullptr)
+            , mTail(nullptr)
+            , mSize(0)
+        {
+            mOnePastEnd.next = nullptr;
+            mOnePastEnd.prev = nullptr;
+        }
+
+        list(const list& other)
+            : mSize(other.mSize)
+        {
+            node* n = other.mHead;
+            while (n)
+            {
+                push_back(n->v);
+                n = n->next;
+            }
+        }
+
+        list(list&& other)
+            : mHead(other.mHead)
+            , mTail(other.mTail)
+            , mSize(other.mSize)
+        {
+            mOnePastEnd.prev = mTail;
+
+            other.mHead = nullptr;
+            other.mTail = nullptr;
+            other.mOnePastEnd.prev = nullptr;
+            other.mSize = 0;
+        }
+
+        ~list()
+        {
+            clearAll();
+        }
+
+        list& operator=(const list& other)
+        {
+            clearAll();
+            mSize = other.mSize;
+
+            node* n = other.mHead;
+            while (n && n != &other.mOnePastEnd)
+            {
+                push_back(n->v);
+                n = n->next;
+            }
+
+            return *this;
+        }
+
+        list& operator=(list&& other)
+        {
+            clearAll();
+            mHead = other.mHead;
+            mTail = other.mTail;
+            mSize = other.mSize;
+            mOnePastEnd.prev = mTail;
+
+            other.mHead = nullptr;
+            other.mTail = nullptr;
+            other.mOnePastEnd.prev = nullptr;
+            other.mSize = 0;
+
+            return *this;
+        }
+
+        T& front()
+        {
+            return mHead->v;
+        }
+
+        T& back()
+        {
+            return mTail->v;
+        }
+
+        template <class U>
+        class base_iterator
+        {
+        friend class list;
+        public:
+            base_iterator() = default;
+
+            U* operator->()
+            {
+                return &mElem->v;
+            }
+
+            U& operator*()
+            {
+                return mElem->v;
+            }
+
+            base_iterator& operator++()
+            {
+                mElem = mElem->next;
+                return *this;
+            }
+
+            base_iterator& operator--()
+            {
+                mElem = mElem->prev;
+                return *this;
+            }
+
+            bool operator==(const base_iterator& other) const
+            {
+                return (other.mElem == mElem);
+            }
+
+        private:
+            base_iterator(node* elem)
+                : mElem(elem)
+            {
+            }
+
+            node* mElem; 
+        };
+
+        using iterator = base_iterator<T>;
+        using const_iterator = base_iterator<const T>;
+
+        iterator begin()
+        {
+            return iterator(mHead);
+        }
+
+        iterator end()
+        {
+            return iterator(&mOnePastEnd);
+        }
+
+
+        bool empty() const
+        {
+            return mSize == 0;
+        }
+
+        std::size_t size() const
+        {
+            return mSize;
+        }
+
+
+        void clear()
+        {
+            clearAll();
+        }
+
+        iterator insert(iterator pos, const T& value)
+        {
+            auto insertAfter = pos.mElem;
+            auto newNode = new node;
+
+            newNode->prev = insertAfter;
+            newNode->next = insertAfter->next;
+            newNode->v = value;
+            insertAfter->next = newNode;
+            newNode->next->prev = newNode;
+
+            return iterator(newNode);
+        }
+
+        iterator erase(iterator pos)
+        {
+            auto toErase = pos.mElem;
+            auto ret = toErase->next;
+
+            toErase->prev->next = toErase->next;
+            toErase->next->prev = toErase->prev;
+            delete toErase;
+
+            return ret;
+        }
+
+        void push_back(const T& value)
+        {
+            auto newNode = new node;
+            newNode->v = value;
+            newNode->next = nullptr;
+            if (!mHead)
+            {
+                mHead = newNode;
+                newNode->prev = nullptr;
+            }
+            else
+            {
+                mTail->next = newNode;
+                newNode->prev = mTail;
+            }
+            mTail = newNode;
+            mTail->next = &mOnePastEnd;
+            mOnePastEnd.prev = mTail;
+        }
+
+        void pop_back()
+        {
+            auto back = mTail;
+            mTail = back->prev;
+            mTail->next = &mOnePastEnd;
+            mOnePastEnd.prev = mTail;
+            
+            delete back;
+        }
+
+        void push_front(const T& value)
+        {
+            auto newNode = new node;
+            newNode->v = value;
+            newNode->prev = nullptr;
+            if (!mHead)
+            {
+                mTail = newNode;
+                mTail->next = mOnePastEnd;
+                mOnePastEnd.prev = mTail;
+                newNode->next = nullptr;
+            }
+            else
+            {
+                mHead->prev = newNode;
+                newNode.next = mHead;
+            }
+            mHead = newNode;
+        }
+
+        void pop_front()
+        {
+            auto front = mHead;
+            mHead = mHead->prev;
+            mHead->prev = nullptr;
+
+            delete front;
+        }
+
+    private:
+        void clearAll()
+        {
+            node* elem = mHead;
+            while(elem && elem != &mOnePastEnd)
+            {
+                node* temp = elem;
+                elem = elem->next;
+                delete temp;
+            }
+            mHead = nullptr;
+            mTail = nullptr;
+            mOnePastEnd.prev = nullptr;
+            mSize = 0;
+        }
+
+        node* mHead;
+        node* mTail;
+        node mOnePastEnd;
+        std::size_t mSize;
+    };
+}
+
+#endif // VIPEROS_ECHIS_LIST

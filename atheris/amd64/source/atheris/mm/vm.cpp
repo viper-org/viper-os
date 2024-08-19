@@ -10,6 +10,7 @@
 
 #include <limine.h>
 
+#include <lazy_init.h>
 #include <cstring>
 
 static volatile limine_hhdm_request hhdmRequest = {
@@ -35,7 +36,7 @@ namespace atheris
     {
         constexpr unsigned int PageSize = 0x1000;
 
-        AddressSpace kernelAddressSpace;
+        lazy_init<AddressSpace> kernelAddressSpace;
 
         void AddressSpace::switchTo()
         {
@@ -55,10 +56,12 @@ namespace atheris
             return phys;
         }
 
+        static std::uint64_t hhdmTop = 0;
 
         static inline void CreateKernelPML4()
         {
-            kernelAddressSpace.pml4 = GetPageLevel();
+            kernelAddressSpace = AddressSpace();
+            kernelAddressSpace->pml4 = GetPageLevel();
         }
 
         static inline void MapKernel()
@@ -83,6 +86,7 @@ namespace atheris
                 hhdmBase,
                 flags::present | flags::write,
                 NPAGES(0x400000));
+            hhdmTop = hhdmBase + 0x400000;
 
             // Map all memory map entries
             for (std::uint64_t i = 0; i < amd64::pm::GetMemoryMap()->entry_count; ++i)
@@ -94,6 +98,12 @@ namespace atheris
                     reinterpret_cast<uint64_t>(GetVirtualAddress(entry->base)),
                     flags::present | flags::write,
                     NPAGES(entry->length));
+                
+                std::uint64_t entryTop = reinterpret_cast<uint64_t>(GetVirtualAddress(entry->base)) + entry->length;
+                if (entryTop > hhdmTop)
+                {
+                    hhdmTop = entryTop;
+                }
             }
         }
 
@@ -104,7 +114,22 @@ namespace atheris
             MapKernel();
             MapHHDM();
 
-            kernelAddressSpace.switchTo();
+            kernelAddressSpace->switchTo();
+        }
+
+        void InitAllocator(std::list<echis::vm::VMAllocNode>& freeList)
+        {
+            echis::vm::VMAllocNode lowerNode;
+            lowerNode.base = hhdmTop;
+            auto size = (std::uint64_t)_kernel_start - hhdmTop;
+            lowerNode.numPages = NPAGES(size);
+            freeList.push_back(lowerNode);
+
+            echis::vm::VMAllocNode higherNode;
+            higherNode.base = (std::uint64_t)_kernel_end;
+            size = 0xffffffffffffe000 - (std::uint64_t)_kernel_end;
+            higherNode.numPages = NPAGES(size);
+            freeList.push_back(higherNode);
         }
 
         void MapPage(AddressSpace* addressSpace, pm::physaddr phys, uint64_t virt, uint16_t flags)
@@ -159,6 +184,25 @@ namespace atheris
         {
             // maybe check that response is valid here
             return reinterpret_cast<void*>(hhdmRequest.response->offset + physAddress);
+        }
+
+
+        AddressSpace AddressSpace::Create()
+        {
+            AddressSpace ret;
+            ret.pml4 = echis::mm::physical::GetPage();
+
+            void* higherHalf       = reinterpret_cast<void*>(GetVirtualAddress(ret.pml4 + (256 * sizeof(uint64_t))));
+            void* kernelHigherHalf = reinterpret_cast<void*>(GetVirtualAddress(kernelAddressSpace->pml4 + (256 * sizeof(uint64_t))));
+
+            std::memcpy(higherHalf, kernelHigherHalf, 256 * sizeof(uint64_t));
+
+            echis::vm::VMAllocNode node;
+            node.base = 0x1000; // skip null page
+            node.numPages = NPAGES(0x00007FFFFFFFE000ull - 0x1000ull);
+            ret.nodes.push_back(node);
+
+            return ret;
         }
     }
 }

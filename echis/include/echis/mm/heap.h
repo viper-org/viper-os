@@ -8,6 +8,11 @@ namespace echis
     namespace mm
     {
         void Init();
+        /*
+         * Tell the VMM about the pages the heap allocator mapped
+         * so it doesn't try to allocate them
+         */
+        void MarkMemUsed();
 
         void* AllocateMemory(std::size_t count);
 

@@ -9,9 +9,14 @@ set(SOURCES
     "source/mm/physical.cpp"
     "source/mm/heap.cpp"
 
+    "source/mm/vm/alloc.cpp"
+
     "source/fs/vfs.cpp"
     "source/fs/testfs.cpp"
     "source/fs/devfs.cpp"
+
+    "source/sched/proc.cpp"
+    "source/sched/sched.cpp"
 
     "source/libc/stdlib.cpp"
     "source/libc/string.cpp"
@@ -27,9 +32,15 @@ set(HEADERS
     "include/echis/mm/physical.h"
     "include/echis/mm/heap.h"
 
+    "include/echis/mm/vm/node.h"
+    "include/echis/mm/vm/alloc.h"
+
     "include/echis/fs/vfs.h"
     "include/echis/fs/testfs.h"
     "include/echis/fs/devfs.h"
+
+    "include/echis/sched/proc.h"
+    "include/echis/sched/sched.h"
 
     "include/echis/util/math.h"
     "include/echis/util/debug.h"
