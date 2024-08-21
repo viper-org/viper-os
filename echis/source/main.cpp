@@ -10,14 +10,15 @@
 #include <fs/devfs.h>
 
 #include <sched/sched.h>
-
-#include <sched/sched.h>
+#include <sched/lock/mutex.h>
 
 #include <atheris/driver/timer.h>
 
 #include <atheris/mm/vm.h>
 
 #include <limine.h>
+
+#include <lazy_init.h>
  
 static volatile limine_module_request ModuleRequest = {
     .id = LIMINE_MODULE_REQUEST,
@@ -27,31 +28,36 @@ static volatile limine_module_request ModuleRequest = {
 
 namespace echis
 {
+    lazy_init<sched::lock::Mutex> m;
+
     void TestThreadThing1()
     {
         while(1)
         {
-            driver::debugcon::WriteString("A", 1);
+            m->lock();
+            driver::debugcon::Write("Proc1\n");
             asm("pause");
             asm("pause");
             asm("pause");
             asm("pause");
             asm("pause");
             asm("pause");
+            m->unlock();
         }
     }
     void TestThreadThing2()
     {
-        sched::Block();
         while(1)
         {
-            driver::debugcon::WriteString("B", 1);
+            m->lock();
+            driver::debugcon::Write("Proc2\n");
             asm("pause");
             asm("pause");
             asm("pause");
             asm("pause");
             asm("pause");
             asm("pause");
+            m->unlock();
         }
     }
     
@@ -89,7 +95,8 @@ namespace echis
         node->write(nullptr, 0);
 
         atheris::timer::Init(10e6); // 10ms
-
+        
+        m.default_init();
         sched::Init();
         auto addproc = [](void(*fn)()){
             sched::Process proc1;

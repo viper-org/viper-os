@@ -16,6 +16,7 @@ set(SOURCES
     "source/atheris/sched/switch_context.s"
 
     "source/atheris/cpu/halt.cpp"
+    "source/atheris/cpu/int.cpp"
 
     "source/cpu/gdt.cpp"
     "source/cpu/gdt_install.s"
@@ -53,6 +54,7 @@ set(HEADERS
     "include/atheris/private/sched/sched.h"
 
     "include/atheris/private/cpu/halt.h"
+    "include/atheris/private/cpu/int.h"
 )   
 
 set(LINKER_OPTIONS

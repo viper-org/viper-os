@@ -15,7 +15,7 @@ namespace atheris
             amd64::cpu::apic::InitTimer(tickSizeNs);
         }
 
-        TimerHandler handler; // TODO: Move this into core local structure
+        TimerHandler handler = nullptr; // TODO: Move this into core local structure
 
         void Subscribe(TimerHandler newHandler)
         {

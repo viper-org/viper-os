@@ -4,6 +4,8 @@
 
 #include <atheris/sched/sched.h>
 
+#include <atheris/cpu/int.h>
+
 #include <algorithm>
 #include <intrusive_ring.h>
 #include <lazy_init.h>
@@ -15,7 +17,6 @@ namespace echis
     {
         static lazy_init<std::vector<Process> > processList;
         static lazy_init<intrusive_ring<Thread> > threadList;
-        static lazy_init<std::vector<Thread*> > blockedThreads;
 
         void Schedule();
 
@@ -23,7 +24,6 @@ namespace echis
         {
             processList.default_init();
             threadList.default_init();
-            blockedThreads.default_init();
         }
 
         void AddProcess(Process&& process)
@@ -35,34 +35,42 @@ namespace echis
 
         void Start()
         {
+            atheris::cpu::DisableInt();
             atheris::timer::Subscribe(Schedule); // TODO: Proper event system that we subscribe to
 
             atheris::sched::ThreadContext* old; // unused
             atheris::sched::SwitchContext(&old, threadList->current()->getContext());
         }
 
+
+        Thread* Current()
+        {
+            return threadList->current();
+        }
         
         void Block()
         {
             auto current = threadList->current();
             threadList->remove();
-            blockedThreads->push_back(current);
 
             // TODO: Go to idle thread if no others found
+            if (!threadList->current())
+            {
+                asm("1: hlt; jmp 1b");
+            }
+            atheris::cpu::PushDisableInt();
             atheris::sched::SwitchContext(&current->getContext(), threadList->current()->getContext());
+            atheris::cpu::PopDisableInt();
         }
 
         void Unblock(Thread* thread)
         {
-            auto it = std::find(blockedThreads->begin(), blockedThreads->end(), thread);
-            if (it == blockedThreads->end()) return; // probably error here
-
-            threadList->push(*it);
-            blockedThreads->erase(it);
+            threadList->push(thread);
         }
 
         void Yield()
         {
+            if (!threadList->current()) return;
             if (threadList->peek() == threadList->current()) return;
 
             auto old = threadList->next();

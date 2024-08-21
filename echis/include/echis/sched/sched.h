@@ -13,6 +13,8 @@ namespace echis
 
         void Start();
 
+        Thread* Current();
+
         void Block();
         void Unblock(Thread* thread);
 

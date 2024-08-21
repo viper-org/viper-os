@@ -29,7 +29,8 @@ namespace echis
             const ThreadStack& getKernelStack() const;
             atheris::sched::ThreadContext*& getContext();
 
-            Thread* next; // for scheduler
+            Thread* next;
+            Thread* prev;
 
         private:
             Thread(Process* process, tid_t tid);

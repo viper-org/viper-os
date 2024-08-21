@@ -51,6 +51,20 @@ public:
         }
     }
 
+    void pop_front()
+    {
+        T* head = mHead;
+        mHead = head->next;
+        if (mHead)
+            mHead->prev = nullptr;
+        else
+        {
+            mTail = nullptr;
+        }
+        head->next = nullptr;
+        head->prev = nullptr;
+    }
+
     class iterator
     {
     public:

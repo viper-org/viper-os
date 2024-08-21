@@ -18,6 +18,8 @@ set(SOURCES
 
     "source/sched/proc.cpp"
     "source/sched/sched.cpp"
+    "source/sched/event/event.cpp"
+    "source/sched/lock/mutex.cpp"
 
     "source/exception/exception.cpp"
 
@@ -46,6 +48,8 @@ set(HEADERS
 
     "include/echis/sched/proc.h"
     "include/echis/sched/sched.h"
+    "include/echis/sched/event/event.h"
+    "include/echis/sched/lock/mutex.h"
 
     "include/echis/exception/exception.h"
 
