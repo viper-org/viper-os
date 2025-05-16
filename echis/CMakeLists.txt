@@ -2,10 +2,14 @@ cmake_minimum_required(VERSION 3.8)
 
 set(SOURCES
     "source/main.cpp"
+
+    "source/driver/debugcon.cpp"
 )
 
 set(HEADERS
     "include/echis/main.h"
+
+    "include/echis/driver/debugcon.h"
 )
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
