@@ -1,0 +1,8 @@
+// Copyright 2025 solar-mist
+
+#ifndef VIPEROS_ATHERIS_PUBLIC_ATHERIS_DRIVER_DEBUGCON_H
+#define VIPEROS_ATHERIS_PUBLIC_ATHERIS_DRIVER_DEBUGCON_H 1
+
+#include <atheris/private/driver/debugcon.h>
+
+#endif // VIPEROS_ATHERIS_PUBLIC_ATHERIS_DRIVER_DEBUGCON_H

@@ -2,9 +2,14 @@ cmake_minimum_required(VERSION 3.8)
 
 set(SOURCES
     "source/boot/init.cpp"
+
+    "source/atheris/driver/debugcon.cpp"
 )
 
 set(HEADERS
+    "include/atheris/private/driver/debugcon.h"
+
+    "include/driver/port.h"
 )   
 
 set(LINKER_OPTIONS
