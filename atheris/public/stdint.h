@@ -1,6 +1,0 @@
-#ifndef VIPEROS_ATHERIS_PUBLIC_STDINT_H
-#define VIPEROS_ATHERIS_PUBLIC_STDINT_H 1
-
-#include <atheris/private/stdint.h>
-
-#endif // VIPEROS_ATHERIS_PUBLIC_STDINT_H

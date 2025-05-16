@@ -1,9 +1,0 @@
-#ifndef VIPEROS_ECHIS_CSTRING
-#define VIPEROS_ECHIS_CSTRING 1
-
-namespace std
-{
-#include <string.h>
-}
-
-#endif // VIPEROS_ECHIS_CSTRING

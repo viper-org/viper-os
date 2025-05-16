@@ -1,6 +1,0 @@
-#ifndef VIPEROS_ATHERIS_PUBLIC_LIMITS_H
-#define VIPEROS_ATHERIS_PUBLIC_LIMITS_H 1
-
-#include <atheris/private/limits.h>
-
-#endif // VIPEROS_ATHERIS_PUBLIC_LIMITS_H

@@ -1,6 +1,0 @@
-#ifndef VIPEROS_ATHERIS_PUBLIC_STDARG_H
-#define VIPEROS_ATHERIS_PUBLIC_STDARG_H 1
-
-#include <atheris/private/stdarg.h>
-
-#endif // VIPEROS_ATHERIS_PUBLIC_STDARG_H
