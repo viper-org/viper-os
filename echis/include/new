@@ -1,0 +1,7 @@
+#ifndef VIPEROS_ECHIS_NEW
+#define VIPEROS_ECHIS_NEW 1
+
+void* operator new(unsigned long size, void* base);
+void* operator new[](unsigned long size, void* base);
+
+#endif // VIPEROS_ECHIS_NEW

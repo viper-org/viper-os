@@ -4,12 +4,24 @@ set(SOURCES
     "source/main.cpp"
 
     "source/driver/debugcon.cpp"
+
+    "source/mm/physical.cpp"
+
+    "source/new.cpp"
+    "source/string.cpp"
 )
 
 set(HEADERS
     "include/echis/main.h"
 
     "include/echis/driver/debugcon.h"
+
+    "include/echis/mm/physical.h"
+
+    "include/echis/util/math.h"
+
+    "include/new"
+    "include/string.h"
 )
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})

@@ -1,1 +1,1 @@
-curl -Lo $1/include/limine.h https://github.com/limine-bootloader/limine/raw/trunk/limine.h
+curl -Lo $1/include/limine.h https://codeberg.org/Limine/limine-protocol/raw/branch/trunk/include/limine.h

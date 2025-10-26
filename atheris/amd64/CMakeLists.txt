@@ -3,13 +3,22 @@ cmake_minimum_required(VERSION 3.8)
 set(SOURCES
     "source/boot/init.cpp"
 
+    "source/mm/pm.cpp"
+
     "source/atheris/driver/debugcon.cpp"
+
+    "source/atheris/mm/vm.cpp"
 )
 
 set(HEADERS
     "include/atheris/private/driver/debugcon.h"
 
+    "include/atheris/private/mm/pm.h"
+    "include/atheris/private/mm/vm.h"
+
     "include/driver/port.h"
+
+    "include/mm/pm.h"
 )   
 
 set(LINKER_OPTIONS
@@ -47,8 +56,6 @@ set(COMPILER_OPTIONS
     "-mno-red-zone"
     "-mcmodel=kernel"
 )
-
-set(CMAKE_CXX_COMPILER x86_64-elf-g++)
 
 execute_process(COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/get_limine_header.sh ${CMAKE_CURRENT_SOURCE_DIR})
 
