@@ -1,10 +1,15 @@
 CMakeFiles/
 .cache/
+ovmf/
+limine/
 
 *.cmake
 Makefile
 *.txt
 *.json
 *.log
+*.hdd
 
 !CMakeLists.txt
+viperos-amd64
+limine.h
