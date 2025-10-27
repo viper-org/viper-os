@@ -6,6 +6,7 @@
 void _start(void)
 {
     pm_init();
+    vm_init();
     physaddr_t page = pm_getpage();
     int* mem = vm_phystovirt(page);
     *mem = 12;

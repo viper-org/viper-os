@@ -190,3 +190,8 @@ void pm_freepages(physaddr_t addr, int n)
         curr = curr->next;
     }
 }
+
+struct limine_memmap_response *pm_get_memmap(void)
+{
+    return memmap_request.response;
+}
