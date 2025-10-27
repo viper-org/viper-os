@@ -1,12 +1,17 @@
 #include "driver/dbg.h"
 
+#include "cpu/gdt.h"
+
 #include "mm/pm.h"
 #include "mm/vm.h"
 
 void _start(void)
 {
+    gdt_init();
+
     pm_init();
     vm_init();
+
     physaddr_t page = pm_getpage();
     int* mem = vm_phystovirt(page);
     *mem = 12;

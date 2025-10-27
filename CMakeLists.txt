@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(viper-os)
+project(viper-os C ASM)
 
 set(SOURCES
     "source/init.c"
+
+    "source/cpu/install_gdt.s"
+    "source/cpu/gdt.c"
 
     "source/driver/dbg.c"
 
@@ -14,6 +17,8 @@ set(SOURCES
 )
 
 set(HEADERS
+    "include/cpu/gdt.h"
+
     "include/driver/dbg.h"
     "include/driver/port.h"
 
