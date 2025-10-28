@@ -17,6 +17,9 @@ set(SOURCES
     "source/mm/vm.c"
     "source/mm/kheap.c"
 
+    "source/fs/vfs.c"
+    "source/fs/testfs.c"
+
     "source/libc/string.c"
 )
 
@@ -31,6 +34,9 @@ set(HEADERS
     "include/mm/pm.h"
     "include/mm/vm.h"
     "include/mm/kheap.h"
+
+    "include/fs/vfs.h"
+    "include/fs/testfs.h"
 
     "include/stdint.h"
     "include/stdarg.h"
