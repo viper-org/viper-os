@@ -25,7 +25,7 @@ void *memcpy(void *d, const void *s, size_t sz)
     return d;
 }
 
-size_t strlen(char *s)
+size_t strlen(const char *s)
 {
     size_t i = 0;
     while (s[i]) ++i;
@@ -42,7 +42,7 @@ int strcmp(const char *s1, const char *s2)
     return *s1 - *s2;
 }
 
-char *strdup(char *s)
+char *strdup(const char *s)
 {
     size_t sz = strlen(s) + 1;
     char *mem = kheap_alloc(sz);

@@ -13,8 +13,6 @@ struct testfs_file
     char *name;
     char *data;
     size_t length;
-
-    struct testfs_file *next; // dir linked list
 };
 
 struct testfs_dir

@@ -60,8 +60,8 @@ struct vnode *lookuppn(char *path)
 
         if (curr->mounted)
         {
-            curr->mounted->root(&curr);
             currfs = curr->mounted;
+            currfs->root(&curr);
         }
 
         bufIdx = 0;

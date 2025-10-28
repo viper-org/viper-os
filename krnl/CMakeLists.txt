@@ -18,6 +18,7 @@ set(SOURCES
 
     "source/fs/vfs.c"
     "source/fs/testfs.c"
+    "source/fs/devfs.c"
 
     "source/libc/string.c"
 )
@@ -37,6 +38,7 @@ set(HEADERS
 
     "include/fs/vfs.h"
     "include/fs/testfs.h"
+    "include/fs/devfs.h"
 
     "include/stdint.h"
     "include/stdarg.h"
