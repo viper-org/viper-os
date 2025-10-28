@@ -7,6 +7,9 @@ set(SOURCES
 
     "source/cpu/install_gdt.s"
     "source/cpu/gdt.c"
+    "source/cpu/interrupt/idt.c"
+    "source/cpu/interrupt/exception.c"
+    "source/cpu/interrupt/interrupt_table.s"
 
     "source/driver/dbg.c"
 
@@ -19,6 +22,8 @@ set(SOURCES
 
 set(HEADERS
     "include/cpu/gdt.h"
+    "include/cpu/idt.h"
+    "include/cpu/cpu.h"
 
     "include/driver/dbg.h"
     "include/driver/port.h"

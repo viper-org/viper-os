@@ -45,6 +45,15 @@ static inline void fl_remove(struct heap_header *curr, struct heap_header *prev)
     curr->next = NULL;
 }
 
+static inline void get_more_pages(void)
+{
+    void* pages = vm_getpages(NULL, 32);
+    struct heap_header *hdr = pages;
+    hdr->next = fl;
+    fl = hdr;
+    hdr->size = 32 * 0x1000;
+}
+
 void *kheap_alloc(size_t sz)
 {
     if (!sz) return NULL;
@@ -64,7 +73,7 @@ void *kheap_alloc(size_t sz)
             }
             size_t newsz = curr->size - sz;
             char *newHdr = (char*)curr + sz;
-            struct heap_header *hdr = newHdr;
+            struct heap_header *hdr = (struct heap_header *)newHdr;
             hdr->size = newsz;
             
             fl_remove(curr, prev);
@@ -77,7 +86,8 @@ void *kheap_alloc(size_t sz)
         prev = curr;
         curr = curr->next;
     }
-    return NULL;
+    get_more_pages();
+    return kheap_alloc(sz - sizeof(struct heap_header));
 }
 
 void kheap_free(void *mem)
