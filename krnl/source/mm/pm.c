@@ -1,6 +1,8 @@
 #include "mm/pm.h"
 #include "mm/vm.h"
 
+#include "util.h"
+
 #include <limine.h>
 
 #include <stdint.h>
@@ -26,11 +28,6 @@ struct limine_memmap_request memmap_request = {
     .revision = 1,
     .response = NULL
 };
-
-static inline int align_up(int v, int align)
-{
-    return (v & ~(align - 1)) + align;
-}
 
 struct mem_region* fl;
 

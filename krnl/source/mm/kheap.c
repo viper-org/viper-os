@@ -2,6 +2,8 @@
 #include "mm/pm.h"
 #include "mm/vm.h"
 
+#include "util.h"
+
 #include <stdint.h>
 
 extern char _kernel_end[];
@@ -14,11 +16,6 @@ struct heap_header
 static struct heap_header *fl;
 
 #define HEAPSZ 32
-
-static inline int align_up(int v, int align)
-{
-    return (v & ~(align - 1)) + align;
-}
 
 void kheap_init(void)
 {

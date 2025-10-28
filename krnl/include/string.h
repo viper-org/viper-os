@@ -7,7 +7,7 @@ void *memset(void *d, int ch, size_t sz);
 void *memcpy(void *d, const void *s, size_t sz);
 
 size_t strlen(char *s);
-int strcmp(char *s1, char *s2);
+int strcmp(const char *s1, const char *s2);
 char *strdup(char *s);
 
 #endif // VIPEROS_STRING

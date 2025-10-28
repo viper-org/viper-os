@@ -1,5 +1,6 @@
 #include "driver/dbg.h"
 #include "driver/port.h"
+#include "driver/driver.h"
 
 #include <stdarg.h>
 #include <stdbool.h>
@@ -9,7 +10,7 @@ void dbg_writechar(char c)
     outb(0x3F8, c); // COM1
 }
 
-void dbg_print(char *s)
+void dbg_print(const char *s)
 {
     while(*s)
     {
@@ -63,10 +64,8 @@ char *itoa(uint64_t n, char *buf, int r)
     return buf;
 }
 
-void dbg_printf(char *fmt, ...)
+void dbg_printf_impl(const char *fmt, va_list arg)
 {
-    va_list arg;
-    va_start(arg, fmt);
     size_t i = 0;
     while(fmt[i])
     {
@@ -115,4 +114,25 @@ void dbg_printf(char *fmt, ...)
             dbg_writechar(fmt[i]);
         ++i;
     }
+}
+
+void dbg_printf(const char *fmt, ...)
+{
+    va_list arg;
+    va_start(arg, fmt);
+    dbg_printf_impl(fmt, arg);
+    va_end(arg);
+}
+
+DRIVER_EXPORT void KeDebugLog(const char *s)
+{
+    dbg_print(s);
+}
+
+DRIVER_EXPORT void KeDebugLogFmt(const char *fmt, ...)
+{
+    va_list arg;
+    va_start(arg, fmt);
+    dbg_printf_impl(fmt, arg);
+    va_end(arg);
 }
