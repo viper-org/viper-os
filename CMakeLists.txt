@@ -12,6 +12,7 @@ set(SOURCES
 
     "source/mm/pm.c"
     "source/mm/vm.c"
+    "source/mm/kheap.c"
 
     "source/libc/string.c"
 )
@@ -24,6 +25,7 @@ set(HEADERS
 
     "include/mm/pm.h"
     "include/mm/vm.h"
+    "include/mm/kheap.h"
 
     "include/stdint.h"
     "include/stdarg.h"

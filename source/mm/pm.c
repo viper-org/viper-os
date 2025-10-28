@@ -27,7 +27,7 @@ struct limine_memmap_request memmap_request = {
     .response = NULL
 };
 
-int align_up(int v, int align)
+static inline int align_up(int v, int align)
 {
     return (v & ~(align - 1)) + align;
 }
