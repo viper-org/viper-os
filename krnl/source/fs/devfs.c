@@ -13,6 +13,7 @@ static enum vfs_error devfs_write(struct vnode *, const void *, size_t);
 static enum vfs_error devfs_lookup(struct vnode *, char *, struct vnode **);
 static enum vfs_error devfs_create(struct vnode *, char *, struct vnode **);
 static enum vfs_error devfs_mkdir(struct vnode *, char *, struct vnode **);
+static enum vfs_error devfs_ioctl(struct vnode *, unsigned long, void *);
 
 static int devfs_fs_root(struct vnode **);
 static int devfs_fs_mount(char *);
@@ -47,6 +48,7 @@ void devfs_init(void)
     vfs.lookup = devfs_lookup;
     vfs.create = devfs_create;
     vfs.mkdir = devfs_mkdir;
+    vfs.ioctl = devfs_ioctl;
 
     pushvfs(&vfs);
 }
@@ -125,6 +127,17 @@ static enum vfs_error devfs_mkdir(struct vnode *node, char *name, struct vnode *
     if (node->type == VNODE_FILE) return VFS_IS_FILE;
     return VFS_IS_DIR;
 }
+
+static enum vfs_error devfs_ioctl(struct vnode *node, unsigned long op, void *argp)
+{
+    if (node->type == VNODE_DIR) return VFS_IS_DIR;
+
+    struct devfs_file *file = node->impl;
+    file->drvr.header->ioctl(op, argp);
+
+    return VFS_SUCCESS; // TODO: output ssize_t
+}
+
 
 static int devfs_fs_root(struct vnode **out)
 {

@@ -51,6 +51,7 @@ void _start(void)
 
     tmp = lookuppn("/dev/sample");
     tmp->fs->read(tmp, "", 0);
+    tmp->fs->ioctl(tmp, 12, NULL);
     
     __asm__("cli; hlt");
 }

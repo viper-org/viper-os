@@ -13,6 +13,7 @@ static enum vfs_error testfs_write(struct vnode *, const void *, size_t);
 static enum vfs_error testfs_lookup(struct vnode *, char *, struct vnode **);
 static enum vfs_error testfs_create(struct vnode *, char *, struct vnode **);
 static enum vfs_error testfs_mkdir(struct vnode *, char *, struct vnode **);
+static enum vfs_error testfs_ioctl(struct vnode *, unsigned long, void *);
 
 static int testfs_fs_root(struct vnode **);
 static int testfs_fs_mount(char *);
@@ -64,6 +65,7 @@ void testfs_init(void)
     vfs.lookup = testfs_lookup;
     vfs.create = testfs_create;
     vfs.mkdir = testfs_mkdir;
+    vfs.ioctl = testfs_ioctl;
 
     pushvfs(&vfs);
     setrootfs(&vfs);
@@ -148,6 +150,11 @@ static enum vfs_error testfs_mkdir(struct vnode *node, char *name, struct vnode 
     dir->contained = vnode;
     *out = vnode;
     return VFS_SUCCESS;
+}
+
+static enum vfs_error testfs_ioctl(struct vnode *n, unsigned long op, void *argp)
+{
+    return VFS_NOTTY;
 }
 
 

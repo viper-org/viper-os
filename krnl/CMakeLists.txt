@@ -11,6 +11,7 @@ set(SOURCES
 
     "source/driver/dbg.c"
     "source/driver/ldr/loader.c"
+    "source/driver/helpers/fb.c"
 
     "source/mm/pm.c"
     "source/mm/vm.c"

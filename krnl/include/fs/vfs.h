@@ -15,7 +15,8 @@ enum vfs_error
     VFS_IS_DIR,
     VFS_IS_FILE,
     VFS_NOT_FOUND,
-    VFS_IS_MOUNTED
+    VFS_IS_MOUNTED,
+    VFS_NOTTY
 };
 
 struct vnode;
@@ -37,6 +38,7 @@ struct vfilesystem
     enum vfs_error (*lookup)(struct vnode *,char *component, struct vnode **);
     enum vfs_error (*create)(struct vnode *,char *name, struct vnode **);
     enum vfs_error (*mkdir)(struct vnode *,char *name, struct vnode **);
+    enum vfs_error (*ioctl)(struct vnode *, unsigned long op, void *argp);
 };
 
 struct vnode
