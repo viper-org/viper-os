@@ -23,6 +23,11 @@ set(SOURCES
     "source/fs/module.c"
     "source/fs/initrd.c"
 
+    "source/sched/proc.c"
+    "source/sched/sched.c"
+    "source/sched/prepare_thread.s"
+    "source/sched/swtch.s"
+
     "source/libc/string.c"
 )
 
@@ -44,6 +49,9 @@ set(HEADERS
     "include/fs/devfs.h"
     "include/fs/module.h"
     "include/fs/initrd.h"
+
+    "include/sched/proc.h"
+    "include/sched/sched.h"
 
     "include/stdint.h"
     "include/stdarg.h"

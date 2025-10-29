@@ -30,6 +30,11 @@ void *vm_phystovirt(physaddr_t addr)
     return (void *)(addr + hhdm_request.response->offset);
 }
 
+struct addrspace *vm_get_kaddrspace(void)
+{
+    return &k_addrspace;
+}
+
 void vm_switch_to(struct addrspace *a)
 {
     __asm__ volatile("mov %0, %%cr3" :: "r"(a->pml4));

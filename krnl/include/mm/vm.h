@@ -29,6 +29,7 @@ struct addrspace
     struct vm_allocator_node *fl;
 };
 
+struct addrspace *vm_get_kaddrspace(void);
 void vm_switch_to(struct addrspace *a);
 
 void vm_init(void);
