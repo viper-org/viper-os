@@ -15,10 +15,14 @@ swtch:
     pushq %rbx
     pushq %rbp
 
+    movq %cr3, %rcx
+    pushq %rcx
+
     movq %rsp, (%rax)
     movq %rdx, %rsp
     
-    # todo: load cr3
+    popq %rcx
+    movq %rcx, %cr3
 
     popq %rbp
     popq %rbx

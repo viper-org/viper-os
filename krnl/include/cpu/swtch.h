@@ -5,6 +5,7 @@
 
 struct thread_context
 {
+    uint64_t cr3;
     uint64_t rbp;
     uint64_t rbx;
     uint64_t rdi;

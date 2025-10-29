@@ -45,6 +45,26 @@ static inline physaddr_t get_pt_address(physaddr_t phys)
     return (phys & ~0xFFFF000000000FFF);
 }
 
+struct addrspace make_addrspace(void)
+{
+    struct addrspace ret;
+    ret.pml4 = pm_getpage();
+    memset(vm_phystovirt(ret.pml4), 0, 0x1000);
+    ret.pml4 = get_pt_address(ret.pml4);
+
+    void *hhalf  = vm_phystovirt(ret.pml4 + 256 * sizeof(uint64_t));
+    void *khhalf = vm_phystovirt(k_addrspace.pml4 + 256 * sizeof(uint64_t));
+
+    memcpy(hhalf, khhalf, 256 * sizeof(uint64_t));
+
+    ret.fl = kheap_alloc(sizeof(struct vm_allocator_node));
+    ret.fl->base = 0x1000;
+    ret.fl->nPages = NPAGES(0x00007FFFFFFFE000 - 0x1000);
+    ret.fl->next = NULL;
+
+    return ret;
+}
+
 static inline physaddr_t get_page_level(void)
 {
     physaddr_t phys = pm_getpage();
@@ -56,6 +76,14 @@ static inline physaddr_t get_page_level(void)
 static inline void make_kernel_pml4(void)
 {
     k_addrspace.pml4 = get_page_level();
+
+    for (int i = 256; i < 512; ++i)
+    {
+        uint64_t *pml4 = vm_phystovirt(k_addrspace.pml4);
+        pml4[i] = pm_getpage();
+        memset((void *)pml4[i], 0, 0x1000);
+        pml4[i] |= PT_PRESENT | PT_WRITE;
+    }
 }
 
 static inline void map_kernel(void)

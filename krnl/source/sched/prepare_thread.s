@@ -14,6 +14,7 @@ prepare_thread:
     pushq %rcx
     pushq $0x0
     pushq $0x0
+    pushq %r8
 
     movq %rsp, (%rsi)
     movq %r11, %rsp
