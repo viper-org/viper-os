@@ -1,1 +1,0 @@
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=true -DCMAKE_BUILD_TYPE=Debug -Darch=amd64 .
