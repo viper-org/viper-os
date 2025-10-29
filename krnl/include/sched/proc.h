@@ -26,6 +26,7 @@ struct thread
 
     struct thread *prev;
     struct thread *next;
+    struct thread *wnext;
 };
 
 struct process

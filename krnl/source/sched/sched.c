@@ -23,7 +23,7 @@ void sched_addproc(struct process *proc)
     else
     {
         t->next = head;
-        t->next = tail;
+        t->prev = tail;
         tail->next = t;
         head->prev = t;
         tail = t;
@@ -36,6 +36,36 @@ void sched_yield(void)
     tail = head;
     head = head->next;
     swtch(&old->ctx, head->ctx);
+}
+
+void sched_blockcurr(void)
+{
+    struct thread *old = head;
+    tail->next = head->next;
+    head->next->prev = tail;
+    head = head->next;
+
+    swtch(&old->ctx, head->ctx);
+    // todo: idle proc
+}
+
+void sched_readdthread(struct thread *t)
+{
+    if (!head)
+    {
+        head = t;
+        tail = t;
+        t->next = t;
+        t->prev = t;
+    }
+    else
+    {
+        t->next = head;
+        t->prev = tail;
+        tail->next = t;
+        head->prev = t;
+        tail = t;
+    }
 }
 
 struct thread *sched_curr(void)

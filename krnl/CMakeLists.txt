@@ -28,6 +28,8 @@ set(SOURCES
     "source/sched/prepare_thread.s"
     "source/sched/swtch.s"
 
+    "source/event/object.c"
+
     "source/libc/string.c"
 )
 
@@ -52,6 +54,8 @@ set(HEADERS
 
     "include/sched/proc.h"
     "include/sched/sched.h"
+
+    "include/event/object.h"
 
     "include/stdint.h"
     "include/stdarg.h"
