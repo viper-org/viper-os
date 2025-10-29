@@ -27,8 +27,10 @@ set(SOURCES
     "source/sched/sched.c"
     "source/sched/prepare_thread.s"
     "source/sched/swtch.s"
+    "source/sched/idle.s"
 
     "source/event/object.c"
+    "source/event/bus.c"
 
     "source/libc/string.c"
 )
@@ -56,6 +58,7 @@ set(HEADERS
     "include/sched/sched.h"
 
     "include/event/object.h"
+    "include/event/bus.h"
 
     "include/stdint.h"
     "include/stdarg.h"

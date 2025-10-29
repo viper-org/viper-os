@@ -4,6 +4,8 @@
 static struct thread *head;
 static struct thread *tail;
 
+void start_idle_proc(void);
+
 void sched_start(void)
 {
     struct thread_context *old;
@@ -32,9 +34,12 @@ void sched_addproc(struct process *proc)
 
 void sched_yield(void)
 {
+    if (!head) return;
+
     struct thread *old = head;
     tail = head;
     head = head->next;
+
     swtch(&old->ctx, head->ctx);
 }
 
@@ -45,8 +50,26 @@ void sched_blockcurr(void)
     head->next->prev = tail;
     head = head->next;
 
+    if (head == old)
+    {
+        head = NULL;
+        tail = NULL;
+        start_idle_proc();
+    }
+
     swtch(&old->ctx, head->ctx);
-    // todo: idle proc
+}
+
+void sched_blockone(struct thread *t)
+{
+    if (t == head)
+    {
+        sched_blockcurr();
+        return;
+    }
+
+    t->prev->next = t->next;
+    t->next->prev = t->prev;
 }
 
 void sched_readdthread(struct thread *t)

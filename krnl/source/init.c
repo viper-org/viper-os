@@ -4,6 +4,7 @@
 #include "cpu/gdt.h"
 #include "cpu/idt.h"
 
+#include "event/bus.h"
 #include "event/object.h"
 #include "mm/pm.h"
 #include "mm/vm.h"
@@ -19,22 +20,19 @@
 
 #include <string.h>
 
-struct event_object obj;
+struct thread *t;
 
 void threadmain(void)
 {
     dbg_writechar('A');
     sched_yield();
-    ready_event(&obj);
-    while (1) {
-        dbg_writechar('A');
-        sched_yield();
-    }
+    thread_kill(sched_curr());
 }
 
 void threadmain2(void)
 {
-    wait_on_object(&obj, sched_curr());
+    struct exit_event_object *e = create_exit_event(t);
+    wait_on_object(&e->obj, sched_curr());
     sched_blockcurr();
     while (1) {
         dbg_writechar('B');
@@ -68,6 +66,7 @@ void _start(void)
 
     struct process *proc = alloc_proc((uint64_t)threadmain);
     struct process *proc2 = alloc_proc((uint64_t)threadmain2);
+    t = &proc->main_thread;
     sched_addproc(proc);
     sched_addproc(proc2);
     sched_start();

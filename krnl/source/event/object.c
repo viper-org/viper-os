@@ -1,4 +1,7 @@
 #include "event/object.h"
+
+#include "mm/kheap.h"
+
 #include "sched/sched.h"
 
 void wait_on_object(struct event_object *obj, struct thread *t)
@@ -17,4 +20,5 @@ void ready_event(struct event_object *obj)
         curr = next;
     }
     obj->waiting = NULL;
+    if (obj->free_on_ready) kheap_free(obj->free_on_ready);
 }

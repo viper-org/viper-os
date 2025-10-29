@@ -1,7 +1,10 @@
 #include "sched/proc.h"
+#include "sched/sched.h"
 
 #include "mm/kheap.h"
 #include "mm/vm.h"
+
+#include "event/object.h"
 
 static int npid = 0;
 
@@ -20,8 +23,18 @@ struct process *alloc_proc(uint64_t entry)
         .top = (uint64_t)kstack_base + 8 * 0x1000,
         8 * 0x1000
     };
+    t->exit_event = NULL;
 
     prepare_thread(entry, &t->ctx, t->krnl_stack.top, t);
     
     return ret;
+}
+
+void thread_kill(struct thread *t)
+{
+    if (t->exit_event)
+    {
+        ready_event(&t->exit_event->obj);
+    }
+    sched_blockone(t);
 }

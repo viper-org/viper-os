@@ -15,6 +15,8 @@ struct stack
 
 struct process;
 
+struct exit_event_object;
+
 struct thread
 {
     struct process *owner;
@@ -23,6 +25,8 @@ struct thread
 
     struct thread_context *ctx;
     uint64_t entry;
+
+    struct exit_event_object *exit_event;
 
     struct thread *prev;
     struct thread *next;
@@ -37,5 +41,7 @@ struct process
 };
 
 struct process *alloc_proc(uint64_t entry);
+
+void thread_kill(struct thread *t);
 
 #endif // VIPEROS_SCHED_PROC
