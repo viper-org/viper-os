@@ -44,4 +44,6 @@ struct process *alloc_proc(uint64_t entry);
 
 void thread_kill(struct thread *t);
 
+void ctx_switch(struct thread *old, struct thread *new);
+
 #endif // VIPEROS_SCHED_PROC

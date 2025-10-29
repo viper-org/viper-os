@@ -4,6 +4,8 @@
 #include "mm/kheap.h"
 #include "mm/vm.h"
 
+#include "cpu/tss.h"
+
 #include "event/object.h"
 
 static int npid = 0;
@@ -38,4 +40,10 @@ void thread_kill(struct thread *t)
         ready_event(&t->exit_event->obj);
     }
     sched_blockone(t);
+}
+
+void ctx_switch(struct thread *old, struct thread *new)
+{
+    tss_set_rsp0(new->krnl_stack.top);
+    swtch(&old->ctx, new->ctx);
 }

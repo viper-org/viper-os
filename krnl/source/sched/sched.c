@@ -1,6 +1,8 @@
 #include "sched/sched.h"
 #include "sched/proc.h"
 
+#include "cpu/tss.h"
+
 static struct thread *head;
 static struct thread *tail;
 
@@ -9,6 +11,7 @@ void start_idle_proc(void);
 void sched_start(void)
 {
     struct thread_context *old;
+    tss_set_rsp0(head->krnl_stack.top);
     swtch(&old, head->ctx);
 }
 
@@ -40,7 +43,7 @@ void sched_yield(void)
     tail = head;
     head = head->next;
 
-    swtch(&old->ctx, head->ctx);
+    ctx_switch(old, head);
 }
 
 void sched_blockcurr(void)
@@ -57,7 +60,7 @@ void sched_blockcurr(void)
         start_idle_proc();
     }
 
-    swtch(&old->ctx, head->ctx);
+    ctx_switch(old, head);
 }
 
 void sched_blockone(struct thread *t)

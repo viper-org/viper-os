@@ -17,3 +17,10 @@ reload_segments:
     movw %ax, %gs
     movw %ax, %ss
     ret
+
+.globl tss_install
+.type tss_install, @function
+tss_install:
+    movw $0x28, %ax
+    ltr %ax
+    ret

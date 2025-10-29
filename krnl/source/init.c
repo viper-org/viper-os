@@ -3,6 +3,7 @@
 
 #include "cpu/gdt.h"
 #include "cpu/idt.h"
+#include "cpu/tss.h"
 
 #include "event/bus.h"
 #include "event/object.h"
@@ -44,6 +45,7 @@ void _start(void)
 {
     gdt_init();
     idt_init();
+    tss_init();
 
     pm_init();
     vm_init();

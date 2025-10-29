@@ -5,6 +5,7 @@ set(SOURCES
 
     "source/cpu/install_gdt.s"
     "source/cpu/gdt.c"
+    "source/cpu/tss.c"
     "source/cpu/interrupt/idt.c"
     "source/cpu/interrupt/exception.c"
     "source/cpu/interrupt/interrupt_table.s"
@@ -37,6 +38,7 @@ set(SOURCES
 
 set(HEADERS
     "include/cpu/gdt.h"
+    "include/cpu/tss.h"
     "include/cpu/idt.h"
     "include/cpu/cpu.h"
 
