@@ -1,9 +1,6 @@
 #include "driver/ldr/loader.h"
 
-#include "mm/pm.h"
 #include "mm/vm.h"
-
-#include "util.h"
 
 #include <limine.h>
 
@@ -78,6 +75,7 @@ typedef struct
 } Elf64_Sym;
 
 #define PT_LOAD 1
+#define PF_DHDR (1 << 3)
 
 static Elf64_Ehdr *kernelEhdr;
 static Elf64_Shdr *symtab = NULL;
@@ -121,6 +119,18 @@ struct driver ldr_load(void *addr)
     Elf64_Ehdr *ehdr = addr;
     Elf64_Phdr *phdr = (Elf64_Phdr *)(file + ehdr->e_phoff);
 
+    uint32_t size = 0;
+    Elf64_Phdr *hdr_phdr = NULL;
+    for (uint32_t i = 0; i < ehdr->e_phnum; ++i, ++phdr)
+    {
+        if (phdr->p_type != PT_LOAD) continue;
+        if (phdr->p_flags & PF_DHDR) hdr_phdr = phdr;
+        size += phdr->p_memsz;
+    }
+    size = NPAGES(size);
+    void *vaddr_base = vm_getpages(NULL, size);
+
+    phdr = (Elf64_Phdr *)(file + ehdr->e_phoff);
     for (uint32_t i = 0; i < ehdr->e_phnum; ++i, ++phdr)
     {
         if (phdr->p_type != PT_LOAD)
@@ -128,39 +138,27 @@ struct driver ldr_load(void *addr)
             continue;
         }
 
-        uint64_t vaddr = phdr->p_vaddr;
-        uint32_t size = align_up(phdr->p_memsz, 0x1000);
-        for (uint32_t j = 0; j < size; j += 0x1000)
-        {
-            vm_map_page(NULL,
-                pm_getpage(),
-                vaddr + j,
-                PT_PRESENT | PT_WRITE);
-        }
+        void *vaddr = (char *)vaddr_base + phdr->p_vaddr;
 
         char *start = file + phdr->p_offset;
-        memcpy((void*)vaddr, start, phdr->p_filesz);
+        memcpy(vaddr, start, phdr->p_filesz);
         char *bss = (char *)vaddr + phdr->p_filesz;
         memset(bss, 0, phdr->p_memsz - phdr->p_filesz);
-
-        // TODO: Mark the area as used in the VMM
     }
 
-    Elf64_Shdr *shdr = (Elf64_Shdr *)(file + ehdr->e_shoff);
-    char *shstrtab = getShstrtab(ehdr);
-    struct driver_header *header;
-    for (int i = 0; i < ehdr->e_shnum; ++i)
-    {
-        if (!strcmp(shstrtab + shdr[i].sh_name, ".driver_header"))
-        {
-            header = (struct driver_header *)(shdr[i].sh_addr);
-            header->kernel_func_getter = &kernel_function_getter;
-        }
-    }
+    char *hdr_loc = (char *)vaddr_base + hdr_phdr->p_vaddr;
+    struct driver_header *header = (struct driver_header *)hdr_loc;
+    header->kernel_func_getter = &kernel_function_getter;
+
+    // "relocate" header fields
+    header->name  += (uint64_t)vaddr_base;
+    header->read  = (ssize_t (*)(void *,size_t))((uint64_t)header->read + (uint64_t)vaddr_base);
+    header->write = (ssize_t (*)(const void *,size_t))((uint64_t)header->write + (uint64_t)vaddr_base);
+    header->ioctl = (int (*)(unsigned long, char *))((uint64_t)header->ioctl + (uint64_t)vaddr_base);
 
     return (struct driver) {
         .header = header,
-        .init = (void(*)(void))(ehdr->e_entry),
+        .init = (void(*)(void))(ehdr->e_entry + (uint64_t)vaddr_base),
     };
 }
 

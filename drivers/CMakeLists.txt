@@ -5,12 +5,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/bin)
 add_link_options(
     "-Wl,-melf_x86_64"
     "-nostdlib"
-    "-static"
-    "-no-pie"
+    "-pie"
     "-Wl,--no-dynamic-linker"
     "-ztext"
     "-zmax-page-size=0x1000"
-    "-Tlinker.ld"
+    "-T${CMAKE_CURRENT_LIST_DIR}/linker.ld"
 )
 
 add_compile_options(
@@ -23,8 +22,8 @@ add_compile_options(
     "-fno-stack-protector"
     "-fno-stack-check"
     "-fno-lto"
-    "-fno-pie"
-    "-fno-pic"
+    "-fPIE"
+    "-fPIC"
     "-m64"
     "-march=x86-64"
     "-mno-80387"
@@ -32,7 +31,6 @@ add_compile_options(
     "-mno-sse"
     "-mno-sse2"
     "-mno-red-zone"
-    "-mcmodel=kernel"
 )
 
 include_directories(include)
