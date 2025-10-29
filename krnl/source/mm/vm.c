@@ -216,6 +216,8 @@ void *vm_getpages(struct addrspace *a, uint32_t count)
 {
     if (!count) return NULL;
     if (!a) a = &k_addrspace;
+    uint16_t flags = PT_PRESENT | PT_WRITE;
+    if (a != &k_addrspace) flags |= PT_USER;
 
     struct vm_allocator_node *prev = NULL;
     struct vm_allocator_node *curr = a->fl;
@@ -243,7 +245,7 @@ void *vm_getpages(struct addrspace *a, uint32_t count)
             a,
             pm_getpage(),
             base + i,
-            PT_PRESENT | PT_WRITE
+            flags
         );
     }
 

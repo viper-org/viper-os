@@ -41,4 +41,6 @@ struct cpu_state
     } base_frame;
 };
 
+void cpu_init(void);
+
 #endif // VIPEROS_CPU_CPU

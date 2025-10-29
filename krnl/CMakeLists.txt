@@ -7,6 +7,7 @@ set(SOURCES
     "source/cpu/gdt.c"
     "source/cpu/tss.c"
     "source/cpu/interrupt/idt.c"
+    "source/cpu/cpu.c"
     "source/cpu/interrupt/exception.c"
     "source/cpu/interrupt/interrupt_table.s"
 
@@ -29,6 +30,7 @@ set(SOURCES
     "source/sched/prepare_thread.s"
     "source/sched/swtch.s"
     "source/sched/idle.s"
+    "source/sched/user.s"
 
     "source/event/object.c"
     "source/event/bus.c"
@@ -41,6 +43,7 @@ set(HEADERS
     "include/cpu/tss.h"
     "include/cpu/idt.h"
     "include/cpu/cpu.h"
+    "include/cpu/asm.h"
 
     "include/driver/dbg.h"
     "include/driver/port.h"

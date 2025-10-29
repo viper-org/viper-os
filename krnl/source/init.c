@@ -1,9 +1,7 @@
 #include "driver/ldr/loader.h"
 #include "driver/dbg.h"
 
-#include "cpu/gdt.h"
-#include "cpu/idt.h"
-#include "cpu/tss.h"
+#include "cpu/cpu.h"
 
 #include "event/bus.h"
 #include "event/object.h"
@@ -21,31 +19,12 @@
 
 #include <string.h>
 
-struct thread *t;
-
-void threadmain(void)
-{
-    dbg_writechar('A');
-    sched_yield();
-    thread_kill(sched_curr());
-}
-
-void threadmain2(void)
-{
-    struct exit_event_object *e = create_exit_event(t);
-    wait_on_object(&e->obj, sched_curr());
-    sched_blockcurr();
-    while (1) {
-        dbg_writechar('B');
-        sched_yield();
-    }
-}
+extern void userproc();
+extern void userproc_end();
 
 void _start(void)
 {
-    gdt_init();
-    idt_init();
-    tss_init();
+    cpu_init();
 
     pm_init();
     vm_init();
@@ -65,12 +44,12 @@ void _start(void)
     ldr_init();
     initrd_init();
 
-
-    struct process *proc = alloc_proc((uint64_t)threadmain);
-    struct process *proc2 = alloc_proc((uint64_t)threadmain2);
-    t = &proc->main_thread;
+    struct process *proc = alloc_proc((uint64_t)userproc);
+    void *page = vm_getpage(&proc->addr_space);
+    proc->main_thread.entry = (uint64_t)page;
+    vm_switch_to(&proc->addr_space);
+    memcpy(page, userproc, userproc_end - userproc);
     sched_addproc(proc);
-    sched_addproc(proc2);
     sched_start();
     
     __asm__("cli; hlt");

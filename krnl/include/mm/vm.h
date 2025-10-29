@@ -10,7 +10,8 @@ void *vm_phystovirt(physaddr_t);
 enum pt_flags
 {
     PT_PRESENT = 1 << 0,
-    PT_WRITE   = 1 << 1
+    PT_WRITE   = 1 << 1,
+    PT_USER    = 1 << 2,
 };
 
 #define NPAGES(n) ((n + 0x1000 - 1) / 0x1000)

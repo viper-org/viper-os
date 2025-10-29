@@ -11,6 +11,8 @@
 static int npid = 0;
 
 extern void prepare_thread(uint64_t entry, struct thread_context **ctx, uint64_t stack, struct thread *t, uint64_t pml4);
+extern void enter_usermode(uint64_t rip, uint64_t rsp);
+void usermode_setup(struct thread *t);
 
 struct process *alloc_proc(uint64_t entry)
 {
@@ -28,7 +30,7 @@ struct process *alloc_proc(uint64_t entry)
     };
     t->exit_event = NULL;
 
-    prepare_thread(entry, &t->ctx, t->krnl_stack.top, t, t->owner->addr_space.pml4);
+    prepare_thread((uint64_t)usermode_setup, &t->ctx, t->krnl_stack.top, t, t->owner->addr_space.pml4);
     
     return ret;
 }
@@ -46,4 +48,10 @@ void ctx_switch(struct thread *old, struct thread *new)
 {
     tss_set_rsp0(new->krnl_stack.top);
     swtch(&old->ctx, new->ctx);
+}
+
+void usermode_setup(struct thread *t)
+{
+    vm_switch_to(&t->owner->addr_space);
+    enter_usermode(t->entry, t->usr_stack.top);
 }
