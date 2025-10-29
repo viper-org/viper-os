@@ -2,6 +2,7 @@ CMakeFiles/
 .cache/
 ovmf/
 limine/
+modules/
 
 *.cmake
 Makefile

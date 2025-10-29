@@ -1,24 +1,19 @@
 #include "driver/ldr/loader.h"
+#include "driver/dbg.h"
 
 #include "cpu/gdt.h"
 #include "cpu/idt.h"
 
-#include "fs/vfs.h"
 #include "mm/pm.h"
 #include "mm/vm.h"
 #include "mm/kheap.h"
 
 #include "fs/testfs.h"
 #include "fs/devfs.h"
+#include "fs/initrd.h"
+#include "fs/vfs.h"
 
-#include "limine.h"
 #include <string.h>
-
-static volatile struct limine_module_request modreq = {
-    .id = LIMINE_MODULE_REQUEST,
-    .revision = 1,
-    .response = NULL
-};
 
 void _start(void)
 {
@@ -37,21 +32,20 @@ void _start(void)
     struct vnode *tmp;
     root->fs->mkdir(root, "dev", &tmp);
     devfs_get()->mount("/dev");
+
+    dbg_writechar('\n');
     
     ldr_init();
-    for (uint64_t i = 0; i < modreq.response->module_count; ++i)
-    {
-        if (!strcmp("/sample.vdrv", modreq.response->modules[i]->path))
-        {
-            struct driver hdr = ldr_load(modreq.response->modules[i]->address);
-            hdr.init();
-            devfs_add_drv(hdr);
-        }
-    }
+    initrd_init();
 
-    tmp = lookuppn("/dev/sample");
-    tmp->fs->read(tmp, "", 0);
-    tmp->fs->ioctl(tmp, 12, NULL);
+    tmp = lookuppn("/dev/fb");
+    uint64_t width, height, pitch;
+    tmp->fs->ioctl(tmp, 0, &width);
+    tmp->fs->ioctl(tmp, 1, &height);
+    tmp->fs->ioctl(tmp, 2, &pitch);
+    void *backbuf = vm_getpages(NULL, NPAGES(height * pitch));
+    memset(backbuf, 0x87, height * pitch);
+    tmp->fs->write(tmp, backbuf, height * pitch);
     
     __asm__("cli; hlt");
 }
