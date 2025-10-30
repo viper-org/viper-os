@@ -5,9 +5,10 @@ make -C limine
 
 mkdir -p ../drivers/bin
 mkdir -p ../modules
-mkdir -p ../initrd
-cp ../drivers/bin/** ../initrd/
-cp ../user/bin/** ../initrd
+mkdir -p ../initrd/boot/
+mkdir -p ../initrd/bin/
+cp -r ../drivers/bin ../initrd/boot
+cp -r ../user/sysroot/* ../initrd/
 cd ../initrd
 tar cvf ../modules/initrd.tar **
 cd ../krnl

@@ -58,5 +58,6 @@ void pushvfs(struct vfilesystem *);
 void setrootfs(struct vfilesystem *);
 enum vfs_error defaultmount(struct vfilesystem *, char *path);
 struct vnode *lookuppn(char *path);
+struct vnode *recursive_create(const char *path, int n);
 
 #endif // VIPEROS_FS_VFS

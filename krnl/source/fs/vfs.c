@@ -1,5 +1,7 @@
 #include "fs/vfs.h"
 
+#include "mm/kheap.h"
+
 #include <string.h>
 
 struct vfilesystem *vfs_list = NULL;
@@ -67,4 +69,26 @@ struct vnode *lookuppn(char *path)
     }
 
     return curr;
+}
+
+struct vnode *recursive_create(const char *pn, int n)
+{
+    const char *component = strrchr(pn, '/')+1;
+    char *parent = strdup(pn);
+    parent[component - pn] = '\0';
+    if (component[0] == 0)
+    {
+        parent[component - pn - 1] = 0;
+    }
+    struct vnode *node = lookuppn(parent);
+    if (!node)
+    {
+        node = recursive_create(parent, 1);
+        if (component[0] == 0) return node;
+    }
+    struct vnode *out;
+    if (n) node->fs->mkdir(node, component, &out);
+    else node->fs->create(node, component, &out);
+    kheap_free(parent);
+    return out;
 }

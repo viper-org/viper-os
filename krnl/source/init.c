@@ -51,7 +51,7 @@ void _start(void)
 
     void *mem = vm_getpages(NULL, 16);
     size_t count = 0x10000;
-    tmp = lookuppn("/tmp/usertest");
+    tmp = lookuppn("/bin/usertest");
     tmp->fs->read(tmp, mem, &count, 0);
 
     struct elf_exec e = load_elf(mem, &proc->addr_space);

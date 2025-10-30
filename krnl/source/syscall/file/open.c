@@ -9,22 +9,6 @@
 
 #include <string.h>
 
-struct vnode *create_one(const char *pn)
-{
-    const char *component = strrchr(pn, '/')+1;
-    char *parent = strdup(pn);
-    parent[component - pn] = '\0';
-    struct vnode *node = lookuppn(parent);
-    if (!node)
-    {
-        node = create_one(parent);
-    }
-    struct vnode *out;
-    node->fs->create(node, component, &out);
-    kheap_free(parent);
-    return out;
-}
-
 int sys_open(const char *path, uint16_t openmode)
 {
     // todo: verify path
@@ -34,7 +18,7 @@ int sys_open(const char *path, uint16_t openmode)
     {
         if (openmode & O_CREAT)
         {
-            node = create_one(path); 
+            node = recursive_create(path, 0); 
         }
     }
     int ret = proc_addfd(proc, node, openmode);

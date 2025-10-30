@@ -38,18 +38,13 @@ static inline size_t parse_size(const char *sz)
 
 void initrd_init(void)
 {
-    struct vnode *root = lookuppn("/");
-    struct vnode *tmp;
-    root->fs->mkdir(root, "tmp", &tmp);
-
     void *addr = get_module("/initrd.tar")->address;
     struct tar_header *hdr = addr;
     while (!memcmp("ustar", hdr->magic, 5))
     {
-        char name[100];
-        strcpy(name, hdr->name);
-        struct vnode *node;
-        tmp->fs->create(tmp, name, &node);
+        char name[100] = "/";
+        strcpy(name+1, hdr->name);
+        struct vnode *node = recursive_create(name, 0);
         size_t sz = parse_size(hdr->size);
         node->fs->write(node, (char*)hdr + 512, sz, 0);
         dbg_printf("loading file: %s\n", name);
