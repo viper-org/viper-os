@@ -64,10 +64,10 @@ void yield(void)
 
 void _start(void)
 {
-    int fd = open("/file", 7);
+    int fd = open("/file", 15);
     char buf[12];
     write(fd, "Hello\n", 7);
-    lseek(fd, 0, 0); // SEEK_SET
+    //lseek(fd, 0, 0); // SEEK_SET
     struct stat a = {0};
     stat("/file", &a);
     read(fd, buf, a.size);

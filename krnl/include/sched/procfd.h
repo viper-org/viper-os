@@ -9,12 +9,13 @@ enum openmode
     OMODE_W = 1 << 1,
 
     O_CREAT = 1 << 2,
+    O_APPEND = 1 << 3,
 };
 
 struct proc_fd
 {
     struct vnode *vnode;
-    uint8_t flags;
+    uint16_t flags;
     size_t seek;
 };
 
