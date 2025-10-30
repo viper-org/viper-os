@@ -1,4 +1,5 @@
 #include "sched/proc.h"
+#include "cpu/cpu.h"
 #include "sched/sched.h"
 
 #include "mm/kheap.h"
@@ -47,11 +48,13 @@ void thread_kill(struct thread *t)
 void ctx_switch(struct thread *old, struct thread *new)
 {
     tss_set_rsp0(new->krnl_stack.top);
+    get_core()->kstack = new->krnl_stack.top;
     swtch(&old->ctx, new->ctx);
 }
 
 void usermode_setup(struct thread *t)
 {
     vm_switch_to(&t->owner->addr_space);
+    get_core()->kstack = t->krnl_stack.top;
     enter_usermode(t->entry, t->usr_stack.top);
 }

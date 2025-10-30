@@ -41,6 +41,15 @@ struct cpu_state
     } base_frame;
 };
 
-void cpu_init(void);
+struct core_struct
+{
+    struct core_struct *self;
+    uint64_t kstack;
+    uint64_t ustack;
+};
+
+void cpu_earlyinit(void);
+void cpu_init(void); // stuff that needs memory allocations
+struct core_struct *get_core(void);
 
 #endif // VIPEROS_CPU_CPU

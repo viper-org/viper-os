@@ -19,17 +19,29 @@
 
 #include <string.h>
 
-extern void userproc();
-extern void userproc_end();
+extern char userproc[];
+extern char userproc_end[];
+
+void makeuserproc()
+{
+    struct process *proc = alloc_proc((uint64_t)userproc);
+    void *page = vm_getpage(&proc->addr_space);
+    proc->main_thread.entry = (uint64_t)page;
+    vm_switch_to(&proc->addr_space);
+    memcpy(page, userproc, userproc_end - userproc);
+    sched_addproc(proc);
+}
 
 void _start(void)
 {
-    cpu_init();
+    cpu_earlyinit();
 
     pm_init();
     vm_init();
     kheap_init();
     vm_allocator_init();
+
+    cpu_init();
 
     testfs_init();
     devfs_init();
@@ -44,12 +56,8 @@ void _start(void)
     ldr_init();
     initrd_init();
 
-    struct process *proc = alloc_proc((uint64_t)userproc);
-    void *page = vm_getpage(&proc->addr_space);
-    proc->main_thread.entry = (uint64_t)page;
-    vm_switch_to(&proc->addr_space);
-    memcpy(page, userproc, userproc_end - userproc);
-    sched_addproc(proc);
+    makeuserproc();
+    makeuserproc();
     sched_start();
     
     __asm__("cli; hlt");

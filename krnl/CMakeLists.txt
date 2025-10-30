@@ -8,8 +8,11 @@ set(SOURCES
     "source/cpu/tss.c"
     "source/cpu/interrupt/idt.c"
     "source/cpu/cpu.c"
+    "source/cpu/syscall.s"
     "source/cpu/interrupt/exception.c"
     "source/cpu/interrupt/interrupt_table.s"
+
+    "source/syscall/syscall.c"
 
     "source/driver/dbg.c"
     "source/driver/ldr/loader.c"

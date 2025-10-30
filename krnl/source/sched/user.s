@@ -29,5 +29,7 @@ enter_usermode:
 .globl userproc_end
 userproc:
     pause
+    movq $12, %rax
+    syscall
     jmp userproc
 userproc_end:
