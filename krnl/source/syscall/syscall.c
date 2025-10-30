@@ -89,6 +89,14 @@ void syscall_dispatcher(struct syscall_frame *frame)
             frame->rax = sys_spawn((const char *)frame->rdi);
             break;
 
+        case 33:
+            frame->rax = sys_dup(frame->rdi);
+            break;
+        
+        case 34:
+            frame->rax = sys_dup2(frame->rdi, frame->rsi);
+            break;
+
         case 60:
             sys_exit(frame->rdi);
             break; // shouldn't return but avoid warnings by breaking

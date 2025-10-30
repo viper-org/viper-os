@@ -109,12 +109,28 @@ int spawn(const char *path)
     return ret;
 }
 
+int dup(int fd)
+{
+    int ret;
+    __asm__ volatile("syscall" : "=a"(ret) : "a"(33), "D"(fd) : "rcx", "r11");
+    return ret;
+}
+
+int dup2(int old, int new)
+{
+    int ret;
+    __asm__ volatile("syscall" : "=a"(ret) : "a"(34), "D"(old), "S"(new) : "rcx", "r11");
+    return ret;
+}
+
 void _start(void)
 {
     if (getpid() == 0)
     {
         int fds[2];
         pipe(fds);
+        dup2(fds[1], 9);
+        close(fds[1]);
 
         spawn("/tmp/usertest");
         poll1(fds[0]);
@@ -125,7 +141,7 @@ void _start(void)
     }
     else // child
     {
-        write(1, "Hello\n", 7);
+        write(9, "Hello\n", 7);
         exit(0);
     }
 

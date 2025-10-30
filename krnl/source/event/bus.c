@@ -1,6 +1,7 @@
 #include "event/bus.h"
 #include "event/object.h"
 
+#include "sched/pipe.h"
 #include "sched/proc.h"
 
 #include "mm/kheap.h"
@@ -28,7 +29,7 @@ struct poll_event_object *create_poll_event(struct proc_fd *desc)
     event->obj.waiting = 0;
     event->next = bus.poll_events;
     
-    desc->events->poll_event = event;
+    desc->pipe->poll_event = event;
 
     bus.poll_events = event;
 

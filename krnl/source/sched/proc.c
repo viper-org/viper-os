@@ -58,8 +58,6 @@ int proc_addfd(struct process *proc, struct vnode *node, enum openmode mode)
         {
             proc->fds[i].vnode = node;
             proc->fds[i].flags = mode;
-            proc->fds[i].events = kheap_alloc(sizeof(struct procfd_events));
-            memset(proc->fds[i].events, 0, sizeof(struct procfd_events));
             return i;
         }
     }
@@ -73,8 +71,18 @@ int proc_add_pipefd(struct process *proc, struct pipe *pipe)
         if (!proc->fds[i].vnode && !proc->fds[i].pipe)
         {
             proc->fds[i].pipe = pipe;
-            proc->fds[i].events = kheap_alloc(sizeof(struct procfd_events));
-            memset(proc->fds[i].events, 0, sizeof(struct procfd_events));
+            return i;
+        }
+    }
+    return -1;
+}
+
+int proc_get_freefd(struct process *proc)
+{
+    for (int i = 0; i < NFD; ++i)
+    {
+        if (!proc->fds[i].vnode && !proc->fds[i].pipe)
+        {
             return i;
         }
     }

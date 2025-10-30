@@ -9,6 +9,8 @@ enum pipe_type
     PIPE_WRITE
 };
 
+struct poll_event_object;
+
 struct pipe
 {
     enum pipe_type type;
@@ -28,6 +30,8 @@ struct pipe
             struct pipe *write_end;
         } read;
     };
+
+    struct poll_event_object *poll_event;
 };
 
 ssize_t write_pipe(struct pipe *pipe, const void *buf, size_t count);

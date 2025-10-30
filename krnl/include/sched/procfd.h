@@ -13,12 +13,6 @@ enum openmode
 };
 
 struct pipe;
-struct poll_event_object;
-
-struct procfd_events
-{
-    struct poll_event_object *poll_event;
-};
 
 struct proc_fd
 {
@@ -26,8 +20,6 @@ struct proc_fd
     struct pipe *pipe;
     uint16_t flags;
     size_t seek;
-
-    struct procfd_events *events;
 };
 
 #endif // VIPEROS_SCHED_PROCFD

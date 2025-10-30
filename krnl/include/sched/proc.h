@@ -52,6 +52,7 @@ struct process *alloc_proc(uint64_t entry);
 
 int proc_addfd(struct process *proc, struct vnode *node, enum openmode mode);
 int proc_add_pipefd(struct process *proc, struct pipe *pipe);
+int proc_get_freefd(struct process *proc);
 struct process *find_proc(int pid);
 
 void thread_kill(struct thread *t, int code);

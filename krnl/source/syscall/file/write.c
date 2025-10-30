@@ -36,9 +36,9 @@ ssize_t sys_write(int fd, const void *buf, size_t count)
         if (!(desc->flags & O_APPEND)) desc->seek += count;
     }
 
-    if (desc->events->poll_event)
+    if (desc->pipe && desc->pipe->poll_event)
     {
-        ready_event(&desc->events->poll_event->obj);
+        ready_event(&desc->pipe->poll_event->obj);
         // todo: free event
     }
     
