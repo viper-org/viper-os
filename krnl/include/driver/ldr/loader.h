@@ -9,8 +9,8 @@ struct __attribute__((packed)) driver_header
 {
     void* (*kernel_func_getter)(const char *);
 
-    ssize_t (*read)(void *, size_t);
-    ssize_t (*write)(const void *, size_t);
+    ssize_t (*read)(void *, size_t*, size_t);
+    ssize_t (*write)(const void *, size_t, size_t);
     int (*ioctl)(unsigned long, char *);
 
     const char *name;

@@ -33,8 +33,8 @@ struct vfilesystem
     int (*mount)(char *path);
 
     // vnode ops
-    enum vfs_error (*read)(struct vnode *,void *buf, size_t count);
-    enum vfs_error (*write)(struct vnode *,const void *buf, size_t count);
+    enum vfs_error (*read)(struct vnode *,void *buf, size_t* count, size_t seek);
+    enum vfs_error (*write)(struct vnode *,const void *buf, size_t count, size_t seek);
     enum vfs_error (*lookup)(struct vnode *,char *component, struct vnode **);
     enum vfs_error (*create)(struct vnode *,char *name, struct vnode **);
     enum vfs_error (*mkdir)(struct vnode *,char *name, struct vnode **);

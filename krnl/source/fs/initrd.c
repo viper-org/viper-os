@@ -50,7 +50,7 @@ void initrd_init(void)
         struct vnode *node;
         tmp->fs->create(tmp, name, &node);
         size_t sz = parse_size(hdr->size);
-        node->fs->write(node, (char*)hdr + 512, sz);
+        node->fs->write(node, (char*)hdr + 512, sz, 0);
 
         size_t namelen = strlen(name);
         if (!strcmp(name + namelen - 5, ".vdrv"))

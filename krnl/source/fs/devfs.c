@@ -8,8 +8,8 @@
 static struct devfs_vfs fs;
 static struct vfilesystem vfs;
 
-static enum vfs_error devfs_read(struct vnode *, void *, size_t);
-static enum vfs_error devfs_write(struct vnode *, const void *, size_t);
+static enum vfs_error devfs_read(struct vnode *, void *, size_t*, size_t);
+static enum vfs_error devfs_write(struct vnode *, const void *, size_t, size_t);
 static enum vfs_error devfs_lookup(struct vnode *, char *, struct vnode **);
 static enum vfs_error devfs_create(struct vnode *, char *, struct vnode **);
 static enum vfs_error devfs_mkdir(struct vnode *, char *, struct vnode **);
@@ -76,22 +76,22 @@ void devfs_add_drv(struct driver drv)
     root->contained = node;
 }
 
-static enum vfs_error devfs_read(struct vnode *node, void *data, size_t sz)
+static enum vfs_error devfs_read(struct vnode *node, void *data, size_t* sz, size_t seek)
 {
     if (node->type == VNODE_DIR) return VFS_IS_DIR;
 
     struct devfs_file *file = node->impl;
-    file->drvr.header->read(data, sz);
+    file->drvr.header->read(data, sz, seek);
 
     return VFS_SUCCESS; // TODO: output ssize_t
 }
 
-static enum vfs_error devfs_write(struct vnode *node, const void *data, size_t sz)
+static enum vfs_error devfs_write(struct vnode *node, const void *data, size_t sz, size_t seek)
 {
     if (node->type == VNODE_DIR) return VFS_IS_DIR;
 
     struct devfs_file *file = node->impl;
-    file->drvr.header->write(data, sz);
+    file->drvr.header->write(data, sz, seek);
 
     return VFS_SUCCESS; // TODO: output ssize_t
 }

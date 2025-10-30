@@ -8,8 +8,8 @@ typedef struct __attribute__((packed))
 {
     void*(*kernel_func_getter)(const char*);
 
-    ssize_t (*read)(void* buf, size_t count);
-    ssize_t (*write)(const void* buf, size_t count);
+    ssize_t (*read)(void* buf, size_t *count, size_t seek);
+    ssize_t (*write)(const void* buf, size_t count, size_t seek);
     int (*ioctl)(unsigned long op, void *argp);
 
     const char* name;

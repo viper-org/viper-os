@@ -28,8 +28,12 @@ enter_usermode:
 .globl userproc
 .globl userproc_end
 userproc:
-    pause
-    movq $12, %rax
+    movq $2, %rax # open
+    lea x(%rip), %rdi
+    movq $1, %rsi
     syscall
-    jmp userproc
+1:
+    pause
+    jmp 1b
+x: .asciz "/dev/fb"
 userproc_end:

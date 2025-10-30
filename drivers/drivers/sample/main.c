@@ -1,7 +1,7 @@
 #include <driver.h>
 
-ssize_t read(void* buf, size_t count);
-ssize_t write(const void* buf, size_t count);
+ssize_t read(void* buf, size_t *count, size_t seek);
+ssize_t write(const void* buf, size_t count, size_t seek);
 int ioctl(unsigned long op, void *argp);
 
 __attribute__((section(".driver_header"))) volatile DriverHeader header = {
@@ -22,18 +22,20 @@ void _start(void)
     KeDebugLog("Initialized sample driver\n");
 }
 
-ssize_t read(void* buf, size_t count)
+ssize_t read(void* buf, size_t* count, size_t seek)
 {
     (void)buf;
     (void)count;
-    KeDebugLogFmt("Reading %d bytes into %p\n", count, buf);
+    (void)seek;
+    KeDebugLogFmt("Reading %d bytes into %p\n", *count, buf);
     return 0;
 }
 
-ssize_t write(const void* buf, size_t count)
+ssize_t write(const void* buf, size_t count, size_t seek)
 {
     (void)buf;
     (void)count;
+    (void)seek;
     KeDebugLogFmt("Writing %d bytes to %p\n", count, buf);
     return 0;
 }

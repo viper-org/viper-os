@@ -1,5 +1,9 @@
+#include "syscall/syscalls.h"
+
 #include "driver/dbg.h"
+
 #include <stdint.h>
+
 
 struct syscall_frame
 {
@@ -25,5 +29,14 @@ struct syscall_frame
 
 void syscall_dispatcher(struct syscall_frame *frame)
 {
-    dbg_printf("syscall rax=%d", frame->rax);
+    switch (frame->rax)
+    {
+        case 2:
+            frame->rax = sys_open((const char *)frame->rdi, frame->rsi);
+            break;
+        
+        default:
+            dbg_printf("syscall rax=%d", frame->rax);
+            break;
+    }
 }

@@ -13,6 +13,7 @@ set(SOURCES
     "source/cpu/interrupt/interrupt_table.s"
 
     "source/syscall/syscall.c"
+    "source/syscall/file/open.c"
 
     "source/driver/dbg.c"
     "source/driver/ldr/loader.c"
@@ -52,6 +53,8 @@ set(HEADERS
     "include/driver/port.h"
     "include/driver/ldr/loader.h"
 
+    "include/syscall/syscalls.h"
+
     "include/mm/pm.h"
     "include/mm/vm.h"
     "include/mm/kheap.h"
@@ -63,6 +66,7 @@ set(HEADERS
     "include/fs/initrd.h"
 
     "include/sched/proc.h"
+    "include/sched/procfd.h"
     "include/sched/sched.h"
 
     "include/event/object.h"

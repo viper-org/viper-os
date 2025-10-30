@@ -9,6 +9,8 @@
 
 #include "event/object.h"
 
+#include <string.h>
+
 static int npid = 0;
 
 extern void prepare_thread(uint64_t entry, struct thread_context **ctx, uint64_t stack, struct thread *t, uint64_t pml4);
@@ -20,6 +22,7 @@ struct process *alloc_proc(uint64_t entry)
     struct process *ret = kheap_alloc(sizeof(struct process));
     ret->pid = npid++;
     ret->addr_space = make_addrspace();
+    memset(ret->fds, 0, sizeof ret->fds);
 
     struct thread *t = &ret->main_thread;
     t->entry = entry;
@@ -35,6 +38,21 @@ struct process *alloc_proc(uint64_t entry)
     
     return ret;
 }
+
+int proc_addfd(struct process *proc, struct vnode *node, enum openmode mode)
+{
+    for (int i = 0; i < NFD; ++i)
+    {
+        if (!proc->fds[i].vnode)
+        {
+            proc->fds[i].vnode = node;
+            proc->fds[i].flags = mode;
+            return i;
+        }
+    }
+    return -1;
+}
+
 
 void thread_kill(struct thread *t)
 {

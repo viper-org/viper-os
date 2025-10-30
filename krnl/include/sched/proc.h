@@ -1,6 +1,8 @@
 #ifndef VIPEROS_SCHED_PROC
 #define VIPEROS_SCHED_PROC 1
 
+#include "sched/procfd.h"
+
 #include "cpu/swtch.h"
 
 #include "mm/vm.h"
@@ -33,14 +35,20 @@ struct thread
     struct thread *wnext;
 };
 
+#define NFD 16 // will need more later probably
+
 struct process
 {
     int pid;
     struct thread main_thread;
     struct addrspace addr_space;
+
+    struct proc_fd fds[NFD];
 };
 
 struct process *alloc_proc(uint64_t entry);
+
+int proc_addfd(struct process *proc, struct vnode *node, enum openmode mode);
 
 void thread_kill(struct thread *t);
 

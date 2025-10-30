@@ -8,8 +8,8 @@
 struct testfs_vfs fs;
 struct vfilesystem vfs;
 
-static enum vfs_error testfs_read(struct vnode *, void *, size_t);
-static enum vfs_error testfs_write(struct vnode *, const void *, size_t);
+static enum vfs_error testfs_read(struct vnode *, void *, size_t*, size_t);
+static enum vfs_error testfs_write(struct vnode *, const void *, size_t, size_t);
 static enum vfs_error testfs_lookup(struct vnode *, char *, struct vnode **);
 static enum vfs_error testfs_create(struct vnode *, char *, struct vnode **);
 static enum vfs_error testfs_mkdir(struct vnode *, char *, struct vnode **);
@@ -72,26 +72,32 @@ void testfs_init(void)
 }
 
 
-static enum vfs_error testfs_read(struct vnode *node, void *data, size_t sz)
+static enum vfs_error testfs_read(struct vnode *node, void *data, size_t* sz, size_t seek)
 {
     if (node->type == VNODE_DIR) return VFS_IS_DIR;
 
     struct testfs_file *file = node->impl;
-    if (sz > file->length) sz = file->length;
-    memcpy(data, file->data, sz);
+    if (*sz > file->length - seek)
+    {
+        *sz = file->length - seek;
+    }
+    memcpy(data, file->data + seek, *sz);
     return VFS_SUCCESS;
 }
 
-static enum vfs_error testfs_write(struct vnode *node, const void *data, size_t sz)
+static enum vfs_error testfs_write(struct vnode *node, const void *data, size_t sz, size_t seek)
 {
     if (node->type == VNODE_DIR) return VFS_IS_DIR;
 
     struct testfs_file *file = node->impl;
-    kheap_free(file->data);
-
+    char *olddata = file->data;
+    
     file->data = kheap_alloc(sz);
-    memcpy(file->data, data, sz);
+    memcpy(file->data, olddata, seek);
+    memcpy(file->data + seek, data, sz);
     file->length = sz;
+
+    kheap_free(olddata);
     return VFS_SUCCESS;
 }
 

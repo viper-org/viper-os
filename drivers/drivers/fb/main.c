@@ -3,8 +3,8 @@
 #include <stdint.h>
 #include <string.h>
 
-ssize_t read(void* buf, size_t count);
-ssize_t write(const void* buf, size_t count);
+ssize_t read(void* buf, size_t* count, size_t seek);
+ssize_t write(const void* buf, size_t count, size_t seek);
 int ioctl(unsigned long op, void *argp);
 
 struct framebuffer {
@@ -38,16 +38,18 @@ void _start(void)
     KeDebugLog("Initialized framebuffer driver\n");
 }
 
-ssize_t read(void *buf, size_t count)
+ssize_t read(void *buf, size_t* count, size_t seek)
 {
     (void)buf;
-    (void)count;
+    (void)seek;
+    *count = 0;
     // Can't read from fb
     return -1;
 }
 
-ssize_t write(const void *buf, size_t count)
+ssize_t write(const void *buf, size_t count, size_t seek)
 {
+    (void)seek;
     if (count != fb.height * fb.pitch) return -1;
 
     memcpy(fb.address, buf, count);
