@@ -32,6 +32,11 @@ struct process *alloc_proc(uint64_t entry)
         .top = (uint64_t)kstack_base + 8 * 0x1000,
         8 * 0x1000
     };
+    void *ustack_base = vm_getpages(&ret->addr_space, 8);
+    t->usr_stack = (struct stack) {
+        .top = (uint64_t)ustack_base + 8 * 0x1000,
+        8 * 0x1000
+    };
     t->exit_event = NULL;
 
     prepare_thread((uint64_t)usermode_setup, &t->ctx, t->krnl_stack.top, t, t->owner->addr_space.pml4);

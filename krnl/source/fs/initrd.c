@@ -1,4 +1,5 @@
 #include "fs/initrd.h"
+#include "driver/dbg.h"
 #include "driver/ldr/loader.h"
 #include "fs/vfs.h"
 #include "fs/devfs.h"
@@ -51,6 +52,7 @@ void initrd_init(void)
         tmp->fs->create(tmp, name, &node);
         size_t sz = parse_size(hdr->size);
         node->fs->write(node, (char*)hdr + 512, sz, 0);
+        dbg_printf("loading file: %s\n", name);
 
         size_t namelen = strlen(name);
         if (!strcmp(name + namelen - 5, ".vdrv"))

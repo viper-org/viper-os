@@ -36,6 +36,8 @@ set(SOURCES
     "source/sched/idle.s"
     "source/sched/user.s"
 
+    "source/ldr/elf.c"
+
     "source/event/object.c"
     "source/event/bus.c"
 
@@ -68,6 +70,8 @@ set(HEADERS
     "include/sched/proc.h"
     "include/sched/procfd.h"
     "include/sched/sched.h"
+
+    "include/ldr/elf.h"
 
     "include/event/object.h"
     "include/event/bus.h"

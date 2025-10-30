@@ -5,8 +5,12 @@ make -C limine
 
 mkdir -p ../drivers/bin
 mkdir -p ../modules
-cp ../drivers/bin/** ../modules/
-tar cvf ../modules/initrd.tar ../drivers/bin/**
+mkdir -p ../initrd
+cp ../drivers/bin/** ../initrd/
+cp ../user/bin/** ../initrd
+cd ../initrd
+tar cvf ../modules/initrd.tar **
+cd ../krnl
 
 rm -f viperos-amd64.hdd
 dd if=/dev/zero bs=1M count=0 seek=64 of=viperos-amd64.hdd

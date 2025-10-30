@@ -3,6 +3,7 @@ CMakeFiles/
 ovmf/
 limine/
 modules/
+initrd/
 
 *.cmake
 Makefile

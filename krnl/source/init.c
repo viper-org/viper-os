@@ -5,6 +5,7 @@
 
 #include "event/bus.h"
 #include "event/object.h"
+#include "ldr/elf.h"
 #include "mm/pm.h"
 #include "mm/vm.h"
 #include "mm/kheap.h"
@@ -21,16 +22,6 @@
 
 extern char userproc[];
 extern char userproc_end[];
-
-void makeuserproc()
-{
-    struct process *proc = alloc_proc((uint64_t)userproc);
-    void *page = vm_getpage(&proc->addr_space);
-    proc->main_thread.entry = (uint64_t)page;
-    vm_switch_to(&proc->addr_space);
-    memcpy(page, userproc, userproc_end - userproc);
-    sched_addproc(proc);
-}
 
 void _start(void)
 {
@@ -56,8 +47,15 @@ void _start(void)
     ldr_init();
     initrd_init();
 
-    makeuserproc();
-    makeuserproc();
+    struct process *proc = alloc_proc((uint64_t)userproc);
+    void *mem = vm_getpages(NULL, 16);
+    size_t count = 0x10000;
+    tmp = lookuppn("/tmp/usertest");
+    tmp->fs->read(tmp, mem, &count, 0);
+    struct elf_exec e = load_elf(mem, &proc->addr_space);
+    proc->main_thread.entry = e.entry;
+    sched_addproc(proc);
+    
     sched_start();
     
     __asm__("cli; hlt");

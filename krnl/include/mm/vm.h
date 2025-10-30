@@ -31,6 +31,7 @@ struct addrspace
 };
 
 struct addrspace *vm_get_kaddrspace(void);
+struct addrspace *vm_get_addrspace(void);
 void vm_switch_to(struct addrspace *a);
 struct addrspace make_addrspace(void);
 

@@ -19,6 +19,7 @@ struct limine_kernel_address_request k_addr_request = {
 };
 
 struct addrspace k_addrspace;
+struct addrspace *curr_addrspace;
 
 uint64_t hhdmTop = 0;
 
@@ -35,8 +36,14 @@ struct addrspace *vm_get_kaddrspace(void)
     return &k_addrspace;
 }
 
+struct addrspace *vm_get_addrspace(void)
+{
+    return curr_addrspace;
+}
+
 void vm_switch_to(struct addrspace *a)
 {
+    curr_addrspace = a;
     __asm__ volatile("mov %0, %%cr3" :: "r"(a->pml4));
 }
 
