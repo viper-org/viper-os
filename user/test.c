@@ -95,6 +95,13 @@ int poll1(int fd)
     return ret;
 }
 
+void *mmap(unsigned long len)
+{
+    void *ret;
+    __asm__ volatile("syscall" : "=a"(ret) : "a"(9), "S"(len) : "rcx", "r11");
+    return ret;
+}
+
 void _start(void)
 {
     int fds[2];
@@ -102,7 +109,11 @@ void _start(void)
 
     if (getpid() == 0) poll1(fds[1]);
 
-    dbg_print("Hello from proc2");
+    char *z = mmap(0x1000);
+    z[0] = 'h';
+    z[1] = 'e';
+    z[2] = 0;
+    dbg_print(z);
 
     while (1) __asm__ volatile("pause");
 }

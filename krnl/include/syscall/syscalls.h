@@ -17,6 +17,9 @@ long sys_lseek(int fd, long offset, int whence);
 int sys_pipe(int fds[2]);
 
 
+void *sys_mmap(void *addr, size_t len, int prot, int flags, int fd, long offset);
+
+
 void sys_yield(void);
 void sys_exit(int code);
 int sys_waitpid(int pid, int *status, int options);
