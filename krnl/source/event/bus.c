@@ -28,7 +28,7 @@ struct poll_event_object *create_poll_event(struct proc_fd *desc)
     event->obj.waiting = 0;
     event->next = bus.poll_events;
     
-    desc->poll_event = event;
+    desc->events->poll_event = event;
 
     bus.poll_events = event;
 

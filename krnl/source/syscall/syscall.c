@@ -85,6 +85,10 @@ void syscall_dispatcher(struct syscall_frame *frame)
             sys_yield();
             break;
 
+        case 25:
+            frame->rax = sys_spawn((const char *)frame->rdi);
+            break;
+
         case 60:
             sys_exit(frame->rdi);
             break; // shouldn't return but avoid warnings by breaking

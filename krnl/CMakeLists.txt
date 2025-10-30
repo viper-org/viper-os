@@ -26,6 +26,7 @@ set(SOURCES
     "source/syscall/sched/exit.c"
     "source/syscall/sched/wait.c"
     "source/syscall/sched/getpid.c"
+    "source/syscall/sched/spawn.c"
 
     "source/driver/dbg.c"
     "source/driver/ldr/loader.c"

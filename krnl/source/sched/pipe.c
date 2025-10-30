@@ -56,4 +56,6 @@ void make_pipe(int fds[2])
     struct process *proc = sched_curr()->owner;
     fds[0] = proc_add_pipefd(proc, read);
     fds[1] = proc_add_pipefd(proc, write);
+    read->fd = fds[0];
+    write->fd = fds[1];
 }

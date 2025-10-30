@@ -102,18 +102,32 @@ void *mmap(unsigned long len)
     return ret;
 }
 
+int spawn(const char *path)
+{
+    int ret;
+    __asm__ volatile("syscall" : "=a"(ret) : "a"(25), "D"(path) : "rcx", "r11");
+    return ret;
+}
+
 void _start(void)
 {
-    int fds[2];
-    pipe(fds);
+    if (getpid() == 0)
+    {
+        int fds[2];
+        pipe(fds);
 
-    if (getpid() == 0) poll1(fds[1]);
-
-    char *z = mmap(0x1000);
-    z[0] = 'h';
-    z[1] = 'e';
-    z[2] = 0;
-    dbg_print(z);
+        spawn("/tmp/usertest");
+        poll1(fds[0]);
+    
+        char buf[7];
+        read(fds[0], buf, 7);
+        dbg_print(buf);
+    }
+    else // child
+    {
+        write(1, "Hello\n", 7);
+        exit(0);
+    }
 
     while (1) __asm__ volatile("pause");
 }

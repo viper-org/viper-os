@@ -24,5 +24,6 @@ void sys_yield(void);
 void sys_exit(int code);
 int sys_waitpid(int pid, int *status, int options);
 int sys_getpid(void);
+int sys_spawn(const char *path); // todo: argc, argv, envp
 
 #endif // VIPEROS_SYSCALL_SYSCALLS

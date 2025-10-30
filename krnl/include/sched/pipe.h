@@ -12,6 +12,7 @@ enum pipe_type
 struct pipe
 {
     enum pipe_type type;
+    int fd;
 
     union
     {
