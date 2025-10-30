@@ -5,7 +5,6 @@ struct thread;
 
 struct event_object
 {
-    void *free_on_ready;
     struct thread *waiting;
 };
 
@@ -13,6 +12,8 @@ struct exit_event_object
 {
     struct event_object obj;
     struct thread *t;
+
+    int exit_code;
 
     struct exit_event_object *next;
 };

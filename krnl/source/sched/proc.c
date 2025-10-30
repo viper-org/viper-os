@@ -74,11 +74,12 @@ struct process *find_proc(int pid)
 }
 
 
-void thread_kill(struct thread *t)
+void thread_kill(struct thread *t, int code)
 {
     if (t->exit_event)
     {
         ready_event(&t->exit_event->obj);
+        t->exit_event->exit_code = code;
     }
     sched_blockone(t);
 }

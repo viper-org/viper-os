@@ -12,7 +12,6 @@ struct exit_event_object *create_exit_event(struct thread *t)
     struct exit_event_object *event = kheap_alloc(sizeof(struct exit_event_object));
     event->t = t;
     event->obj.waiting = 0;
-    event->obj.free_on_ready = event;
     event->next = bus.exit_events;
     
     t->exit_event = event;
