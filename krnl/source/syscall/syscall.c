@@ -34,9 +34,17 @@ void syscall_dispatcher(struct syscall_frame *frame)
         case 0:
             frame->rax = sys_read(frame->rdi, (void *)frame->rsi, frame->rdx);
             break;
+            
+        case 1:
+            frame->rax = sys_write(frame->rdi, (const void *)frame->rsi, frame->rdx);
+            break;
 
         case 2:
             frame->rax = sys_open((const char *)frame->rdi, frame->rsi);
+            break;
+
+        case 8:
+            frame->rax = sys_lseek(frame->rdi, frame->rsi, frame->rdx);
             break;
 
         case 67: // debug log
