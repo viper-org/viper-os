@@ -1,5 +1,7 @@
 #include "syscall/syscalls.h"
 
+#include "sched/sched.h"
+
 #include "driver/dbg.h"
 
 #include <stdint.h>
@@ -45,6 +47,10 @@ void syscall_dispatcher(struct syscall_frame *frame)
 
         case 8:
             frame->rax = sys_lseek(frame->rdi, frame->rsi, frame->rdx);
+            break;
+
+        case 24:
+            sys_yield();
             break;
 
         case 67: // debug log

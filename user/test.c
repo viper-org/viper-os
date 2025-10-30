@@ -31,13 +31,19 @@ void dbg_print(const char *s)
     __asm__ volatile("syscall" :: "a"(67), "D"(s) : "r11", "rcx");
 }
 
+void yield(void)
+{
+    __asm__ volatile("syscall" :: "a"(24) : "r11", "rcx");
+}
+
 void _start(void)
 {
     int fd = open("/tmp/usertest", 3);
     char buf[12];
-    write(fd, "Hello", 6);
+    write(fd, "Hello\n", 7);
     lseek(fd, 0, 0); // SEEK_SET
     read(fd, buf, 11);
     dbg_print(buf);
+    yield();
     while (1) __asm__ volatile("pause");
 }

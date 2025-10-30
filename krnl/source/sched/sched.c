@@ -43,6 +43,8 @@ void sched_yield(void)
     tail = head;
     head = head->next;
 
+    if (old == head) return;
+
     ctx_switch(old, head);
 }
 

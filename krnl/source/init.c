@@ -48,13 +48,20 @@ void _start(void)
     initrd_init();
 
     struct process *proc = alloc_proc((uint64_t)userproc);
+    struct process *proc2 = alloc_proc(0);
+
     void *mem = vm_getpages(NULL, 16);
     size_t count = 0x10000;
     tmp = lookuppn("/tmp/usertest");
     tmp->fs->read(tmp, mem, &count, 0);
+
     struct elf_exec e = load_elf(mem, &proc->addr_space);
     proc->main_thread.entry = e.entry;
     sched_addproc(proc);
+    
+    struct elf_exec e2 = load_elf(mem, &proc2->addr_space);
+    proc2->main_thread.entry = e2.entry;
+    sched_addproc(proc2);
     
     sched_start();
     
