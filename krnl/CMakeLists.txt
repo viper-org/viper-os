@@ -14,6 +14,7 @@ set(SOURCES
 
     "source/syscall/syscall.c"
     "source/syscall/file/open.c"
+    "source/syscall/file/read.c"
 
     "source/driver/dbg.c"
     "source/driver/ldr/loader.c"
