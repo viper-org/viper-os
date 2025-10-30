@@ -62,6 +62,11 @@ void yield(void)
     __asm__ volatile("syscall" :: "a"(24) : "r11", "rcx");
 }
 
+void exit(int code)
+{
+    __asm__ volatile("syscall" :: "a"(60), "D"(code) : "r11", "rcx");
+}
+
 void _start(void)
 {
     int fd = open("/file", 15);
@@ -73,6 +78,6 @@ void _start(void)
     read(fd, buf, a.size);
     close(fd);
     dbg_print(buf);
-    yield();
+    exit(0);
     while (1) __asm__ volatile("pause");
 }

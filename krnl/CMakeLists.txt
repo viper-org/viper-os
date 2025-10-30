@@ -20,6 +20,7 @@ set(SOURCES
     "source/syscall/file/stat.c"
     "source/syscall/file/lseek.c"
     "source/syscall/sched/yield.c"
+    "source/syscall/sched/exit.c"
 
     "source/driver/dbg.c"
     "source/driver/ldr/loader.c"

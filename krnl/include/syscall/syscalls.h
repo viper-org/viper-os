@@ -16,5 +16,6 @@ long sys_lseek(int fd, long offset, int whence);
 
 
 void sys_yield(void);
+void sys_exit(int code);
 
 #endif // VIPEROS_SYSCALL_SYSCALLS
