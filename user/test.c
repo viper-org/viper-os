@@ -24,6 +24,13 @@ long write(int fd, const void *buf, unsigned long size)
     return ret;
 }
 
+int close(int fd)
+{
+    int ret;
+    __asm__ volatile("syscall" : "=a"(ret) : "a"(3), "D"(fd) : "r11", "rcx");
+    return ret;
+}
+
 long lseek(int fd, long off, int whence)
 {
     long ret;
@@ -64,6 +71,7 @@ void _start(void)
     struct stat a = {0};
     stat("/file", &a);
     read(fd, buf, a.size);
+    close(fd);
     dbg_print(buf);
     yield();
     while (1) __asm__ volatile("pause");

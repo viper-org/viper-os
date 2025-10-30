@@ -16,6 +16,7 @@ set(SOURCES
     "source/syscall/file/open.c"
     "source/syscall/file/read.c"
     "source/syscall/file/write.c"
+    "source/syscall/file/close.c"
     "source/syscall/file/stat.c"
     "source/syscall/file/lseek.c"
     "source/syscall/sched/yield.c"

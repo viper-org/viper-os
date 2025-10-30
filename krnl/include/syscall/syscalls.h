@@ -8,6 +8,7 @@
 ssize_t sys_read(int fd, void *buf, size_t count);
 ssize_t sys_write(int fd, const void *buf, size_t count);
 int sys_open(const char *path, uint16_t openmode);
+int sys_close(int fd);
 int sys_stat(const char *path, struct stat *statbuf);
 int sys_fstat(int fd, struct stat *statbuf);
 // lstat

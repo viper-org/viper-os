@@ -45,6 +45,10 @@ void syscall_dispatcher(struct syscall_frame *frame)
             frame->rax = sys_open((const char *)frame->rdi, frame->rsi);
             break;
 
+        case 3:
+            frame->rax = sys_close(frame->rdi);
+            break;
+
         case 4:
             frame->rax = sys_stat((const char *)frame->rdi, (struct stat *)frame->rsi);
             break;
