@@ -18,6 +18,14 @@ struct exit_event_object
     struct exit_event_object *next;
 };
 
+struct poll_event_object
+{
+    struct event_object obj;
+    struct proc_fd *desc;
+
+    struct poll_event_object *next;
+};
+
 void wait_on_object(struct event_object *, struct thread *);
 void ready_event(struct event_object *);
 

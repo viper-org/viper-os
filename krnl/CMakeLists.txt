@@ -19,6 +19,7 @@ set(SOURCES
     "source/syscall/file/close.c"
     "source/syscall/file/stat.c"
     "source/syscall/file/lseek.c"
+    "source/syscall/file/poll.c"
     "source/syscall/file/pipe.c"
     "source/syscall/sched/yield.c"
     "source/syscall/sched/exit.c"

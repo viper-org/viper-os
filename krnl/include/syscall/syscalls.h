@@ -12,6 +12,7 @@ int sys_close(int fd);
 int sys_stat(const char *path, struct stat *statbuf);
 int sys_fstat(int fd, struct stat *statbuf);
 // lstat
+int sys_poll1(int fd);
 long sys_lseek(int fd, long offset, int whence);
 int sys_pipe(int fds[2]);
 

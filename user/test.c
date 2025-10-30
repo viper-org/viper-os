@@ -84,7 +84,14 @@ void exit(int code)
 int pipe(int fds[2])
 {
     int ret;
-    __asm__ volatile("syscall" :: "a"(22), "D"(fds) : "rcx", "r11");
+    __asm__ volatile("syscall" : "=a"(ret) : "a"(22), "D"(fds) : "rcx", "r11");
+    return ret;
+}
+
+int poll1(int fd)
+{
+    int ret;
+    __asm__ volatile("syscall" : "=a"(ret) : "a"(7), "D"(fd) : "rcx", "r11");
     return ret;
 }
 
@@ -93,12 +100,9 @@ void _start(void)
     int fds[2];
     pipe(fds);
 
-    write(fds[1], "Hello\n", 7);
+    if (getpid() == 0) poll1(fds[1]);
 
-    char buf[7];
-    read(fds[0], buf, 7);
-
-    dbg_print(buf);
+    dbg_print("Hello from proc2");
 
     while (1) __asm__ volatile("pause");
 }

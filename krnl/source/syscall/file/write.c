@@ -4,6 +4,8 @@
 #include "sched/sched.h"
 #include "sched/pipe.h"
 
+#include "event/object.h"
+
 #include "driver/dbg.h"
 
 ssize_t sys_write(int fd, const void *buf, size_t count)
@@ -18,7 +20,7 @@ ssize_t sys_write(int fd, const void *buf, size_t count)
     {
         if (desc->pipe->type != PIPE_WRITE) return -1;
 
-        return write_pipe(desc->pipe, buf, count);
+        count = write_pipe(desc->pipe, buf, count);
     }
     else
     {
@@ -32,6 +34,12 @@ ssize_t sys_write(int fd, const void *buf, size_t count)
         }
         node->fs->write(node, buf, count, seek);
         if (!(desc->flags & O_APPEND)) desc->seek += count;
+    }
+
+    if (desc->poll_event)
+    {
+        ready_event(&desc->poll_event->obj);
+        // todo: free event
     }
     
     return count;
