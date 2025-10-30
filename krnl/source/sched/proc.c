@@ -1,11 +1,12 @@
 #include "sched/proc.h"
-#include "cpu/cpu.h"
 #include "sched/sched.h"
+#include "sched/pipe.h"
 
 #include "mm/kheap.h"
 #include "mm/vm.h"
 
 #include "cpu/tss.h"
+#include "cpu/cpu.h"
 
 #include "event/object.h"
 
@@ -53,10 +54,23 @@ int proc_addfd(struct process *proc, struct vnode *node, enum openmode mode)
 {
     for (int i = 0; i < NFD; ++i)
     {
-        if (!proc->fds[i].vnode)
+        if (!proc->fds[i].vnode && !proc->fds[i].pipe)
         {
             proc->fds[i].vnode = node;
             proc->fds[i].flags = mode;
+            return i;
+        }
+    }
+    return -1;
+}
+
+int proc_add_pipefd(struct process *proc, struct pipe *pipe)
+{
+    for (int i = 0; i < NFD; ++i)
+    {
+        if (!proc->fds[i].vnode && !proc->fds[i].pipe)
+        {
+            proc->fds[i].pipe = pipe;
             return i;
         }
     }

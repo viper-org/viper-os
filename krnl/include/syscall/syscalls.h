@@ -13,6 +13,7 @@ int sys_stat(const char *path, struct stat *statbuf);
 int sys_fstat(int fd, struct stat *statbuf);
 // lstat
 long sys_lseek(int fd, long offset, int whence);
+int sys_pipe(int fds[2]);
 
 
 void sys_yield(void);

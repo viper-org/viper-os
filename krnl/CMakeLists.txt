@@ -19,6 +19,7 @@ set(SOURCES
     "source/syscall/file/close.c"
     "source/syscall/file/stat.c"
     "source/syscall/file/lseek.c"
+    "source/syscall/file/pipe.c"
     "source/syscall/sched/yield.c"
     "source/syscall/sched/exit.c"
     "source/syscall/sched/wait.c"
@@ -40,6 +41,7 @@ set(SOURCES
 
     "source/sched/proc.c"
     "source/sched/sched.c"
+    "source/sched/pipe.c"
     "source/sched/prepare_thread.s"
     "source/sched/swtch.s"
     "source/sched/idle.s"
@@ -79,6 +81,7 @@ set(HEADERS
     "include/sched/proc.h"
     "include/sched/procfd.h"
     "include/sched/sched.h"
+    "include/sched/pipe.h"
 
     "include/ldr/elf.h"
 

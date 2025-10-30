@@ -16,7 +16,7 @@ struct stack
 };
 
 struct process;
-
+struct pipe;
 struct exit_event_object;
 
 struct thread
@@ -51,6 +51,7 @@ struct process
 struct process *alloc_proc(uint64_t entry);
 
 int proc_addfd(struct process *proc, struct vnode *node, enum openmode mode);
+int proc_add_pipefd(struct process *proc, struct pipe *pipe);
 struct process *find_proc(int pid);
 
 void thread_kill(struct thread *t, int code);

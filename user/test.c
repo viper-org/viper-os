@@ -81,19 +81,24 @@ void exit(int code)
     __asm__ volatile("syscall" :: "a"(60), "D"(code) : "r11", "rcx");
 }
 
+int pipe(int fds[2])
+{
+    int ret;
+    __asm__ volatile("syscall" :: "a"(22), "D"(fds) : "rcx", "r11");
+    return ret;
+}
+
 void _start(void)
 {
-    int fd = open("/file", 15);
-    char buf[12];
-    write(fd, "Hello\n", 7);
-    //lseek(fd, 0, 0); // SEEK_SET
-    struct stat a = {0};
-    stat("/file", &a);
-    read(fd, buf, a.size);
-    close(fd);
+    int fds[2];
+    pipe(fds);
+
+    write(fds[1], "Hello\n", 7);
+
+    char buf[7];
+    read(fds[0], buf, 7);
+
     dbg_print(buf);
-    int z;
-    if (getpid() == 0) waitpid(1, &z, 0);
-    exit(0);
+
     while (1) __asm__ volatile("pause");
 }

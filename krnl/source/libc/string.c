@@ -36,6 +36,27 @@ int memcmp(const void *a, const void *b, size_t sz)
     return 0;
 }
 
+void *memmove(void *d, const void *s, size_t sz)
+{
+    char *x = d;
+    const char *y = s;
+    
+    if(y < x && y + sz > x)
+    {
+        y += sz;
+        x += sz;
+        while(sz-- > 0)
+            *--x = *--y;
+    }
+    else
+    {
+        while(sz-- > 0)
+            *x++ = *y++;
+    }
+    
+    return d;
+}
+
 size_t strlen(const char *s)
 {
     size_t i = 0;

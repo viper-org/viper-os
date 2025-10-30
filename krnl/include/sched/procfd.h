@@ -12,9 +12,12 @@ enum openmode
     O_APPEND = 1 << 3,
 };
 
+struct pipe;
+
 struct proc_fd
 {
     struct vnode *vnode;
+    struct pipe *pipe;
     uint16_t flags;
     size_t seek;
 };
