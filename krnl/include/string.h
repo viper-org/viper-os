@@ -11,5 +11,6 @@ size_t strlen(const char *s);
 int strcmp(const char *s1, const char *s2);
 char *strcpy(char *s1, const char *s2);
 char *strdup(const char *s);
+char *strrchr(const char *s, int ch);
 
 #endif // VIPEROS_STRING

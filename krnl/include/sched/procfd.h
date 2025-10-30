@@ -7,6 +7,8 @@ enum openmode
 {
     OMODE_R = 1 << 0,
     OMODE_W = 1 << 1,
+
+    O_CREAT = 1 << 2,
 };
 
 struct proc_fd

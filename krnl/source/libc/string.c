@@ -74,3 +74,13 @@ char *strdup(const char *s)
         mem[i] = s[i];
     return mem;
 }
+
+char *strrchr(const char *s, int ch)
+{
+    int sz = strlen(s);
+    for (int i = sz; i >= 0; --i)
+    {
+        if (s[i] == ch) return &s[i];
+    }
+    return 0;
+}

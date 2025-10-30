@@ -57,12 +57,12 @@ void yield(void)
 
 void _start(void)
 {
-    int fd = open("/tmp/usertest", 3);
+    int fd = open("/file", 7);
     char buf[12];
     write(fd, "Hello\n", 7);
     lseek(fd, 0, 0); // SEEK_SET
     struct stat a = {0};
-    stat("/tmp/usertest", &a);
+    stat("/file", &a);
     read(fd, buf, a.size);
     dbg_print(buf);
     yield();

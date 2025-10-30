@@ -1,5 +1,4 @@
 #include "fs/vfs.h"
-#include "driver/dbg.h"
 
 #include <string.h>
 
@@ -54,7 +53,6 @@ struct vnode *lookuppn(char *path)
         enum vfs_error err = currfs->lookup(curr, buf, &curr);
         if (err != VFS_SUCCESS)
         {
-            dbg_printf("Path lookup component %s returned %d", buf, err);
             return NULL;
         }
 
