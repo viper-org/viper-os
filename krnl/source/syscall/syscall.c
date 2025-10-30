@@ -77,6 +77,10 @@ void syscall_dispatcher(struct syscall_frame *frame)
             frame->rax = sys_getpid();
             break;
 
+        case 16:
+            frame->rax = sys_ioctl(frame->rdi, frame->rsi, (char *)frame->rdx);
+            break;
+
         case 22:
             frame->rax = sys_pipe((int *)frame->rdi);
             break;

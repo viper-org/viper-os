@@ -66,7 +66,7 @@ int stat(struct stat *statbuf)
 
 enum fb_ioctl
 {
-    FB_GET_HORIZ,
+    FB_GET_HORIZ=0,
     FB_GET_VERT,
     FB_GET_PITCH
 };

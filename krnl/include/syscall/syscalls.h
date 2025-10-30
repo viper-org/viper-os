@@ -14,6 +14,7 @@ int sys_fstat(int fd, struct stat *statbuf);
 // lstat
 int sys_poll1(int fd);
 long sys_lseek(int fd, long offset, int whence);
+int sys_ioctl(int fd, unsigned long op, char *argp);
 int sys_pipe(int fds[2]);
 int sys_dup(int fd);
 int sys_dup2(int old, int new);

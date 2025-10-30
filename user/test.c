@@ -123,27 +123,28 @@ int dup2(int old, int new)
     return ret;
 }
 
+int ioctl(int fd, unsigned long op, void *argp)
+{
+    int ret;
+    __asm__ volatile("syscall" : "=a"(ret) : "a"(16), "D"(fd), "S"(op), "d"(argp) : "rcx", "r11");
+    return ret;
+}
+
 void _start(void)
 {
-    if (getpid() == 0)
-    {
-        int fds[2];
-        pipe(fds);
-        dup2(fds[1], 9);
-        close(fds[1]);
-
-        spawn("/tmp/usertest");
-        poll1(fds[0]);
+    unsigned long pitch;
+    unsigned long height;
     
-        char buf[7];
-        read(fds[0], buf, 7);
-        dbg_print(buf);
-    }
-    else // child
+    int fd = open("/dev/fb", 3);
+    ioctl(fd, 1, &height);
+    ioctl(fd, 2, &pitch);
+
+    void *mem = mmap(pitch * height);
+    for (unsigned long i = 0; i < pitch * height; ++i)
     {
-        write(9, "Hello\n", 7);
-        exit(0);
+        ((char*)mem)[i] = 0x87;
     }
+    write(fd, mem, pitch * height);
 
     while (1) __asm__ volatile("pause");
 }

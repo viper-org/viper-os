@@ -21,6 +21,7 @@ set(SOURCES
     "source/syscall/file/lseek.c"
     "source/syscall/file/poll.c"
     "source/syscall/file/pipe.c"
+    "source/syscall/file/ioctl.c"
     "source/syscall/file/dup.c"
     "source/syscall/mem/mmap.c"
     "source/syscall/sched/yield.c"
