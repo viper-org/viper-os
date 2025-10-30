@@ -5,6 +5,7 @@
 
 ssize_t read(void* buf, size_t* count, size_t seek);
 ssize_t write(const void* buf, size_t count, size_t seek);
+int stat(struct stat *statbuf);
 int ioctl(unsigned long op, void *argp);
 
 struct framebuffer {
@@ -18,6 +19,7 @@ struct framebuffer {
 __attribute__((section(".driver_header"))) volatile DriverHeader header = {
     .read = read,
     .write = write,
+    .stat = stat,
     .ioctl = ioctl,
     .name = "fb"
 };
@@ -53,6 +55,12 @@ ssize_t write(const void *buf, size_t count, size_t seek)
     if (count != fb.height * fb.pitch) return -1;
 
     memcpy(fb.address, buf, count);
+    return 0;
+}
+
+int stat(struct stat *statbuf)
+{
+    statbuf->st_size = fb.height * fb.pitch;
     return 0;
 }
 

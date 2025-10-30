@@ -154,6 +154,7 @@ struct driver ldr_load(void *addr)
     header->name  += (uint64_t)vaddr_base;
     header->read  = (ssize_t (*)(void *,size_t *,size_t))((uint64_t)header->read + (uint64_t)vaddr_base);
     header->write = (ssize_t (*)(const void *,size_t,size_t))((uint64_t)header->write + (uint64_t)vaddr_base);
+    header->stat  = (int (*)(struct stat *))((uint64_t)header->stat + (uint64_t)vaddr_base);
     header->ioctl = (int (*)(unsigned long, char *))((uint64_t)header->ioctl + (uint64_t)vaddr_base);
 
     return (struct driver) {

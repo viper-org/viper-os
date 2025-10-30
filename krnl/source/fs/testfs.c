@@ -3,6 +3,8 @@
 
 #include "mm/kheap.h"
 
+#include "syscall/stat.h"
+
 #include <string.h>
 
 struct testfs_vfs fs;
@@ -10,6 +12,7 @@ struct vfilesystem vfs;
 
 static enum vfs_error testfs_read(struct vnode *, void *, size_t*, size_t);
 static enum vfs_error testfs_write(struct vnode *, const void *, size_t, size_t);
+static enum vfs_error testfs_stat(struct vnode *, struct stat *);
 static enum vfs_error testfs_lookup(struct vnode *, char *, struct vnode **);
 static enum vfs_error testfs_create(struct vnode *, char *, struct vnode **);
 static enum vfs_error testfs_mkdir(struct vnode *, char *, struct vnode **);
@@ -62,6 +65,7 @@ void testfs_init(void)
 
     vfs.read = testfs_read;
     vfs.write = testfs_write;
+    vfs.stat = testfs_stat;
     vfs.lookup = testfs_lookup;
     vfs.create = testfs_create;
     vfs.mkdir = testfs_mkdir;
@@ -98,6 +102,20 @@ static enum vfs_error testfs_write(struct vnode *node, const void *data, size_t 
     file->length = sz;
 
     kheap_free(olddata);
+    return VFS_SUCCESS;
+}
+
+static enum vfs_error testfs_stat(struct vnode *node, struct stat *statbuf)
+{
+    if (node->type == VNODE_DIR)
+    {
+        statbuf->st_size = 0; // todo: get dir size
+    }
+    else
+    {
+        struct testfs_file *file = node->impl;
+        statbuf->st_size = file->length;
+    }
     return VFS_SUCCESS;
 }
 

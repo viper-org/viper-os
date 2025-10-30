@@ -20,6 +20,7 @@ enum vfs_error
 };
 
 struct vnode;
+struct stat;
 
 struct vfilesystem
 {
@@ -35,6 +36,7 @@ struct vfilesystem
     // vnode ops
     enum vfs_error (*read)(struct vnode *,void *buf, size_t* count, size_t seek);
     enum vfs_error (*write)(struct vnode *,const void *buf, size_t count, size_t seek);
+    enum vfs_error (*stat)(struct vnode *, struct stat *statbuf);
     enum vfs_error (*lookup)(struct vnode *,char *component, struct vnode **);
     enum vfs_error (*create)(struct vnode *,char *name, struct vnode **);
     enum vfs_error (*mkdir)(struct vnode *,char *name, struct vnode **);

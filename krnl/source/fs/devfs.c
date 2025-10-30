@@ -1,6 +1,8 @@
 #include "fs/devfs.h"
 #include "fs/vfs.h"
 
+#include "syscall/stat.h"
+
 #include "mm/kheap.h"
 
 #include <string.h>
@@ -10,6 +12,7 @@ static struct vfilesystem vfs;
 
 static enum vfs_error devfs_read(struct vnode *, void *, size_t*, size_t);
 static enum vfs_error devfs_write(struct vnode *, const void *, size_t, size_t);
+static enum vfs_error devfs_stat(struct vnode *, struct stat *);
 static enum vfs_error devfs_lookup(struct vnode *, char *, struct vnode **);
 static enum vfs_error devfs_create(struct vnode *, char *, struct vnode **);
 static enum vfs_error devfs_mkdir(struct vnode *, char *, struct vnode **);
@@ -45,6 +48,7 @@ void devfs_init(void)
 
     vfs.read = devfs_read;
     vfs.write = devfs_write;
+    vfs.stat = devfs_stat;
     vfs.lookup = devfs_lookup;
     vfs.create = devfs_create;
     vfs.mkdir = devfs_mkdir;
@@ -94,6 +98,21 @@ static enum vfs_error devfs_write(struct vnode *node, const void *data, size_t s
     file->drvr.header->write(data, sz, seek);
 
     return VFS_SUCCESS; // TODO: output ssize_t
+}
+
+static enum vfs_error devfs_stat(struct vnode *node, struct stat *statbuf)
+{
+    if (node->type == VNODE_DIR)
+    {
+        statbuf->st_size = 0;
+    }
+    else
+    {
+        struct devfs_file *file = node->impl;
+        file->drvr.header->stat(statbuf);
+    }
+    
+    return VFS_SUCCESS;
 }
 
 static enum vfs_error devfs_lookup(struct vnode *node, char *name, struct vnode **out)

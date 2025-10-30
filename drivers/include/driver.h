@@ -4,12 +4,18 @@
 typedef unsigned long size_t;
 typedef long ssize_t;
 
+struct stat
+{
+    long st_size;
+};
+
 typedef struct __attribute__((packed))
 {
     void*(*kernel_func_getter)(const char*);
 
     ssize_t (*read)(void* buf, size_t *count, size_t seek);
     ssize_t (*write)(const void* buf, size_t count, size_t seek);
+    int (*stat)(struct stat *);
     int (*ioctl)(unsigned long op, void *argp);
 
     const char* name;

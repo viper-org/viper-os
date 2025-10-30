@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 typedef long ssize_t;
+struct stat;
 
 struct __attribute__((packed)) driver_header
 {
@@ -11,6 +12,7 @@ struct __attribute__((packed)) driver_header
 
     ssize_t (*read)(void *, size_t*, size_t);
     ssize_t (*write)(const void *, size_t, size_t);
+    int (*stat)(struct stat *);
     int (*ioctl)(unsigned long, char *);
 
     const char *name;

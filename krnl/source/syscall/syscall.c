@@ -45,6 +45,14 @@ void syscall_dispatcher(struct syscall_frame *frame)
             frame->rax = sys_open((const char *)frame->rdi, frame->rsi);
             break;
 
+        case 4:
+            frame->rax = sys_stat((const char *)frame->rdi, (struct stat *)frame->rsi);
+            break;
+
+        case 5:
+            frame->rax = sys_fstat(frame->rdi, (struct stat *)frame->rsi);
+            break;
+
         case 8:
             frame->rax = sys_lseek(frame->rdi, frame->rsi, frame->rdx);
             break;

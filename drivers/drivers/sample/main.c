@@ -2,11 +2,13 @@
 
 ssize_t read(void* buf, size_t *count, size_t seek);
 ssize_t write(const void* buf, size_t count, size_t seek);
+int stat(struct stat *statbuf);
 int ioctl(unsigned long op, void *argp);
 
 __attribute__((section(".driver_header"))) volatile DriverHeader header = {
     .read = read,
     .write = write,
+    .stat = stat,
     .ioctl = ioctl,
     .name = "sample"
 };
@@ -37,6 +39,13 @@ ssize_t write(const void* buf, size_t count, size_t seek)
     (void)count;
     (void)seek;
     KeDebugLogFmt("Writing %d bytes to %p\n", count, buf);
+    return 0;
+}
+
+int stat(struct stat *statbuf)
+{
+    (void)statbuf;
+    KeDebugLogFmt("Stat called\n");
     return 0;
 }
 

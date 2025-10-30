@@ -1,3 +1,8 @@
+struct stat
+{
+    long size;
+};
+
 int open(const char *path, unsigned short mode)
 {
     int ret;
@@ -31,6 +36,20 @@ void dbg_print(const char *s)
     __asm__ volatile("syscall" :: "a"(67), "D"(s) : "r11", "rcx");
 }
 
+int fstat(int fd, struct stat *statbuf)
+{
+    int ret;
+    __asm__ volatile("syscall" : "=a"(ret) : "a"(5), "D"(fd), "S"(statbuf) : "r11", "rcx");
+    return ret;
+}
+
+int stat(const char *path, struct stat *statbuf)
+{
+    int ret;
+    __asm__ volatile("syscall" : "=a"(ret) : "a"(4), "D"(path), "S"(statbuf) : "r11", "rcx");
+    return ret;
+}
+
 void yield(void)
 {
     __asm__ volatile("syscall" :: "a"(24) : "r11", "rcx");
@@ -42,7 +61,9 @@ void _start(void)
     char buf[12];
     write(fd, "Hello\n", 7);
     lseek(fd, 0, 0); // SEEK_SET
-    read(fd, buf, 11);
+    struct stat a = {0};
+    stat("/tmp/usertest", &a);
+    read(fd, buf, a.size);
     dbg_print(buf);
     yield();
     while (1) __asm__ volatile("pause");
