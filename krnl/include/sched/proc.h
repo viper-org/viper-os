@@ -44,11 +44,14 @@ struct process
     struct addrspace addr_space;
 
     struct proc_fd fds[NFD];
+
+    struct process *next; // linked list
 };
 
 struct process *alloc_proc(uint64_t entry);
 
 int proc_addfd(struct process *proc, struct vnode *node, enum openmode mode);
+struct process *find_proc(int pid);
 
 void thread_kill(struct thread *t);
 

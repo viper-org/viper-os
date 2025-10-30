@@ -21,6 +21,8 @@ set(SOURCES
     "source/syscall/file/lseek.c"
     "source/syscall/sched/yield.c"
     "source/syscall/sched/exit.c"
+    "source/syscall/sched/wait.c"
+    "source/syscall/sched/getpid.c"
 
     "source/driver/dbg.c"
     "source/driver/ldr/loader.c"

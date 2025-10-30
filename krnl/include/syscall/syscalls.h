@@ -17,5 +17,7 @@ long sys_lseek(int fd, long offset, int whence);
 
 void sys_yield(void);
 void sys_exit(int code);
+int sys_waitpid(int pid, int *status, int options);
+int sys_getpid(void);
 
 #endif // VIPEROS_SYSCALL_SYSCALLS

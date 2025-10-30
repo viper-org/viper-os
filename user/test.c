@@ -57,6 +57,20 @@ int stat(const char *path, struct stat *statbuf)
     return ret;
 }
 
+int getpid()
+{
+    int ret;
+    __asm__ volatile("syscall" : "=a"(ret) : "a"(13) : "rcx", "r11");
+    return ret;
+}
+
+int waitpid(int pid, int *status, int options)
+{
+    int ret;
+    __asm__ volatile("syscall" : "=a"(ret) : "a"(12), "D"(pid), "S"(status), "d"(options) : "r11", "rcx");
+    return ret;
+}
+
 void yield(void)
 {
     __asm__ volatile("syscall" :: "a"(24) : "r11", "rcx");
@@ -78,6 +92,8 @@ void _start(void)
     read(fd, buf, a.size);
     close(fd);
     dbg_print(buf);
+    int z;
+    if (getpid() == 0) waitpid(1, &z, 0);
     exit(0);
     while (1) __asm__ volatile("pause");
 }

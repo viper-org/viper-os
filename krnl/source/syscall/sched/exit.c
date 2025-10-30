@@ -8,6 +8,6 @@
 void sys_exit(int code)
 {
     (void)code; // todo: pass code to the exit event
-    dbg_printf("EXIT called with pid=%d, code=%d", sched_curr()->owner->pid, code);
+    dbg_printf("EXIT called with pid=%d, code=%d\n\n", sched_curr()->owner->pid, code);
     thread_kill(sched_curr());
 }

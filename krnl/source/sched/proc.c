@@ -17,6 +17,8 @@ extern void prepare_thread(uint64_t entry, struct thread_context **ctx, uint64_t
 extern void enter_usermode(uint64_t rip, uint64_t rsp);
 void usermode_setup(struct thread *t);
 
+struct process *proc_table = NULL;
+
 struct process *alloc_proc(uint64_t entry)
 {
     struct process *ret = kheap_alloc(sizeof(struct process));
@@ -40,6 +42,9 @@ struct process *alloc_proc(uint64_t entry)
     t->exit_event = NULL;
 
     prepare_thread((uint64_t)usermode_setup, &t->ctx, t->krnl_stack.top, t, t->owner->addr_space.pml4);
+
+    ret->next = proc_table;
+    proc_table = ret;
     
     return ret;
 }
@@ -56,6 +61,16 @@ int proc_addfd(struct process *proc, struct vnode *node, enum openmode mode)
         }
     }
     return -1;
+}
+
+struct process *find_proc(int pid)
+{
+    struct process *curr = proc_table;
+    while (curr)
+    {
+        if (curr->pid == pid) return curr;
+    }
+    return NULL;
 }
 
 

@@ -61,6 +61,14 @@ void syscall_dispatcher(struct syscall_frame *frame)
             frame->rax = sys_lseek(frame->rdi, frame->rsi, frame->rdx);
             break;
 
+        case 12:
+            frame->rax = sys_waitpid(frame->rdi, (int *)frame->rsi, frame->rdx);
+            break;
+        
+        case 13:
+            frame->rax = sys_getpid();
+            break;
+
         case 24:
             sys_yield();
             break;
