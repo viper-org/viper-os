@@ -131,10 +131,11 @@ int ioctl(int fd, unsigned long op, void *argp)
 }
 
 int (*ioctl_x)(int fd, unsigned long op, void *argp) = ioctl;
-
+int testfunc();
 
 void _start(void)
 {
+    testfunc();
     unsigned long pitch;
     unsigned long height;
     

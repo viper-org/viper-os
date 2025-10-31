@@ -1,9 +1,12 @@
 #include "ldr/elf.h"
 
 #include "driver/dbg.h"
+#include "fs/vfs.h"
+#include "mm/kheap.h"
 #include "mm/vm.h"
 #include "mm/pm.h"
 
+#include "syscall/stat.h"
 #include "util.h"
 
 #include <string.h>
@@ -81,6 +84,7 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
     struct Elf64_Phdr *phdr = (struct Elf64_Phdr *)(file + ehdr->e_phoff);
 
     struct Elf64_Phdr *dynamic = NULL;
+    struct Elf64_Phdr *interp = NULL;
     uint32_t v_start = 0;
     uint32_t v_end = 0;
     for (uint32_t i = 0; i < ehdr->e_phnum; ++i, ++phdr)
@@ -91,6 +95,7 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
             if (phdr->p_vaddr + phdr->p_memsz > v_end) v_end = phdr->p_vaddr + phdr->p_memsz;
         }
         if (phdr->p_type == PT_DYNAMIC) dynamic = phdr;
+        if (phdr->p_type == PT_INTERP) interp = phdr;
     }
 
     void *vaddr_base = vm_getpages(a, NPAGES(v_end - v_start));
@@ -148,6 +153,22 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
             // todo: others
         }
         ++rela;
+    }
+
+    if (interp)
+    {
+        const char *path = file + interp->p_offset;
+        struct vnode *node = lookuppn(path);
+        
+        struct stat b;
+        node->fs->stat(node, &b);
+        char *buf = kheap_alloc(b.st_size);
+        size_t _;
+        node->fs->read(node, buf, &_, 0);
+
+        struct elf_exec e = load_dyn(buf, a);
+        kheap_free(buf);
+        return e;
     }
 
     return (struct elf_exec) {
