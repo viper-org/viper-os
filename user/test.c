@@ -130,14 +130,17 @@ int ioctl(int fd, unsigned long op, void *argp)
     return ret;
 }
 
+int (*ioctl_x)(int fd, unsigned long op, void *argp) = ioctl;
+
+
 void _start(void)
 {
     unsigned long pitch;
     unsigned long height;
     
     int fd = open("/dev/fb", 3);
-    ioctl(fd, 1, &height);
-    ioctl(fd, 2, &pitch);
+    ioctl_x(fd, 1, &height);
+    ioctl_x(fd, 2, &pitch);
 
     void *mem = mmap(pitch * height);
     for (unsigned long i = 0; i < pitch * height; ++i)

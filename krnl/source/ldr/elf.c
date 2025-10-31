@@ -1,42 +1,16 @@
 #include "ldr/elf.h"
 
+#include "driver/dbg.h"
 #include "mm/vm.h"
 #include "mm/pm.h"
 
 #include "util.h"
 
 #include <string.h>
+#include <elf.h>
 
-struct Elf64_Ehdr
-{
-    unsigned char e_ident[16];
-    uint16_t e_type;
-    uint16_t e_machine;
-    uint32_t e_version;
-    uint64_t e_entry;
-    uint64_t e_phoff;
-    uint64_t e_shoff;
-    uint32_t e_flags;
-    uint16_t e_ehsize;
-    uint16_t e_phentsize;
-    uint16_t e_phnum;
-    uint16_t e_shentsize;
-    uint16_t e_shnum;
-    uint16_t e_shstrndx;
-};
-
-#define PT_LOAD 1
-struct Elf64_Phdr
-{
-    uint32_t p_type;
-    uint32_t p_flags;
-    uint64_t p_offset;
-    uint64_t p_vaddr;
-    uint64_t p_paddr;
-    uint64_t p_filesz;
-    uint64_t p_memsz;
-    uint64_t p_align;
-};
+struct elf_exec load_exec(char *file, struct addrspace *a);
+struct elf_exec load_dyn(char *file, struct addrspace *a);
 
 struct elf_exec load_elf(void *addr, struct addrspace *a)
 {
@@ -44,7 +18,28 @@ struct elf_exec load_elf(void *addr, struct addrspace *a)
     vm_switch_to(a);
 
     char *file = addr;
-    struct Elf64_Ehdr *ehdr = (struct Elf64_Ehdr *)addr;
+    struct Elf64_Ehdr *ehdr = addr;
+    
+    switch (ehdr->e_type)
+    {
+        case ET_EXEC:
+        {
+            struct elf_exec ret = load_exec(file, a);
+            vm_switch_to(prev);
+            return ret;
+        }
+        case ET_DYN:
+        {
+            struct elf_exec ret = load_dyn(file, a);
+            vm_switch_to(prev);
+            return ret;
+        }
+    }
+}
+
+struct elf_exec load_exec(char *file, struct addrspace *a)
+{
+    struct Elf64_Ehdr *ehdr = (struct Elf64_Ehdr *)file;
     struct Elf64_Phdr *phdr = (struct Elf64_Phdr *)(file + ehdr->e_phoff);
 
     for (uint32_t i = 0; i < ehdr->e_phnum; ++i, ++phdr)
@@ -75,8 +70,87 @@ struct elf_exec load_elf(void *addr, struct addrspace *a)
         // todo: mark used in vm
     }
 
-    vm_switch_to(prev);
     return (struct elf_exec) {
         .entry = ehdr->e_entry
+    };
+}
+
+struct elf_exec load_dyn(char *file, struct addrspace *a)
+{
+    struct Elf64_Ehdr *ehdr = (struct Elf64_Ehdr *)file;
+    struct Elf64_Phdr *phdr = (struct Elf64_Phdr *)(file + ehdr->e_phoff);
+
+    struct Elf64_Phdr *dynamic = NULL;
+    uint32_t v_start = 0;
+    uint32_t v_end = 0;
+    for (uint32_t i = 0; i < ehdr->e_phnum; ++i, ++phdr)
+    {
+        if (phdr->p_type == PT_LOAD)
+        {
+            if (phdr->p_vaddr < v_start) v_start = phdr->p_vaddr;
+            if (phdr->p_vaddr + phdr->p_memsz > v_end) v_end = phdr->p_vaddr + phdr->p_memsz;
+        }
+        if (phdr->p_type == PT_DYNAMIC) dynamic = phdr;
+    }
+
+    void *vaddr_base = vm_getpages(a, NPAGES(v_end - v_start));
+
+    phdr = (struct Elf64_Phdr *)(file + ehdr->e_phoff);
+    for (uint32_t i = 0; i < ehdr->e_phnum; ++i, ++phdr)
+    {
+        if (phdr->p_type != PT_LOAD)
+        {
+            continue;
+        }
+
+        void *vaddr = (char *)vaddr_base + phdr->p_vaddr;
+
+        char *fileOffset = file + phdr->p_offset;
+        memcpy((void *)vaddr, fileOffset, phdr->p_filesz);
+        char *bss = (char *)vaddr + phdr->p_filesz;
+        memset(bss, 0, phdr->p_memsz - phdr->p_filesz);
+    }
+    
+    struct Elf64_Dyn *tag = file + dynamic->p_offset;
+    uint64_t rela_addr = NULL;
+    int relasz;
+    while (tag->d_tag != DT_NULL)
+    {
+        switch (tag->d_tag)
+        {
+            case DT_RELA:
+                rela_addr = tag->d_un.d_ptr;
+                break;
+
+            case DT_RELASZ:
+                relasz = tag->d_un.d_val;
+                break;
+
+            default: break;
+        }
+        ++tag;
+    }
+
+    struct Elf64_Rela *rela = rela_addr + (char *)vaddr_base;
+    while ((char *)rela < (char *)vaddr_base + rela_addr + relasz)
+    {
+        switch (ELF64_R_TYPE(rela->r_info))
+        {
+            case R_X86_64_RELATIVE:
+            {
+                char *addr = (char *)(vaddr_base) + rela->r_offset;
+                *(uint64_t*)addr = (uint64_t)vaddr_base + rela->r_addend;
+                break;
+            }
+            default:
+                dbg_printf("Unkown ELF64_R_TYPE found: %d. Ignoring.\n\n", ELF64_R_TYPE(rela->r_info));
+                break;
+            // todo: others
+        }
+        ++rela;
+    }
+
+    return (struct elf_exec) {
+        .entry = ehdr->e_entry + (uint64_t)vaddr_base
     };
 }
