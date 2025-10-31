@@ -135,7 +135,7 @@ int testfunc();
 
 void _start(void)
 {
-    testfunc();
+    //testfunc();
     unsigned long pitch;
     unsigned long height;
     

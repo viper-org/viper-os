@@ -17,9 +17,6 @@ struct elf_exec load_dyn(char *file, struct addrspace *a);
 
 struct elf_exec load_elf(void *addr, struct addrspace *a)
 {
-    struct addrspace *prev = vm_get_addrspace();
-    vm_switch_to(a);
-
     char *file = addr;
     struct Elf64_Ehdr *ehdr = addr;
     
@@ -28,16 +25,25 @@ struct elf_exec load_elf(void *addr, struct addrspace *a)
         case ET_EXEC:
         {
             struct elf_exec ret = load_exec(file, a);
-            vm_switch_to(prev);
             return ret;
         }
         case ET_DYN:
         {
             struct elf_exec ret = load_dyn(file, a);
-            vm_switch_to(prev);
             return ret;
         }
     }
+}
+
+void push_elf_auxvals(struct elf_exec *elf, uint64_t ustack_top)
+{
+    uint64_t *stack = (uint64_t *)ustack_top;
+
+    *(stack - AT_ATSIZE) = 5 * sizeof(uint64_t);
+    *(stack - AT_ENTRY) = elf->at_entry;
+    *(stack - AT_PHDR)  = elf->at_phdr;
+    *(stack - AT_PHENT) = elf->at_phent;
+    *(stack - AT_PHNUM) = elf->at_phnum;
 }
 
 struct elf_exec load_exec(char *file, struct addrspace *a)
@@ -85,6 +91,7 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
 
     struct Elf64_Phdr *dynamic = NULL;
     struct Elf64_Phdr *interp = NULL;
+    struct Elf64_Phdr *phdr_phdr = NULL;
     uint32_t v_start = 0;
     uint32_t v_end = 0;
     for (uint32_t i = 0; i < ehdr->e_phnum; ++i, ++phdr)
@@ -94,8 +101,9 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
             if (phdr->p_vaddr < v_start) v_start = phdr->p_vaddr;
             if (phdr->p_vaddr + phdr->p_memsz > v_end) v_end = phdr->p_vaddr + phdr->p_memsz;
         }
-        if (phdr->p_type == PT_DYNAMIC) dynamic = phdr;
-        if (phdr->p_type == PT_INTERP) interp = phdr;
+        else if (phdr->p_type == PT_DYNAMIC) dynamic = phdr;
+        else if (phdr->p_type == PT_INTERP) interp = phdr;
+        else if (phdr->p_type == PT_PHDR) phdr_phdr = phdr;
     }
 
     void *vaddr_base = vm_getpages(a, NPAGES(v_end - v_start));
@@ -155,11 +163,20 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
         ++rela;
     }
 
+    void *at_phdr = NULL;
+    uint64_t at_phnum = 0;
+    if (phdr_phdr)
+    {
+        at_phdr = vm_getpages(a, NPAGES(phdr_phdr->p_memsz));
+        memcpy(at_phdr, file + phdr_phdr->p_offset, phdr_phdr->p_memsz);
+        at_phnum = phdr_phdr->p_memsz / sizeof(struct Elf64_Phdr);
+    }
+
     if (interp)
     {
         const char *path = file + interp->p_offset;
         struct vnode *node = lookuppn(path);
-        
+
         struct stat b;
         node->fs->stat(node, &b);
         char *buf = kheap_alloc(b.st_size);
@@ -168,10 +185,22 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
 
         struct elf_exec e = load_dyn(buf, a);
         kheap_free(buf);
-        return e;
+
+        return (struct elf_exec) {
+            .entry = e.entry,
+
+            .at_entry = ehdr->e_entry + (uint64_t)vaddr_base,
+            .at_phdr = (uint64_t)at_phdr,
+            .at_phent = sizeof(struct Elf64_Phdr),
+            .at_phnum = at_phnum
+        };
     }
 
     return (struct elf_exec) {
-        .entry = ehdr->e_entry + (uint64_t)vaddr_base
+        .entry = ehdr->e_entry + (uint64_t)vaddr_base,
+        .at_entry = ehdr->e_entry + (uint64_t)vaddr_base,
+        .at_phdr = (uint64_t)at_phdr,
+        .at_phent = sizeof(struct Elf64_Phdr),
+        .at_phnum = at_phnum
     };
 }

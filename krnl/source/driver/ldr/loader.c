@@ -7,8 +7,8 @@
 #include <string.h>
 #include <elf.h>
 
-static volatile struct limine_kernel_file_request KernelFileRequest = {
-    .id = LIMINE_KERNEL_FILE_REQUEST,
+static volatile struct limine_executable_file_request KernelFileRequest = {
+    .id = LIMINE_EXECUTABLE_FILE_REQUEST,
     .revision = 1,
     .response = NULL
 };
@@ -19,7 +19,7 @@ static char *strtab = NULL;
 
 void ldr_init(void)
 {
-    kernelEhdr = (Elf64_Ehdr *)(KernelFileRequest.response->kernel_file->address);
+    kernelEhdr = (Elf64_Ehdr *)(KernelFileRequest.response->executable_file->address);
     Elf64_Shdr* shdrStart = (Elf64_Shdr *)((uint64_t)kernelEhdr + kernelEhdr->e_shoff);
     char* shstrtab = getShstrtab(kernelEhdr);
 

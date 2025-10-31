@@ -94,6 +94,7 @@ struct Elf64_Rela
 #define PT_LOAD 1
 #define PT_DYNAMIC 2
 #define PT_INTERP 3
+#define PT_PHDR 6
 #define PF_DHDR (1 << 3)
 
 static inline Elf64_Shdr *section(Elf64_Ehdr *ehdr, int n)

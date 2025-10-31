@@ -12,8 +12,8 @@ struct limine_hhdm_request hhdm_request = {
     .response = NULL
 };
 
-struct limine_kernel_address_request k_addr_request = {
-    .id = LIMINE_KERNEL_ADDRESS_REQUEST,
+struct limine_executable_address_request k_addr_request = {
+    .id = LIMINE_EXECUTABLE_ADDRESS_REQUEST,
     .revision = 1,
     .response = NULL
 };

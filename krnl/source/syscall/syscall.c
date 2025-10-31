@@ -109,6 +109,10 @@ void syscall_dispatcher(struct syscall_frame *frame)
             dbg_print((const char *)frame->rdi);
             frame->rax = 0;
             break;
+
+        case 68:
+            dbg_printf("%p\n", frame->rdi);
+            break;
         
         default:
             dbg_printf("syscall rax=%d", frame->rax);
