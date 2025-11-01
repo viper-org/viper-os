@@ -39,11 +39,12 @@ void push_elf_auxvals(struct elf_exec *elf, uint64_t ustack_top)
 {
     uint64_t *stack = (uint64_t *)ustack_top;
 
-    *(stack - AT_ATSIZE) = 5 * sizeof(uint64_t);
+    *(stack - AT_ATSIZE) = 6 * sizeof(uint64_t);
     *(stack - AT_ENTRY) = elf->at_entry;
     *(stack - AT_PHDR)  = elf->at_phdr;
     *(stack - AT_PHENT) = elf->at_phent;
     *(stack - AT_PHNUM) = elf->at_phnum;
+    *(stack - AT_BASE1) = elf->at_base1;
 }
 
 struct elf_exec load_exec(char *file, struct addrspace *a)
@@ -192,7 +193,8 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
             .at_entry = ehdr->e_entry + (uint64_t)vaddr_base,
             .at_phdr = (uint64_t)at_phdr,
             .at_phent = sizeof(struct Elf64_Phdr),
-            .at_phnum = at_phnum
+            .at_phnum = at_phnum,
+            .at_base1 = (uint64_t)vaddr_base
         };
     }
 
@@ -201,6 +203,7 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
         .at_entry = ehdr->e_entry + (uint64_t)vaddr_base,
         .at_phdr = (uint64_t)at_phdr,
         .at_phent = sizeof(struct Elf64_Phdr),
-        .at_phnum = at_phnum
+        .at_phnum = at_phnum,
+        .at_base1 = (uint64_t)vaddr_base
     };
 }

@@ -14,6 +14,7 @@ struct elf_exec
     uint64_t at_phdr;
     uint64_t at_phent;
     uint64_t at_phnum;
+    uint64_t at_base1;
 };
 
 enum elf_auxval
@@ -22,7 +23,8 @@ enum elf_auxval
     AT_ENTRY,
     AT_PHDR,
     AT_PHENT,
-    AT_PHNUM
+    AT_PHNUM,
+    AT_BASE1
 };
 
 struct elf_exec load_elf(void *file, struct addrspace *a);

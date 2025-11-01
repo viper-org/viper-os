@@ -33,8 +33,9 @@ set(COMPILER_OPTIONS
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../sysroot/lib)
 
-add_executable(ld main.c start.s)
+add_executable(ld source/main.c source/start.s)
 set_target_properties(ld PROPERTIES OUTPUT_NAME "ld.so")
+target_include_directories(ld PRIVATE include)
 
 target_link_options(ld PRIVATE ${LINKER_OPTIONS})
 target_compile_options(ld PRIVATE ${COMPILER_OPTIONS})

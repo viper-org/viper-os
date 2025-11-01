@@ -1,3 +1,5 @@
+#include "ldr/elf.h"
+#include "mm/vm.h"
 #include "syscall/syscalls.h"
 
 #include "sched/sched.h"
@@ -100,6 +102,14 @@ void syscall_dispatcher(struct syscall_frame *frame)
         case 34:
             frame->rax = sys_dup2(frame->rdi, frame->rsi);
             break;
+
+        case 59: // load a dynamic library
+        {
+            struct elf_exec e = load_elf((void *)frame->rdi, vm_get_addrspace());
+            *(struct elf_exec *)frame->rsi = e;
+            frame->rax = 0;
+            break;
+        }
 
         case 60:
             sys_exit(frame->rdi);
