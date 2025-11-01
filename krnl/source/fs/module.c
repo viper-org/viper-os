@@ -3,7 +3,7 @@
 #include <string.h>
 
 static volatile struct limine_module_request modreq = {
-    .id = LIMINE_MODULE_REQUEST,
+    .id = LIMINE_MODULE_REQUEST_ID,
     .revision = 1,
     .response = NULL
 };

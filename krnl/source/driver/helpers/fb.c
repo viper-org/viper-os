@@ -11,7 +11,7 @@ struct framebuffer {
 };
 
 static struct limine_framebuffer_request fbreq = {
-    .id = LIMINE_FRAMEBUFFER_REQUEST,
+    .id = LIMINE_FRAMEBUFFER_REQUEST_ID,
     .revision = 1,
     .response = NULL
 };

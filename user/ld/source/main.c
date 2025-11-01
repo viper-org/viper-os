@@ -3,6 +3,7 @@
 
 extern unsigned long *initial_stack;
 extern void resolve_sym_i(void);
+uint64_t resolve_sym(uint64_t got, uint32_t idx);
 
 unsigned long getauxval(unsigned long type)
 {
@@ -34,6 +35,7 @@ char *strcpy(char *s1, const char *s2)
 
 char *strtab = NULL;
 Elf64_Sym *symtab = NULL;
+struct Elf64_Rela *jmprel = NULL;
 uint64_t execGot = 0;
 
 struct shared_library *libs = NULL;
@@ -62,14 +64,19 @@ void init_library(const char *path)
     }
 
     struct Elf64_Dyn *tag = (struct Elf64_Dyn *)(e.at_base1 + dynamic->p_vaddr);
-
+    int bind_now = 0;
     while (tag->d_tag != DT_NULL)
     {
         if (tag->d_tag == DT_PLTGOT) libs[lib_ptr].got = tag->d_un.d_ptr;
         else if (tag->d_tag == DT_PLTRELSZ) libs[lib_ptr].pltrelsz = tag->d_un.d_val;
         else if (tag->d_tag == DT_STRTAB) libs[lib_ptr].strtab = (char *)(tag->d_un.d_ptr + e.at_base1);
         else if (tag->d_tag == DT_SYMTAB) libs[lib_ptr].symtab = (struct Elf64_Sym *)(tag->d_un.d_ptr + e.at_base1);
+        else if (tag->d_tag == DT_JMPREL) libs[lib_ptr].jmprel = (struct Elf64_Rela *)(tag->d_un.d_ptr + e.at_base1);
         else if (tag->d_tag == DT_GNU_HASH) libs[lib_ptr].hashtab = (uint32_t *)(tag->d_un.d_ptr + e.at_base1);
+        else if (tag->d_tag == DT_FLAGS)
+        {
+            if (tag->d_un.d_val & DT_BIND_NOW) bind_now = 1;
+        }
 
         ++tag;
     }
@@ -81,6 +88,10 @@ void init_library(const char *path)
     for (uint64_t i = 0; i < libs[lib_ptr].pltrelsz / sizeof(struct Elf64_Rela); ++i)
     {
         *((uint64_t *)libs[lib_ptr].got + 3 + i) += e.at_base1;
+        if (bind_now)
+        {
+            resolve_sym(libs[lib_ptr].got, i);
+        }
     }
 
     ++lib_ptr;
@@ -132,9 +143,10 @@ struct Elf64_Sym *lookup(char *strtab, struct Elf64_Sym *symtab, uint32_t *hasht
     return NULL;
 }
 
-uint64_t resolve_sym_impl(uint64_t got, char *strtab, struct Elf64_Sym *symtab, uint32_t idx)
+uint64_t resolve_sym_impl(uint64_t got, char *strtab, struct Elf64_Sym *symtab, struct Elf64_Rela *jmprel, uint32_t idx)
 {
-    char *sym_name = strtab + symtab[idx+1].st_name;
+    struct Elf64_Rela *rela = jmprel + idx;
+    char *sym_name = strtab + symtab[ELF64_R_SYM(rela->r_info)].st_name;
     for (int i = 0; i < lib_ptr; ++i)
     {
         struct shared_library *lib = &libs[i];
@@ -146,21 +158,25 @@ uint64_t resolve_sym_impl(uint64_t got, char *strtab, struct Elf64_Sym *symtab, 
             return real_addr;
         }
     }
+    print("Failed to resolve symbol: ");
+    print(sym_name);
     return 0xCA11CA11CA11CA11;
 }
 
 uint64_t resolve_sym(uint64_t got, uint32_t idx)
 {
     if (got == execGot)
-        return resolve_sym_impl(got, strtab, symtab, idx);
+        return resolve_sym_impl(got, strtab, symtab, jmprel, idx);
     
     for (int i = 0; i < lib_ptr; ++i)
     {
         if (libs[i].got == got)
         {
-            return resolve_sym_impl(got, libs[i].strtab, libs[i].symtab, idx);
+            return resolve_sym_impl(libs[i].got, libs[i].strtab, libs[i].symtab, libs[i].jmprel, idx);
         }
     }
+    print("Failed to find GOT: ");
+    printp((void*)got);
     return 0xCA11CA11CA11CA11;
 }
 
@@ -180,15 +196,19 @@ void ld_start_main(void)
     
     uint64_t base1 = getauxval(AT_BASE1);
     struct Elf64_Dyn *tag = (struct Elf64_Dyn *)(base1 + dynamic->p_vaddr);
-    uint64_t relaent = 0;
     uint64_t pltrelsz = 0;
+    int bind_now = 0;
     while (tag->d_tag != DT_NULL)
     {
         if (tag->d_tag == DT_PLTGOT) execGot = tag->d_un.d_ptr;
-        else if (tag->d_tag == DT_RELAENT) relaent = tag->d_un.d_val;
         else if (tag->d_tag == DT_PLTRELSZ) pltrelsz = tag->d_un.d_val;
         else if (tag->d_tag == DT_SYMTAB) symtab = (Elf64_Sym *)(tag->d_un.d_ptr + base1);
+        else if (tag->d_tag == DT_JMPREL) jmprel = (struct Elf64_Rela *)(tag->d_un.d_ptr + base1);
         else if (tag->d_tag == DT_STRTAB) strtab = (char *)(tag->d_un.d_ptr + base1);
+        else if (tag->d_tag == DT_FLAGS)
+        {
+            if (tag->d_un.d_val & DT_BIND_NOW) bind_now = 1;
+        }
         ++tag;
     }
 
@@ -209,9 +229,13 @@ void ld_start_main(void)
     *((uint64_t *)execGot + 1) = execGot;
     *((uint64_t *)execGot + 2) = (uint64_t)resolve_sym_i;
 
-    for (uint64_t i = 0; i < pltrelsz / relaent; ++i)
+    for (uint64_t i = 0; i < pltrelsz / sizeof(struct Elf64_Rela); ++i)
     {
         *((uint64_t *)execGot + 3 + i) += base1;
+        if (bind_now)
+        {
+            resolve_sym(execGot, i);
+        }
     }
 
     

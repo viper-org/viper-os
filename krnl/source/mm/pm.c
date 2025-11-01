@@ -24,7 +24,7 @@ struct mem_region
 };
 
 struct limine_memmap_request memmap_request = {
-    .id = LIMINE_MEMMAP_REQUEST,
+    .id = LIMINE_MEMMAP_REQUEST_ID,
     .revision = 1,
     .response = NULL
 };

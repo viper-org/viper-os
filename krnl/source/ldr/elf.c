@@ -145,23 +145,26 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
         ++tag;
     }
 
-    struct Elf64_Rela *rela = rela_addr + (char *)vaddr_base;
-    while ((char *)rela < (char *)vaddr_base + rela_addr + relasz)
+    if (rela_addr)
     {
-        switch (ELF64_R_TYPE(rela->r_info))
+        struct Elf64_Rela *rela = rela_addr + (char *)vaddr_base;
+        while ((char *)rela < (char *)vaddr_base + rela_addr + relasz)
         {
-            case R_X86_64_RELATIVE:
+            switch (ELF64_R_TYPE(rela->r_info))
             {
-                char *addr = (char *)(vaddr_base) + rela->r_offset;
-                *(uint64_t*)addr = (uint64_t)vaddr_base + rela->r_addend;
-                break;
+                case R_X86_64_RELATIVE:
+                {
+                    char *addr = (char *)(vaddr_base) + rela->r_offset;
+                    *(uint64_t*)addr = (uint64_t)vaddr_base + rela->r_addend;
+                    break;
+                }
+                default:
+                    dbg_printf("Unkown ELF64_R_TYPE found: %d. Ignoring.\n\n", ELF64_R_TYPE(rela->r_info));
+                    break;
+                // todo: others
             }
-            default:
-                dbg_printf("Unkown ELF64_R_TYPE found: %d. Ignoring.\n\n", ELF64_R_TYPE(rela->r_info));
-                break;
-            // todo: others
+            ++rela;
         }
-        ++rela;
     }
 
     void *at_phdr = NULL;

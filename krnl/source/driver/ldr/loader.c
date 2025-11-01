@@ -8,7 +8,7 @@
 #include <elf.h>
 
 static volatile struct limine_executable_file_request KernelFileRequest = {
-    .id = LIMINE_EXECUTABLE_FILE_REQUEST,
+    .id = LIMINE_EXECUTABLE_FILE_REQUEST_ID,
     .revision = 1,
     .response = NULL
 };

@@ -71,7 +71,10 @@ struct Elf64_Dyn
 #define DT_RELASZ 8
 #define DT_RELAENT 9
 #define DT_JMPREL 23
+#define DT_FLAGS 30
 #define DT_GNU_HASH 0x6FFFFEF5
+
+#define DT_BIND_NOW 8
 
 struct Elf64_Rela
 {
@@ -80,7 +83,8 @@ struct Elf64_Rela
     Elf64_Sxword r_addend;
 };
 
-#define ELF64_R_TYPE(info) ((Elf64_Word)info)
+#define ELF64_R_TYPE(info) ((Elf64_Word)(info))
+#define ELF64_R_SYM(info) ((info) >> 32)
 
 #define R_X86_64_RELATIVE 8
 
@@ -109,6 +113,7 @@ struct shared_library
 
     char *strtab;
     struct Elf64_Sym *symtab;
+    struct Elf64_Rela *jmprel;
     uint32_t *hashtab;
     uint64_t got;
     uint64_t pltrelsz;

@@ -7,13 +7,13 @@
 #include <string.h>
 
 struct limine_hhdm_request hhdm_request = {
-    .id = LIMINE_HHDM_REQUEST,
+    .id = LIMINE_HHDM_REQUEST_ID,
     .revision = 1,
     .response = NULL
 };
 
 struct limine_executable_address_request k_addr_request = {
-    .id = LIMINE_EXECUTABLE_ADDRESS_REQUEST,
+    .id = LIMINE_EXECUTABLE_ADDRESS_REQUEST_ID,
     .revision = 1,
     .response = NULL
 };

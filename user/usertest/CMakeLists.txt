@@ -28,8 +28,9 @@ set(COMPILER_OPTIONS
     "-mno-sse"
     "-mno-sse2"
     "-mno-red-zone"
-    "--sysroot=../sysroot"
+    "--sysroot=../sysroot "
 )
+set(ENV{LD_BIND_NOW} 0)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../sysroot/bin)
 

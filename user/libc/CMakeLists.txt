@@ -27,9 +27,32 @@ set(COMPILER_OPTIONS
     "-mno-red-zone"
 )
 
+set(SOURCES
+    "source/sys/mman.c"
+    "source/sys/ioctl.c"
+    "source/sys/syscall.s"
+
+    "source/unistd/file.c"
+    "source/unistd/proc.c"
+
+    "source/poll.c"
+    "source/sched.c"
+)
+
+set(HEADERS
+    "include/sys/mman.h"
+    "include/sys/ioctl.h"
+    "include/sys/syscall.h"
+
+    "include/poll.h"
+    "include/sched.h"
+    "include/unistd.h"
+)
+
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../sysroot/lib)
 
-add_library(c SHARED test.c)
+add_library(c SHARED ${SOURCES} ${HEADERS})
 
+target_include_directories(c PUBLIC include)
 target_link_options(c PRIVATE ${LINKER_OPTIONS})
 target_compile_options(c PRIVATE ${COMPILER_OPTIONS})

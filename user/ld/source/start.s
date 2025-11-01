@@ -17,7 +17,20 @@ _start:
 .globl resolve_sym_i
 .type resolve_sym_i,@function
 resolve_sym_i:
-    pop %rdi
-    pop %rsi
+    push %rdi
+    push %rsi
+    push %rdx
+    push %rcx
+    push %r8
+    push %r9
+    mov 48(%rsp), %rdi
+    mov 56(%rsp), %rsi
     call resolve_sym
+    pop %r9
+    pop %r8
+    pop %rcx
+    pop %rdx
+    pop %rsi
+    pop %rdi
+    add $16, %rsp
     jmp *%rax
