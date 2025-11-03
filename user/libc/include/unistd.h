@@ -22,6 +22,10 @@ enum
     O_APPEND = 1 << 3
 };
 
+#define SEEK_SET 0
+#define SEEK_CUR 1
+#define SEEK_END 2
+
 struct stat
 {
     size_t st_size;

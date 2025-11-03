@@ -99,12 +99,12 @@ void init_library(const char *path)
     // munmap(mem)
 }
 
-uint32_t gnu_hash(uint8_t *name) {
+uint32_t gnu_hash(const char *s)
+{
     uint32_t h = 5381;
 
-    for (; *name; name++) {
-        h = (h << 5) + h + *name;
-    }
+    for (unsigned char c = *s; c != '\0'; c = *++s)
+            h = h * 33 + c;
 
     return h;
 }
@@ -119,6 +119,7 @@ struct Elf64_Sym *lookup(char *strtab, struct Elf64_Sym *symtab, uint32_t *hasht
     uint32_t bloom_shift = hashtab[3];
     uint64_t *bloom = (void *)&hashtab[4];
     uint32_t *buckets = (void *)&bloom[bloom_size];
+    uint32_t *chain = &buckets[nbuckets];
 
     uint64_t word = bloom[(namehash / 64) % bloom_size];
     uint64_t mask = 0 | (uint64_t)1 << (namehash % 64) | (uint64_t)1 << ((namehash >> bloom_shift) % 64);
@@ -131,7 +132,7 @@ struct Elf64_Sym *lookup(char *strtab, struct Elf64_Sym *symtab, uint32_t *hasht
     for (;;)
     {
         char *symname = strtab + symtab[symix].st_name;
-        uint32_t hash = gnu_hash(symname);
+        uint32_t hash = chain[symix - symoffset];
 
         if ((namehash | 1) == (hash | 1) && !strcmp(name, symname))
             return &symtab[symix];
@@ -150,7 +151,6 @@ uint64_t resolve_sym_impl(uint64_t got, char *strtab, struct Elf64_Sym *symtab, 
     print("Resolving symbol: ");
     print(sym_name);
     print("\n");
-    printp((void*)idx);
     for (int i = 0; i < lib_ptr; ++i)
     {
         struct shared_library *lib = &libs[i];
@@ -164,6 +164,7 @@ uint64_t resolve_sym_impl(uint64_t got, char *strtab, struct Elf64_Sym *symtab, 
     }
     print("Failed to resolve symbol: ");
     print(sym_name);
+    print("\n");
     return 0xCA11CA11CA11CA11;
 }
 

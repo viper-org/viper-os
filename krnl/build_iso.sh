@@ -7,8 +7,11 @@ mkdir -p ../drivers/bin
 mkdir -p ../modules
 mkdir -p ../initrd/boot/
 mkdir -p ../initrd/bin/
+mkdir -p ../initrd/etc/
+mkdir -p ../initrd/lib/
 cp -r ../drivers/bin ../initrd/boot
 cp -r ../user/sysroot/* ../initrd/
+cp -r ../user/etc/* ../initrd/etc/
 cd ../initrd
 tar cvf ../modules/initrd.tar **
 cd ../krnl

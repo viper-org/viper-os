@@ -2,4 +2,4 @@ cmake_minimum_required(VERSION 3.8)
 
 add_subdirectory(ld)
 add_subdirectory(libc)
-add_subdirectory(usertest)
+add_subdirectory(tty)

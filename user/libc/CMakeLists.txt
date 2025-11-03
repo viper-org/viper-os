@@ -37,6 +37,7 @@ set(SOURCES
 
     "source/poll.c"
     "source/sched.c"
+    "source/string.c"
 )
 
 set(HEADERS
