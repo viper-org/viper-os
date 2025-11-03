@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 extern uint64_t exception_stub_table[];
+extern uint64_t irq_stub_table[];
 
 struct __attribute__((packed)) idt_descriptor
 {
@@ -47,6 +48,12 @@ void idt_init(void)
         idt[vec] = init_idt_desc(exception_stub_table[vec], 0x8E, 0);
     }
 
-    // todo: sti
+    for (int vector = 32; vector < 256; ++vector)
+    {
+        idt[vector] = init_idt_desc(irq_stub_table[vector - 32], 0x8E, 0);
+    }
+
+
+    __asm__ volatile("sti");
     __asm__ volatile("lidt %0" :: "m"(idtr));
 }

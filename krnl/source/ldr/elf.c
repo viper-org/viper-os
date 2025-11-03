@@ -183,12 +183,12 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
 
         struct stat b;
         node->fs->stat(node, &b);
-        char *buf = kheap_alloc(b.st_size);
+        char *buf = vm_getpages(NULL, NPAGES(b.st_size));
         size_t _;
         node->fs->read(node, buf, &_, 0);
 
         struct elf_exec e = load_dyn(buf, a);
-        kheap_free(buf);
+        // vm_freepages();
 
         return (struct elf_exec) {
             .entry = e.entry,

@@ -25,6 +25,8 @@ struct thread
     struct stack usr_stack;
     struct stack krnl_stack;
 
+    int timeslice;
+
     struct thread_context *ctx;
     uint64_t entry;
 

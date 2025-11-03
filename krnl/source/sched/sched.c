@@ -10,6 +10,7 @@ void start_idle_proc(void);
 
 void sched_start(void)
 {
+    head->timeslice = 3;
     struct thread_context *old;
     tss_set_rsp0(head->krnl_stack.top);
     swtch(&old, head->ctx);
@@ -46,6 +47,18 @@ void sched_yield(void)
     if (old == head) return;
 
     ctx_switch(old, head);
+}
+
+void sched_tick(void)
+{
+    if (head)
+    {
+        if (!(--head->timeslice))
+        {
+            head->next->timeslice = 3;
+            sched_yield();
+        }
+    }
 }
 
 void sched_blockcurr(void)

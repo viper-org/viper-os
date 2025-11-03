@@ -1,11 +1,15 @@
+
 #include "driver/ldr/loader.h"
 #include "driver/dbg.h"
 
 #include "cpu/cpu.h"
+#include "cpu/int/lapic.h"
 
-#include "event/bus.h"
-#include "event/object.h"
+#include "acpi/acpi.h"
+#include "acpi/hpet.h"
+
 #include "ldr/elf.h"
+
 #include "mm/pm.h"
 #include "mm/vm.h"
 #include "mm/kheap.h"
@@ -19,9 +23,6 @@
 #include "sched/sched.h"
 
 #include <string.h>
-
-extern char userproc[];
-extern char userproc_end[];
 
 void _start(void)
 {
@@ -47,7 +48,12 @@ void _start(void)
     ldr_init();
     initrd_init();
 
-    struct process *proc = alloc_proc((uint64_t)userproc);
+    acpi_init();
+    hpet_init();
+    lapic_init();
+    lapic_init_timer();
+
+    struct process *proc = alloc_proc(0);
     struct addrspace *prev = vm_get_addrspace();
     vm_switch_to(&proc->addr_space);
 

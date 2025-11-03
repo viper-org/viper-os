@@ -7,6 +7,7 @@ void sched_start(void);
 void sched_addproc(struct process *proc);
 
 void sched_yield(void);
+void sched_tick(void);
 
 void sched_blockcurr(void);
 void sched_blockone(struct thread *t);

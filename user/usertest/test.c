@@ -1,9 +1,13 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include <sys/syscall.h>
 
 void _start(void)
 {
+    spawn("/bin/usertest2");
+    syscall1(67, (uint64_t)"TEST");
+
     unsigned long pitch;
     unsigned long height;
     

@@ -5,8 +5,6 @@
 syscall_handler:
     movq %rsp, %gs:0x10 # Save user stack
     movq %gs:0x8, %rsp # Load kernel stack
-
-    pushq %gs:0x10
     
     pushq %rcx
     pushq %r11
@@ -47,6 +45,6 @@ syscall_handler:
     popq %r11
     popq %rcx
 
-    popq %rsp # Restore saved user stack
+    mov %gs:0x10, %rsp
 
     sysretq

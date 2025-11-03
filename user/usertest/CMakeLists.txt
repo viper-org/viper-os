@@ -30,12 +30,15 @@ set(COMPILER_OPTIONS
     "-mno-red-zone"
     "--sysroot=../sysroot "
 )
-set(ENV{LD_BIND_NOW} 0)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../sysroot/bin)
 
 add_executable(usertest test.c)
+add_executable(usertest2 test2.c)
 target_link_libraries(usertest PRIVATE c)
+target_link_libraries(usertest2 PRIVATE c)
 
 target_link_options(usertest PRIVATE ${LINKER_OPTIONS})
 target_compile_options(usertest PRIVATE ${COMPILER_OPTIONS})
+target_link_options(usertest2 PRIVATE ${LINKER_OPTIONS})
+target_compile_options(usertest2 PRIVATE ${COMPILER_OPTIONS})

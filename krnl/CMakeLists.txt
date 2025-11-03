@@ -7,10 +7,15 @@ set(SOURCES
     "source/cpu/gdt.c"
     "source/cpu/tss.c"
     "source/cpu/interrupt/idt.c"
+    "source/cpu/interrupt/lapic.c"
+    "source/cpu/interrupt/exception.c"
+    "source/cpu/interrupt/irq.c"
     "source/cpu/cpu.c"
     "source/cpu/syscall.s"
-    "source/cpu/interrupt/exception.c"
     "source/cpu/interrupt/interrupt_table.s"
+
+    "source/acpi/acpi.c"
+    "source/acpi/hpet.c"
 
     "source/syscall/syscall.c"
     "source/syscall/file/open.c"
@@ -64,12 +69,16 @@ set(HEADERS
     "include/cpu/gdt.h"
     "include/cpu/tss.h"
     "include/cpu/idt.h"
+    "include/cpu/int/lapic.h"
     "include/cpu/cpu.h"
     "include/cpu/asm.h"
 
     "include/driver/dbg.h"
     "include/driver/port.h"
     "include/driver/ldr/loader.h"
+
+    "include/acpi/acpi.h"
+    "include/acpi/hpet.h"
 
     "include/syscall/syscalls.h"
 

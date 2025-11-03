@@ -147,6 +147,10 @@ uint64_t resolve_sym_impl(uint64_t got, char *strtab, struct Elf64_Sym *symtab, 
 {
     struct Elf64_Rela *rela = jmprel + idx;
     char *sym_name = strtab + symtab[ELF64_R_SYM(rela->r_info)].st_name;
+    print("Resolving symbol: ");
+    print(sym_name);
+    print("\n");
+    printp((void*)idx);
     for (int i = 0; i < lib_ptr; ++i)
     {
         struct shared_library *lib = &libs[i];
