@@ -10,7 +10,7 @@ void font_init(void)
     {
         fontFd = open("/etc/font.bmp", O_RDONLY);
         int newfd = dup2(fontFd, 14); // 0, 1, 2 are reserved
-        close(fontFd);
+        if (newfd != fontFd) close(fontFd);
         fontFd = newfd;
     }
 }

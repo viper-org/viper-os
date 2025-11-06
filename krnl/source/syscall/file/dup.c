@@ -1,3 +1,4 @@
+#include "driver/dbg.h"
 #include "syscall/syscalls.h"
 
 #include "sched/sched.h"
@@ -18,7 +19,11 @@ int sys_dup(int fd)
 int sys_dup2(int old, int new)
 {
     struct process *proc = sched_curr()->owner;
-    if (proc->fds[new].vnode || proc->fds[new].pipe) return -1;
+    if (proc->fds[new].vnode || proc->fds[new].pipe)
+    {
+        dbg_printf("Failed to dup2 with old=%d, new=%d\n", old, new);
+        return -1;
+    }
 
     memcpy(&proc->fds[new], &proc->fds[old], sizeof(proc->fds[new]));
     return new;

@@ -45,8 +45,8 @@ void setup_pipes(int fds[2])
     int newfds[2];
     newfds[0] = dup2(fds[0], 13);
     newfds[1] = dup2(fds[1], 1);
-    close(fds[0]);
-    close(fds[1]);
+    if (fds[0] != newfds[0]) close(fds[0]);
+    if (fds[1] != 1) close(fds[1]);
     fds[0] = newfds[0];
     fds[1] = newfds[1];
 }
@@ -58,7 +58,7 @@ void mainloop(int fds[2])
     {
         poll1(fds[0]);
         while(read(fds[0], &c, 1))
-        putchar(c, 0xffffff);
+            putchar(c, 0xffffff);
     }
 }
 
@@ -68,7 +68,6 @@ void _start(void)
 
     int fds[2];
     setup_pipes(fds);
-    puts("test", 0xFFFFFFFF);
-    flush();
+    spawn("/bin/usertest");
     mainloop(fds);
 }

@@ -46,10 +46,11 @@ ssize_t read_pipe(struct pipe *pipe, void *buf, size_t count)
 void make_pipe(int fds[2])
 {
     struct pipe *write = kheap_alloc(sizeof (struct pipe));
+    memset(write, 0, sizeof *write);
     write->type = PIPE_WRITE;
-    memset(&write->write, 0, sizeof write->write);
 
     struct pipe *read = kheap_alloc(sizeof (struct pipe));
+    memset(read, 0, sizeof *read);
     read->type = PIPE_READ;
     read->read.write_end = write;
     

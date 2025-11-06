@@ -53,7 +53,7 @@ void sched_tick(void)
 {
     if (head)
     {
-        if (!(--head->timeslice))
+        if (--head->timeslice <= 0)
         {
             head->next->timeslice = 3;
             sched_yield();
@@ -67,6 +67,7 @@ void sched_blockcurr(void)
     tail->next = head->next;
     head->next->prev = tail;
     head = head->next;
+    head->timeslice = 3;
 
     if (head == old)
     {

@@ -114,6 +114,8 @@ void ctx_switch(struct thread *old, struct thread *new)
 {
     tss_set_rsp0(new->krnl_stack.top);
     get_core()->kstack = new->krnl_stack.top;
+    old->ustack_save = get_core()->ustack;
+    get_core()->ustack = new->ustack_save;
     swtch(&old->ctx, new->ctx);
 }
 

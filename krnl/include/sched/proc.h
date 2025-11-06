@@ -28,6 +28,7 @@ struct thread
     int timeslice;
 
     struct thread_context *ctx;
+    uint64_t ustack_save;
     uint64_t entry;
 
     struct exit_event_object *exit_event;
