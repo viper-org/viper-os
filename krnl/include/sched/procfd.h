@@ -20,6 +20,8 @@ struct proc_fd
     struct pipe *pipe;
     uint16_t flags;
     size_t seek;
+
+    struct proc_fd *enext; // for poll events
 };
 
 #endif // VIPEROS_SCHED_PROCFD

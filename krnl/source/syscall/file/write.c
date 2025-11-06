@@ -1,3 +1,4 @@
+#include "event/bus.h"
 #include "syscall/syscalls.h"
 
 #include "sched/proc.h"
@@ -38,7 +39,15 @@ ssize_t sys_write(int fd, const void *buf, size_t count)
 
     if (desc->pipe && desc->pipe->poll_event)
     {
+        desc->pipe->poll_event->out = desc;
         ready_event(&desc->pipe->poll_event->obj);
+        // todo: free event
+    }
+    struct poll_event_object *event;
+    if ((event = find_poll_event(desc)))
+    {
+        event->out = desc;
+        ready_event(&event->obj);
         // todo: free event
     }
     

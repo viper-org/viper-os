@@ -8,6 +8,7 @@ set(SOURCES
     "source/cpu/tss.c"
     "source/cpu/interrupt/idt.c"
     "source/cpu/interrupt/lapic.c"
+    "source/cpu/interrupt/ioapic.c"
     "source/cpu/interrupt/exception.c"
     "source/cpu/interrupt/irq.c"
     "source/cpu/cpu.c"
@@ -16,6 +17,7 @@ set(SOURCES
 
     "source/acpi/acpi.c"
     "source/acpi/hpet.c"
+    "source/acpi/madt.c"
 
     "source/syscall/syscall.c"
     "source/syscall/file/open.c"
@@ -36,6 +38,7 @@ set(SOURCES
     "source/syscall/sched/spawn.c"
 
     "source/driver/dbg.c"
+    "source/driver/keyboard.c"
     "source/driver/ldr/loader.c"
     "source/driver/helpers/fb.c"
 
@@ -70,15 +73,18 @@ set(HEADERS
     "include/cpu/tss.h"
     "include/cpu/idt.h"
     "include/cpu/int/lapic.h"
+    "include/cpu/int/ioapic.h"
     "include/cpu/cpu.h"
     "include/cpu/asm.h"
 
     "include/driver/dbg.h"
     "include/driver/port.h"
+    "include/driver/keyboard.h"
     "include/driver/ldr/loader.h"
 
     "include/acpi/acpi.h"
     "include/acpi/hpet.h"
+    "include/acpi/madt.h"
 
     "include/syscall/syscalls.h"
 

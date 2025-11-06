@@ -1,12 +1,14 @@
-
+#include "driver/keyboard.h"
 #include "driver/ldr/loader.h"
 #include "driver/dbg.h"
 
 #include "cpu/cpu.h"
 #include "cpu/int/lapic.h"
+#include "cpu/int/ioapic.h"
 
 #include "acpi/acpi.h"
 #include "acpi/hpet.h"
+#include "acpi/madt.h"
 
 #include "ldr/elf.h"
 
@@ -51,8 +53,11 @@ void _start(void)
 
     acpi_init();
     hpet_init();
+    madt_init();
     lapic_init();
     lapic_init_timer();
+    ioapic_init();
+    kb_init();
 
     struct process *proc = alloc_proc(0);
     struct addrspace *prev = vm_get_addrspace();

@@ -23,6 +23,8 @@ struct poll_event_object
     struct event_object obj;
     struct proc_fd *desc;
 
+    struct proc_fd *out;
+
     struct poll_event_object *next;
 };
 

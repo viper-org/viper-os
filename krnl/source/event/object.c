@@ -11,7 +11,6 @@ void wait_on_object(struct event_object *obj, struct thread *t)
 
 void ready_event(struct event_object *obj)
 {
-    dbg_printf("%p\n", obj);
     struct thread *curr = obj->waiting;
     while (curr)
     {

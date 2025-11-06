@@ -51,14 +51,32 @@ void setup_pipes(int fds[2])
     fds[1] = newfds[1];
 }
 
+struct keyboard_event
+{
+    uint8_t mode;
+    uint8_t scancode;
+};
+
 void mainloop(int fds[2])
 {
+    struct keyboard_event buf;
     char c;
+    int kbd = open("/dev/kb", O_RDONLY);
+    int pollfds[2] = {kbd,fds[0]};
     while(1)
     {
-        poll1(fds[0]);
-        while(read(fds[0], &c, 1))
-            putchar(c, 0xffffff);
+        int readfd = poll(pollfds, 2);
+        if (readfd == kbd)
+        {
+            while(read(readfd, &buf, sizeof (struct keyboard_event)))
+                putchar('K', 0xffffff);
+            putchar('\n', 0xffffff);
+        }
+        else
+        {
+            while(read(readfd, &c, 1))
+                putchar(c, 0xffffff);
+        }
     }
 }
 

@@ -1,9 +1,12 @@
 #include "cpu/cpu.h"
 #include "cpu/int/lapic.h"
 
+#include "driver/keyboard.h"
+
 #include "sched/sched.h"
 
 #define TIMER_VEC 0x20
+#define KB_VEC 0x21
 
 void irq_handler(struct cpu_state *state)
 {
@@ -11,5 +14,9 @@ void irq_handler(struct cpu_state *state)
     if (state->base_frame.vector == TIMER_VEC)
     {
         sched_tick();
+    }
+    else if (state->base_frame.vector == KB_VEC)
+    {
+        kb_handler();
     }
 }

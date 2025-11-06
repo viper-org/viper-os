@@ -12,4 +12,8 @@ struct event_bus
 struct exit_event_object *create_exit_event(struct thread *t);
 struct poll_event_object *create_poll_event(struct proc_fd *desc);
 
+struct poll_event_object *find_poll_event(struct proc_fd *desc);
+
+struct event_bus *get_event_bus(void);
+
 #endif // VIPEROS_EVENT_BUS
