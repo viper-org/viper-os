@@ -6,14 +6,16 @@ ViperOS is a multitasking operating system that currently only supports the amd6
 
 ## Building
 
-ViperOS requires a C++ compiler that supports at least C++20, along with the other following dependencies:
+ViperOS requires any C compiler that can target amd64, as well as the following dependencies:
 * CMake
 * QEMU
 
-To build for a specific architecture, simply run `./cmake/run_cmake_{arch}.sh`, where arch is the name of the architecture, e.g. `amd64`
+To build, simply run `cmake .`, then `cmake --build .`.
 
-Then run the `cmake --build .` command to build
+If compilation is slow, use the `-j` flag when running `cmake --build`
 
 ## Running
 
-Each architecture has a shell script to run the ViperOS in QEMU after the build command has been run - `./atheris/{arch}/run.sh`
+There are shell scripts to run ViperOS in QEMU in both debug and release mode: `./krnl/debug.sh` and `./krnl/run.sh` respectively.
+
+When running in debug mode, the emulator is paused on open, so connect to it using gdb(`target remote localhost:1234`) and then use `continue` in GDB to begin execution.

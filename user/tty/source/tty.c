@@ -17,6 +17,13 @@ void putchar(char c, uint32_t fg)
             ++y;
             break;
         }
+        case '\b':
+        {
+            --x;
+            if (x < 0) --y, x = get_horiz() / 8;
+            plot_char(' ', x, y, fg, 0);
+            break;
+        }
         default:
         {
             plot_char(c, x, y, fg, 0);
@@ -93,7 +100,7 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
                 {
                     char c = ch;
                     write(stdinfds[1], &c, 1);
-                    putchar(c, 0xffffffff);
+                    //putchar(c, 0xffffffff);
                 }
             }
         }

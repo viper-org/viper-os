@@ -14,15 +14,23 @@ void _start(void)
         poll1(0);
         while (read(0, &c, 1))
         {
-            linebuf[p++] = c;
-            if (c == '\n')
+            write(1, &c, 1);
+            if (c == '\b')
             {
-                done = 1;
-                break;
+                linebuf[--p] = '\0';
+            }
+            else
+            {
+                linebuf[p++] = c;
+                if (c == '\n')
+                {
+                    done = 1;
+                    break;
+                }
             }
         }
         if (done) break;
     }
     write(1, linebuf, p);
-    while(1) asm("pause");
+    _exit(0);
 }
