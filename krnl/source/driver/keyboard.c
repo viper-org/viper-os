@@ -1,5 +1,4 @@
 #include "driver/keyboard.h"
-#include "driver/dbg.h"
 #include "driver/port.h"
 
 #include "event/bus.h"
@@ -7,9 +6,11 @@
 #include "event/object.h"
 #include "fs/devfs.h"
 
+#include "mm/kheap.h"
 #include "mm/vm.h"
 
 #include "sched/procfd.h"
+
 #include "syscall/stat.h"
 
 #include <string.h>
@@ -54,6 +55,7 @@ void kb_handler(void)
     struct poll_event_object *poll = bus->poll_events;
     while (poll)
     {
+        struct poll_event_object *next = poll->next;
         struct proc_fd *curr = poll->desc;
         while (curr)
         {
@@ -65,11 +67,12 @@ void kb_handler(void)
                     poll->out = curr;
                     ready_event(&poll->obj);
                     // todo: free event
+                    break;
                 }
             }
             curr = curr->enext;
         }
-        poll = poll->next;
+        poll = next;
     }
 }
 
@@ -80,7 +83,6 @@ ssize_t kb_read(void *buf, size_t *count, size_t seek)
     {
         *count = (char *)kb_buf_ptr - (char *)kb_buf;
     }
-    dbg_printf("%d\n", kb_buf_ptr - kb_buf - (*count / sizeof (struct keyboard_event)));
     if (!*count)
     {
         *count = 0;

@@ -6,10 +6,16 @@
 static struct thread *head;
 static struct thread *tail;
 
+struct process idle_proc;
+int idling = 0;
+
 void start_idle_proc(void);
 
 void sched_start(void)
 {
+    init_proc(&idle_proc);
+    idle_proc.main_thread.ctx->rip = (uint64_t)start_idle_proc;
+
     head->timeslice = 3;
     struct thread_context *old;
     tss_set_rsp0(head->krnl_stack.top);
@@ -44,8 +50,18 @@ void sched_yield(void)
     tail = head;
     head = head->next;
 
-    if (old == head) return;
+    if (old == head)
+    {
+        if (idling)
+        {
+            idling = 0;
+            ctx_switch(&idle_proc.main_thread, head);
+            return;
+        }
+        else return;
+    }
 
+    idling = 0;
     ctx_switch(old, head);
 }
 
@@ -73,9 +89,12 @@ void sched_blockcurr(void)
     {
         head = NULL;
         tail = NULL;
-        start_idle_proc();
+        idling = 1;
+        ctx_switch(old, &idle_proc.main_thread);
+        return;
     }
 
+    idling = 0;
     ctx_switch(old, head);
 }
 

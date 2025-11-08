@@ -2,8 +2,6 @@
 #include "mm/vm.h"
 #include "syscall/syscalls.h"
 
-#include "sched/sched.h"
-
 #include "driver/dbg.h"
 
 #include <stdint.h>

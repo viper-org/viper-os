@@ -7,15 +7,11 @@
 
 #include "event/object.h"
 
-#include "driver/dbg.h"
-
 ssize_t sys_write(int fd, const void *buf, size_t count)
 {
     // todo: verify buf
     struct process *proc = sched_curr()->owner;
     struct proc_fd *desc = &proc->fds[fd];
-    
-    dbg_printf("WRITE called with fd=%d,count=%d\n\n", fd, count);
 
     if (desc->pipe)
     {

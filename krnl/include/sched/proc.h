@@ -51,7 +51,8 @@ struct process
     struct process *next; // linked list
 };
 
-struct process *alloc_proc(uint64_t entry);
+void init_proc(struct process *proc);
+struct process *alloc_proc();
 
 int proc_addfd(struct process *proc, struct vnode *node, enum openmode mode);
 int proc_add_pipefd(struct process *proc, struct pipe *pipe);

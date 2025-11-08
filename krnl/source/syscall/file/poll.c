@@ -53,11 +53,11 @@ int sys_poll(int *fds, size_t nfds)
     
     for (size_t i = 0; i < nfds; ++i)
     {
-        if (proc->fds[i].pipe && event->out->pipe)
+        if (proc->fds[fds[i]].pipe && event->out->pipe)
         {
-            if (proc->fds[i].pipe->read.write_end == event->out->pipe) return i;
+            if (proc->fds[fds[i]].pipe->read.write_end == event->out->pipe) return fds[i];
         }
-        if (&proc->fds[i] == event->out) return i;
+        if (&proc->fds[fds[i]] == event->out) return fds[i];
     }
 
     return -1;

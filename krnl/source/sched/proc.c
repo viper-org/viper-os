@@ -12,7 +12,7 @@
 
 #include <string.h>
 
-static int npid = 0;
+static int npid = 1;
 
 extern void prepare_thread(uint64_t entry, struct thread_context **ctx, uint64_t stack, struct thread *t, uint64_t pml4);
 extern void enter_usermode(uint64_t rip, uint64_t rsp);
@@ -20,22 +20,20 @@ void usermode_setup(struct thread *t);
 
 struct process *proc_table = NULL;
 
-struct process *alloc_proc(uint64_t entry)
+void init_proc(struct process *proc)
 {
-    struct process *ret = kheap_alloc(sizeof(struct process));
-    ret->pid = npid++;
-    ret->addr_space = make_addrspace();
-    memset(ret->fds, 0, sizeof ret->fds);
+    proc->pid = npid++;
+    proc->addr_space = make_addrspace();
+    memset(proc->fds, 0, sizeof proc->fds);
 
-    struct thread *t = &ret->main_thread;
-    t->entry = entry;
-    t->owner = ret;
+    struct thread *t = &proc->main_thread;
+    t->owner = proc;
     void *kstack_base = vm_getpages(NULL, 8);
     t->krnl_stack = (struct stack) {
         .top = (uint64_t)kstack_base + 8 * 0x1000,
         8 * 0x1000
     };
-    void *ustack_base = vm_getpages(&ret->addr_space, 8);
+    void *ustack_base = vm_getpages(&proc->addr_space, 8);
     t->usr_stack = (struct stack) {
         .top = (uint64_t)ustack_base + 8 * 0x1000,
         8 * 0x1000
@@ -44,9 +42,14 @@ struct process *alloc_proc(uint64_t entry)
 
     prepare_thread((uint64_t)usermode_setup, &t->ctx, t->krnl_stack.top, t, t->owner->addr_space.pml4);
 
-    ret->next = proc_table;
-    proc_table = ret;
-    
+    proc->next = proc_table;
+    proc_table = proc;
+}
+
+struct process *alloc_proc(void)
+{
+    struct process *ret = kheap_alloc(sizeof(struct process));
+    init_proc(ret);
     return ret;
 }
 
