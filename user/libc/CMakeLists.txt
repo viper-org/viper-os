@@ -30,6 +30,7 @@ set(COMPILER_OPTIONS
 set(SOURCES
     "source/sys/mman.c"
     "source/sys/ioctl.c"
+    "source/sys/wait.c"
     "source/sys/syscall.s"
 
     "source/unistd/file.c"
@@ -38,16 +39,19 @@ set(SOURCES
     "source/poll.c"
     "source/sched.c"
     "source/string.c"
+    "source/readline.c"
 )
 
 set(HEADERS
     "include/sys/mman.h"
     "include/sys/ioctl.h"
+    "include/sys/wait.h"
     "include/sys/syscall.h"
 
     "include/poll.h"
     "include/sched.h"
     "include/unistd.h"
+    "include/readline.h"
 )
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../sysroot/lib)

@@ -33,8 +33,12 @@ set(COMPILER_OPTIONS
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../sysroot/bin)
 
-add_executable(usertest test.c)
-target_link_libraries(usertest PRIVATE c)
+add_executable(sh sh.c)
+target_link_libraries(sh PRIVATE c)
+target_link_options(sh PRIVATE ${LINKER_OPTIONS})
+target_compile_options(sh PRIVATE ${COMPILER_OPTIONS})
 
-target_link_options(usertest PRIVATE ${LINKER_OPTIONS})
-target_compile_options(usertest PRIVATE ${COMPILER_OPTIONS})
+add_executable(hello hello.c)
+target_link_libraries(hello PRIVATE c)
+target_link_options(hello PRIVATE ${LINKER_OPTIONS})
+target_compile_options(hello PRIVATE ${COMPILER_OPTIONS})

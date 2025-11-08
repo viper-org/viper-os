@@ -14,6 +14,7 @@ int sys_open(const char *path, uint16_t openmode)
         {
             node = recursive_create(path, 0); 
         }
+        else return -1;
     }
     int ret = proc_addfd(proc, node, openmode);
     return ret;

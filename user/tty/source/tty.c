@@ -119,6 +119,6 @@ void _start(void)
     int stdoutfds[2];
     int stdinfds[2];
     setup_pipes(stdoutfds, stdinfds);
-    spawn("/bin/usertest");
+    spawn("/bin/sh");
     mainloop(stdoutfds, stdinfds);
 }
