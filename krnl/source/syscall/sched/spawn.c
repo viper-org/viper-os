@@ -1,6 +1,6 @@
-#include "mm/vm.h"
 #include "syscall/syscalls.h"
 
+#include "mm/vm.h"
 #include "mm/kheap.h"
 
 #include "sched/proc.h"
@@ -9,6 +9,7 @@
 #include "fs/vfs.h"
 
 #include "ldr/elf.h"
+
 #include <string.h>
 
 int sys_spawn(const char *path)
@@ -23,7 +24,7 @@ int sys_spawn(const char *path)
     size_t _;
     node->fs->read(node, buf, &_, 0);
 
-    struct process *proc = alloc_proc(0);
+    struct process *proc = alloc_proc();
     struct addrspace *prev = vm_get_addrspace();
     vm_switch_to(&proc->addr_space);
 

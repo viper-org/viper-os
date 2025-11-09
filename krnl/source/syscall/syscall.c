@@ -26,7 +26,6 @@ struct syscall_frame
 
     uint64_t rflags;
     uint64_t rip;
-    uint64_t rsp;
 };
 
 void syscall_dispatcher(struct syscall_frame *frame)

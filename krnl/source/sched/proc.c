@@ -119,6 +119,7 @@ void ctx_switch(struct thread *old, struct thread *new)
     get_core()->kstack = new->krnl_stack.top;
     old->ustack_save = get_core()->ustack;
     get_core()->ustack = new->ustack_save;
+    vm_set_curr(&new->owner->addr_space);
     swtch(&old->ctx, new->ctx);
 }
 

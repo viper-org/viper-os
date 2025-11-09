@@ -45,6 +45,6 @@ syscall_handler:
     popq %r11
     popq %rcx
 
-    mov %gs:0x10, %rsp
+    movq %gs:0x10, %rsp
 
     sysretq

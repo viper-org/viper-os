@@ -33,6 +33,7 @@ uint32_t read_lapic(int reg)
 void lapic_init(void)
 {
     lapic = vm_phystovirt(lapic_phys_addr());
+    vm_map_page(NULL, lapic_phys_addr(), (uint64_t)lapic, PT_PRESENT | PT_WRITE);
 
     write_lapic(0xF0, 0x1FF);
 }

@@ -47,6 +47,11 @@ void vm_switch_to(struct addrspace *a)
     __asm__ volatile("mov %0, %%cr3" :: "r"(a->pml4));
 }
 
+void vm_set_curr(struct addrspace *a)
+{
+    curr_addrspace = a;
+}
+
 static inline physaddr_t get_pt_address(physaddr_t phys)
 {
     return (phys & ~0xFFFF000000000FFF);
@@ -129,7 +134,7 @@ static inline void map_hhdm(void)
             entry->base,
             entry->base + hhdmBase,
             PT_PRESENT | PT_WRITE,
-            NPAGES(entry->base)
+            NPAGES(entry->length)
         );
 
         if (entry->base + entry->length > hhdmTop)
@@ -166,11 +171,11 @@ void vm_map_page(struct addrspace *a, physaddr_t phys, uint64_t virt, uint16_t f
     {
         a = &k_addrspace;
     }
-
+    
     phys  &= ~0xFFF;
     virt  &= ~0xFFF;
     flags &=  0xFFF;
-
+    
     uint64_t shift = 48;
     uint64_t* pt = vm_phystovirt(get_pt_address(a->pml4));
     uint64_t index;
@@ -203,6 +208,34 @@ void vm_map_pages(struct addrspace *a, physaddr_t phys, uint64_t virt, uint16_t 
             flags
         );
     }
+}
+
+uint64_t vm_get_phys(struct addrspace *a, uint64_t virt)
+{
+    if (!a)
+    {
+        a = &k_addrspace;
+    }
+
+    virt  &= ~0xFFF;
+
+    uint64_t shift = 48;
+    uint64_t* pt = vm_phystovirt(get_pt_address(a->pml4));
+    uint64_t index;
+    for (int i = 0; i < 4; ++i)
+    {
+        shift -= 9;
+        index = (virt >> shift) & 0x1FF;
+        if (i == 3) break;
+
+        if (!(pt[index] & PT_PRESENT))
+        {
+            return -1;
+        }
+
+        pt = vm_phystovirt(get_pt_address(pt[index]));
+    }
+    return pt[index];
 }
 
 

@@ -24,6 +24,7 @@ void ioapic_init(void)
 {
     ioapic_phys = madt_ioapic_base();
     ioapic = vm_phystovirt(ioapic_phys);
+    vm_map_page(NULL, ioapic_phys, (uint64_t)ioapic, PT_PRESENT | PT_WRITE);
     gsi_base = madt_gsi_base();
 
     union redir_entry kb_ent;

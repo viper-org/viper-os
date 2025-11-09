@@ -42,19 +42,22 @@ void initrd_init(void)
     struct tar_header *hdr = addr;
     while (!memcmp("ustar", hdr->magic, 5))
     {
-        char name[100] = "/";
-        strcpy(name+1, hdr->name);
-        struct vnode *node = recursive_create(name, 0);
         size_t sz = parse_size(hdr->size);
-        node->fs->write(node, (char*)hdr + 512, sz, 0);
-        dbg_printf("loading file: %s\n", name);
-
-        size_t namelen = strlen(name);
-        if (!strcmp(name + namelen - 5, ".vdrv"))
+        if (hdr->typeflag == '0')
         {
-            struct driver drv = ldr_load((char*)hdr + 512);
-            drv.init();
-            devfs_add_drv(drv);
+            char name[100] = "/";
+            strcpy(name+1, hdr->name);
+            struct vnode *node = recursive_create(name, 0);
+            node->fs->write(node, (char*)hdr + 512, sz, 0);
+            dbg_printf("loading file: %s with type %d\n", name, hdr->typeflag);
+
+            size_t namelen = strlen(name);
+            if (!strcmp(name + namelen - 5, ".vdrv"))
+            {
+                struct driver drv = ldr_load((char*)hdr + 512);
+                drv.init();
+                devfs_add_drv(drv);
+            }
         }
 
         hdr = (struct tar_header *)((char *)hdr + ((sz + 511) / 512 + 1) * 512);

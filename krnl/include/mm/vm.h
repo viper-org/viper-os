@@ -33,6 +33,7 @@ struct addrspace
 struct addrspace *vm_get_kaddrspace(void);
 struct addrspace *vm_get_addrspace(void);
 void vm_switch_to(struct addrspace *a);
+void vm_set_curr(struct addrspace *a); // set vm_get_addrspace() but don't switch cr3
 struct addrspace make_addrspace(void);
 
 void vm_init(void);
@@ -40,6 +41,7 @@ void vm_allocator_init(void);
 
 void vm_map_page(struct addrspace *a, physaddr_t phys, uint64_t virt, uint16_t flags);
 void vm_map_pages(struct addrspace *a, physaddr_t phys, uint64_t virt, uint16_t flags, uint32_t count);
+uint64_t vm_get_phys(struct addrspace *a, uint64_t virt);
 
 
 void* vm_getpage(struct addrspace *);
