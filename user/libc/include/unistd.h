@@ -48,7 +48,7 @@ int open(const char *path, int flags);
 int close(int fd);
 off_t lseek(int fd, off_t offset, int whence);
 int pipe(int pipefd[2]);
-pid_t spawn(const char *path);
+pid_t spawn(const char *path, int argc, char **argv);
 int dup(int fd);
 int dup2(int oldfd, int newfd);
 pid_t getpid(void);

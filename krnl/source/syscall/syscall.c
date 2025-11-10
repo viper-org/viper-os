@@ -97,7 +97,7 @@ void syscall_dispatcher(struct syscall_frame *frame)
             break;
 
         case 25:
-            frame->rax = sys_spawn((const char *)frame->rdi);
+            frame->rax = sys_spawn((const char *)frame->rdi, frame->rsi, (char **)frame->rdx);
             break;
 
         case 33:

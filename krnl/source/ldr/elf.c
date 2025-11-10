@@ -35,6 +35,33 @@ struct elf_exec load_elf(void *addr, struct addrspace *a)
     }
 }
 
+uint64_t push_argvc(int argc, char *argv, uint64_t ustack_top, size_t total_len)
+{
+    ustack_top -= (1 + argc + 1) * 8;
+    ustack_top -= total_len;
+    uint64_t *stack = (uint64_t *)ustack_top;
+    char *p = argv;
+    char *str_stack = (char *)(stack + 2 + argc);
+
+    *(stack++) = (uint64_t)argc;
+
+    size_t prevlen = 0;
+    for (int i = 0; i < argc; ++i)
+    {
+        *stack = (uint64_t)(stack + argc + 1 - i) + prevlen;
+        ++stack;
+
+        size_t len = strlen(p);
+        prevlen += len+1;
+        memcpy(str_stack, p, len + 1);
+        p += len + 1;
+        str_stack += len + 1;
+    }
+    *(stack++) = NULL;
+
+    return ustack_top;
+}
+
 void push_elf_auxvals(struct elf_exec *elf, uint64_t ustack_top)
 {
     uint64_t *stack = (uint64_t *)ustack_top;

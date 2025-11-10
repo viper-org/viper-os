@@ -128,5 +128,5 @@ void usermode_setup(struct thread *t)
 {
     vm_switch_to(&t->owner->addr_space);
     get_core()->kstack = t->krnl_stack.top;
-    enter_usermode(t->entry, t->usr_stack.top);
+    enter_usermode(t->entry, t->ustack_save);
 }

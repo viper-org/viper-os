@@ -250,6 +250,8 @@ uint64_t resolve_sym(uint64_t got, uint32_t idx)
 
 void ld_start_main(void)
 {
+    printp((void*)getauxval(0));
+
     libs = mmap(0x100 * sizeof(struct shared_library));
     copies = mmap(0x100 * sizeof(struct copy_relocation));
 
@@ -343,8 +345,8 @@ void ld_start_main(void)
         do_library_relocations(libs + i);
     }
 
-    void(*entry)(void) = (void(*)(void))(getauxval(AT_ENTRY));
-    entry();
+    void(*entry)(int, char **) = (void(*)(int, char **))(getauxval(AT_ENTRY));
+    entry(getauxval(0), (char**)(initial_stack + 1));
 
     __asm__("1: pause; jmp 1b" ::: "memory");
 }

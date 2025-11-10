@@ -112,6 +112,8 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
     }
 }
 
+char *argv[] = { "/bin/sh", 0 };
+
 int main()
 {
     screen_init();
@@ -119,6 +121,6 @@ int main()
     int stdoutfds[2];
     int stdinfds[2];
     setup_pipes(stdoutfds, stdinfds);
-    spawn("/bin/sh");
+    spawn("/bin/sh", 1, argv);
     mainloop(stdoutfds, stdinfds);
 }

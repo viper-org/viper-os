@@ -71,7 +71,8 @@ void _start(void)
     tmp->fs->read(tmp, mem, &sz, 0);
 
     struct elf_exec e = load_elf(mem, &proc->addr_space);
-    push_elf_auxvals(&e, proc->main_thread.usr_stack.top);
+    proc->main_thread.ustack_save = push_argvc(0, "", proc->main_thread.usr_stack.top, 0);
+    push_elf_auxvals(&e, proc->main_thread.ustack_save);
     proc->main_thread.entry = e.entry;
     sched_addproc(proc);
 

@@ -29,6 +29,7 @@ enum elf_auxval
 
 struct elf_exec load_elf(void *file, struct addrspace *a);
 
+uint64_t push_argvc(int argc, char *argv, uint64_t ustack_top, size_t total_len);
 void push_elf_auxvals(struct elf_exec *elf, uint64_t ustack_top);
 
 #endif // VIPEROS_LDR_ELF

@@ -43,3 +43,8 @@ add_executable(hello hello.c)
 target_link_libraries(hello PRIVATE c)
 target_link_options(hello PRIVATE ${LINKER_OPTIONS})
 target_compile_options(hello PRIVATE ${COMPILER_OPTIONS})
+
+add_executable(echo echo.c)
+target_link_libraries(echo PRIVATE c)
+target_link_options(echo PRIVATE ${LINKER_OPTIONS})
+target_compile_options(echo PRIVATE ${COMPILER_OPTIONS})
