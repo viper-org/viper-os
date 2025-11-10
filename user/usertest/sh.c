@@ -37,8 +37,7 @@ int main()
         }
         else
         {
-            fputs(buf+5, stdout);
-            fputs(": command not found\n", stdout);
+            printf("%s: command not found\n", buf+5);
         }
     }
     _exit(0);
