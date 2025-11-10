@@ -6,3 +6,8 @@ int sys_getpid(void)
 {
     return sched_curr()->owner->pid;
 }
+
+int sys_getppid(void)
+{
+    return sched_curr()->owner->ppid;
+}

@@ -46,9 +46,10 @@ void init_proc(struct process *proc)
     proc_table = proc;
 }
 
-struct process *alloc_proc(void)
+struct process *alloc_proc(int ppid)
 {
     struct process *ret = kheap_alloc(sizeof(struct process));
+    ret->ppid = ppid;
     init_proc(ret);
     return ret;
 }

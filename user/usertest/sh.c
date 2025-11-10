@@ -15,6 +15,18 @@ int main()
     {
         readline(buf+5, "> ");
         if (!buf[5]) continue; // empty line
+        if (!strcmp(buf+5, "exit"))
+        {
+            if (getppid() != 3)
+            {
+                _exit(0);
+            }
+            else
+            {
+                puts("cannot exit from root shell");
+                continue;
+            }
+        }
         int fd = open(buf, O_RDWR);
         if (fd >= 0)
         {
@@ -25,7 +37,8 @@ int main()
         }
         else
         {
-            fputs("command not found\n", stdout);
+            fputs(buf+5, stdout);
+            fputs(": command not found\n", stdout);
         }
     }
     _exit(0);

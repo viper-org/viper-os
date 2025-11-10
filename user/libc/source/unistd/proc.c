@@ -11,6 +11,11 @@ pid_t getpid(void)
     return syscall0(SYS_getpid);
 }
 
+pid_t getppid(void)
+{
+    return syscall0(SYS_getppid);
+}
+
 void loadlib(const char *path, struct elf_exec *out)
 {
     syscall2(SYS_loadlib, (uint64_t)path, (uint64_t)out);

@@ -24,7 +24,7 @@ int sys_spawn(const char *path)
     size_t _;
     node->fs->read(node, buf, &_, 0);
 
-    struct process *proc = alloc_proc();
+    struct process *proc = alloc_proc(parent->pid);
     struct addrspace *prev = vm_get_addrspace();
     vm_switch_to(&proc->addr_space);
 

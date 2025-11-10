@@ -8,6 +8,7 @@ typedef unsigned long size_t;
 void *memcpy(void *d, const void *s, size_t size);
 void *memset(void *d, int ch, size_t size);
 
+int strcmp(const char *s1, const char *s2);
 size_t strlen(const char *s);
 
 #endif // VIPEROS_LIBC_STRING

@@ -25,6 +25,16 @@ void *memset(void *d, int ch, size_t size)
 }
 
 
+int strcmp(const char *s1, const char *s2)
+{
+    while (*s1 && *s1 == *s2)
+    {
+        ++s1;
+        ++s2;
+    }
+    return *s1 - *s2;
+}
+
 size_t strlen(const char *s)
 {
     size_t i = 0;

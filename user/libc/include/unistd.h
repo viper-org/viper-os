@@ -52,6 +52,7 @@ pid_t spawn(const char *path);
 int dup(int fd);
 int dup2(int oldfd, int newfd);
 pid_t getpid(void);
+pid_t getppid(void);
 // getppid
 void loadlib(const char *path, struct elf_exec *out);
 __attribute__((noreturn)) void _exit(int status);
