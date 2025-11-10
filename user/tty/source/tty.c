@@ -112,7 +112,7 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
     }
 }
 
-void _start(void)
+int main()
 {
     screen_init();
 

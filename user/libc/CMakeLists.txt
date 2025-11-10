@@ -14,6 +14,7 @@ set(COMPILER_OPTIONS
     "-Wpedantic"
     "-O0"
     "-nostdinc"
+    "-nostdlib"
     "-ffreestanding"
     "-fno-stack-protector"
     "-fno-stack-check"
@@ -38,8 +39,11 @@ set(SOURCES
 
     "source/poll.c"
     "source/sched.c"
-    "source/string.c"
     "source/readline.c"
+
+    "source/string.c"
+    "source/stdio.c"
+    "source/stdlib.c"
 )
 
 set(HEADERS
@@ -52,11 +56,17 @@ set(HEADERS
     "include/sched.h"
     "include/unistd.h"
     "include/readline.h"
+
+    "include/string.h"
+    "include/stdio.h"
+    "include/stdlib.h"
 )
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../sysroot/lib)
 
+add_library(crt0 OBJECT source/crt0.s)
 add_library(c SHARED ${SOURCES} ${HEADERS})
+target_sources(c INTERFACE $<TARGET_OBJECTS:crt0>)
 
 target_include_directories(c PUBLIC include)
 target_link_options(c PRIVATE ${LINKER_OPTIONS})

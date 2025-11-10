@@ -89,6 +89,8 @@ struct Elf64_Rela
 
 #define ELF64_R_TYPE(info) ((Elf64_Word)info)
 
+#define R_X86_64_COPY 5
+#define R_X86_64_GLOB_DAT 6
 #define R_X86_64_RELATIVE 8
 
 #define PT_LOAD 1

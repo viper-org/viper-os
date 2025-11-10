@@ -86,6 +86,8 @@ struct Elf64_Rela
 #define ELF64_R_TYPE(info) ((Elf64_Word)(info))
 #define ELF64_R_SYM(info) ((info) >> 32)
 
+#define R_X86_64_COPY 5
+#define R_X86_64_GLOB_DAT 6
 #define R_X86_64_RELATIVE 8
 
 #define PT_LOAD 1
@@ -117,6 +119,16 @@ struct shared_library
     uint32_t *hashtab;
     uint64_t got;
     uint64_t pltrelsz;
+
+    int bind_now;
+    uint64_t rela_addr;
+    uint64_t relasz;
+};
+
+struct copy_relocation
+{
+    char *name;
+    uint64_t address;
 };
 
 enum elf_auxval

@@ -16,6 +16,7 @@ set(COMPILER_OPTIONS
     "-Wpedantic"
     "-O0"
     "-nostdinc"
+    "-nostdlib"
     "-fno-stack-protector"
     "-fno-stack-check"
     "-fno-lto"

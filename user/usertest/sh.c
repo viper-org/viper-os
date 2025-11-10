@@ -1,16 +1,20 @@
 #include <poll.h>
-
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <readline.h>
 #include <sys/wait.h>
 
-void _start(void)
+int main()
 {
-    write(1, "ViperOS Shell\n", 15);
+    fputs("ViperOS Shell\n", stdout);
+    char *buf = malloc(32);
+    memcpy(buf, "/bin/", 5);
     while (1)
     {
-        char buf[32] = "/bin/";
         readline(buf+5, "> ");
+        if (!buf[5]) continue; // empty line
         int fd = open(buf, O_RDWR);
         if (fd >= 0)
         {
@@ -21,7 +25,7 @@ void _start(void)
         }
         else
         {
-            write(1, "command not found\n", 19);
+            fputs("command not found\n", stdout);
         }
     }
     _exit(0);

@@ -158,6 +158,12 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
                     *(uint64_t*)addr = (uint64_t)vaddr_base + rela->r_addend;
                     break;
                 }
+                case R_X86_64_GLOB_DAT:
+                case R_X86_64_COPY:
+                {
+                    // should be handled by program interpreter
+                    break;
+                }
                 default:
                     dbg_printf("Unkown ELF64_R_TYPE found: %d. Ignoring.\n\n", ELF64_R_TYPE(rela->r_info));
                     break;

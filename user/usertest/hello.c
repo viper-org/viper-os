@@ -1,7 +1,6 @@
-#include <unistd.h>
+#include <stdio.h>
 
-void _start(void)
+int main()
 {
-    write(1, "Hello, world!\n", 15);
-    _exit(0);
+    puts("Hello, world!");
 }
