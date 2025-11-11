@@ -19,7 +19,9 @@ enum
     O_RDWR   = O_RDONLY | O_WRONLY,
     
     O_CREAT  = 1 << 2,
-    O_APPEND = 1 << 3
+    O_APPEND = 1 << 3,
+
+    O_DIRECTORY = 1 << 4,
 };
 
 #define SEEK_SET 0

@@ -48,3 +48,8 @@ add_executable(echo echo.c)
 target_link_libraries(echo PRIVATE c)
 target_link_options(echo PRIVATE ${LINKER_OPTIONS})
 target_compile_options(echo PRIVATE ${COMPILER_OPTIONS})
+
+add_executable(ls ls.c)
+target_link_libraries(ls PRIVATE c)
+target_link_options(ls PRIVATE ${LINKER_OPTIONS})
+target_compile_options(ls PRIVATE ${COMPILER_OPTIONS})

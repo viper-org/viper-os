@@ -39,6 +39,7 @@ set(SOURCES
 
     "source/poll.c"
     "source/sched.c"
+    "source/dirent.c"
     "source/readline.c"
 
     "source/string.c"
@@ -55,6 +56,7 @@ set(HEADERS
     "include/poll.h"
     "include/sched.h"
     "include/unistd.h"
+    "include/dirent.h"
     "include/readline.h"
 
     "include/string.h"

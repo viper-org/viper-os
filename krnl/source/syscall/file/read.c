@@ -1,3 +1,4 @@
+#include "sched/procfd.h"
 #include "syscall/syscalls.h"
 
 #include "sched/proc.h"

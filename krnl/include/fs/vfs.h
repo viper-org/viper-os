@@ -19,6 +19,18 @@ enum vfs_error
     VFS_NOTTY
 };
 
+struct dirent
+{
+    unsigned char d_type;
+    char d_name[256];
+};
+
+enum dirent_type
+{
+    DT_DIR,
+    DT_REG
+};
+
 struct vnode;
 struct stat;
 

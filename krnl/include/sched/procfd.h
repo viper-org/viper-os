@@ -10,6 +10,8 @@ enum openmode
 
     O_CREAT = 1 << 2,
     O_APPEND = 1 << 3,
+
+    O_DIRECTORY = 1 << 4,
 };
 
 struct pipe;

@@ -1,6 +1,8 @@
 #include "fs/testfs.h"
 #include "fs/vfs.h"
 
+#include "driver/dbg.h"
+
 #include "mm/kheap.h"
 
 #include "syscall/stat.h"
@@ -78,7 +80,41 @@ void testfs_init(void)
 
 static enum vfs_error testfs_read(struct vnode *node, void *data, size_t* sz, size_t seek)
 {
-    if (node->type == VNODE_DIR) return VFS_IS_DIR;
+    if (node->type == VNODE_DIR)
+    {
+        if (*sz != sizeof (struct dirent)) return VFS_IS_DIR;
+        struct dirent *d = data;
+        struct testfs_dir *dir = node->impl;
+        struct vnode *n = dir->contained;
+        for (size_t i = 0; i < seek / sizeof (struct dirent); ++i)
+        {
+            n = n->next;
+        }
+        if (!n)
+        {
+            *sz = -1;
+            return VFS_SUCCESS; // end of directory is not an error
+        }
+        switch (n->type)
+        {
+            case VNODE_FILE:
+            {
+                struct testfs_file *file = n->impl;
+                strcpy(d->d_name, file->name);
+                dbg_printf("hello: %s\n", file->name);
+                d->d_type = DT_REG;
+                break;
+            }
+            case VNODE_DIR:
+            {
+                struct testfs_dir *dir = n->impl;
+                strcpy(d->d_name, dir->name);
+                d->d_type = DT_DIR;
+                break;
+            }
+        }
+        return VFS_SUCCESS;
+    }
 
     struct testfs_file *file = node->impl;
     if (*sz > file->length - seek)
