@@ -92,3 +92,36 @@ struct vnode *recursive_create(const char *pn, int n)
     kheap_free(parent);
     return out;
 }
+
+
+char *get_relpath(const char *path, const char *cwd)
+{
+    if (path[0] != '/') // relative path
+    {
+        size_t size1 = strlen(cwd) + 1;
+        size_t size2 = strlen(path) + 1;
+        char *new = kheap_alloc(size1 + size2);
+
+        strcpy(new, cwd);
+        if (strcmp(cwd, "/")) // there will be a trailing slash if we are in the root dir
+        {
+            new[size1 - 1] = '/';
+            new[size1] = 0;
+        }
+        strcat(new, path);
+
+        if (path[size2 - 2] == '/')
+        {
+            new[size1 + size2 - 2] = 0;
+        }
+        return new;
+    }
+
+    char *new = strdup(path);
+    size_t len = strlen(path);
+    if (path[len-1] == '/' && len != 1) // len != 1 is checking if we are in root dir, see above
+    {
+        new[len-1] = 0;
+    }
+    return new;
+}

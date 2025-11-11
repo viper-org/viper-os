@@ -72,4 +72,6 @@ enum vfs_error defaultmount(struct vfilesystem *, char *path);
 struct vnode *lookuppn(char *path);
 struct vnode *recursive_create(const char *path, int n);
 
+char *get_relpath(const char *path, const char *cwd);
+
 #endif // VIPEROS_FS_VFS
