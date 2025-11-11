@@ -59,6 +59,10 @@ void *memmove(void *d, const void *s, size_t sz)
 
 size_t strlen(const char *s)
 {
+    if (!s)
+    {
+        int a = 1;
+    }
     size_t i = 0;
     while (s[i]) ++i;
     return i;
@@ -72,6 +76,18 @@ int strcmp(const char *s1, const char *s2)
         ++s2;
     }
     return *s1 - *s2;
+}
+
+char *strcat(char *d, const char *s)
+{
+    char *p = d;
+    while (*p) ++p;
+
+    while (*s)
+        *p++ = *s++;
+
+    *p = 0;
+    return d;
 }
 
 char *strcpy(char *s1, const char *s2)

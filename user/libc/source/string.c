@@ -35,6 +35,31 @@ int strcmp(const char *s1, const char *s2)
     return *s1 - *s2;
 }
 
+char *strcat(char *d, const char *s)
+{
+    char *p = d;
+    while (*p) ++p;
+
+    while (*s)
+        *p++ = *s++;
+
+    *p = 0;
+    return d;
+}
+
+char *strcpy(char *s1, const char *s2)
+{
+    char *s = s1;
+    while (*s2)
+    {
+        *s1 = *s2;
+        ++s1;
+        ++s2;
+    }
+    *s1 = 0;
+    return s;
+}
+
 size_t strlen(const char *s)
 {
     size_t i = 0;

@@ -31,6 +31,8 @@ set(SOURCES
     "source/syscall/file/ioctl.c"
     "source/syscall/file/dup.c"
     "source/syscall/mem/mmap.c"
+    "source/syscall/proc/getcwd.c"
+    "source/syscall/proc/chdir.c"
     "source/syscall/sched/yield.c"
     "source/syscall/sched/exit.c"
     "source/syscall/sched/wait.c"

@@ -20,6 +20,9 @@ int sys_pipe(int fds[2]);
 int sys_dup(int fd);
 int sys_dup2(int old, int new);
 
+char *sys_getcwd(char buf[], size_t size);
+int sys_chdir(char *path);
+
 
 void *sys_mmap(void *addr, size_t len, int prot, int flags, int fd, long offset);
 

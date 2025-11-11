@@ -20,10 +20,11 @@ void usermode_setup(struct thread *t);
 
 struct process *proc_table = NULL;
 
-void init_proc(struct process *proc)
+void init_proc(struct process *proc, const char *wd)
 {
     proc->pid = npid++;
     proc->addr_space = make_addrspace();
+    proc->cwd = strdup(wd);
     memset(proc->fds, 0, sizeof proc->fds);
 
     struct thread *t = &proc->main_thread;
@@ -46,11 +47,11 @@ void init_proc(struct process *proc)
     proc_table = proc;
 }
 
-struct process *alloc_proc(int ppid)
+struct process *alloc_proc(int ppid, const char *wd)
 {
     struct process *ret = kheap_alloc(sizeof(struct process));
     ret->ppid = ppid;
-    init_proc(ret);
+    init_proc(ret, wd);
     return ret;
 }
 

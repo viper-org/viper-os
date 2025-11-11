@@ -48,12 +48,13 @@ struct process
     struct addrspace addr_space;
 
     struct proc_fd fds[NFD];
+    char *cwd;
 
     struct process *next; // linked list
 };
 
-void init_proc(struct process *proc);
-struct process *alloc_proc(int ppid);
+void init_proc(struct process *proc, const char *wd);
+struct process *alloc_proc(int ppid, const char *wd);
 
 int proc_addfd(struct process *proc, struct vnode *node, enum openmode mode);
 int proc_add_pipefd(struct process *proc, struct pipe *pipe);

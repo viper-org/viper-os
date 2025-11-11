@@ -128,6 +128,14 @@ void syscall_dispatcher(struct syscall_frame *frame)
         case 68:
             dbg_printf("%p\n", frame->rdi);
             break;
+
+        case 79:
+            frame->rax = (uint64_t)sys_getcwd((char *)frame->rdi, frame->rsi);
+            break;
+
+        case 80:
+            frame->rax = sys_chdir((char *)frame->rdi);
+            break;
         
         default:
             dbg_printf("syscall rax=%d", frame->rax);

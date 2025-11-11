@@ -59,7 +59,7 @@ void _start(void)
     ioapic_init();
     kb_init();
 
-    struct process *proc = alloc_proc(0);
+    struct process *proc = alloc_proc(0, "/");
     struct addrspace *prev = vm_get_addrspace();
     vm_switch_to(&proc->addr_space);
 

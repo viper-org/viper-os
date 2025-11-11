@@ -43,7 +43,7 @@ int sys_spawn(const char *path, int argc, char **argv)
         dbg_writechar(argv_copy[i]);
     }
 
-    struct process *proc = alloc_proc(parent->pid);
+    struct process *proc = alloc_proc(parent->pid, parent->cwd);
     struct addrspace *prev = vm_get_addrspace();
     vm_switch_to(&proc->addr_space);
 

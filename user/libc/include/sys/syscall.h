@@ -32,5 +32,7 @@ uint64_t syscall6(uint64_t n, uint64_t arg0, uint64_t arg1, uint64_t arg2, uint6
 #define SYS_dup2 34
 #define SYS_loadlib 59
 #define SYS_exit 60
+#define SYS_getcwd 79
+#define SYS_chdir 80
 
 #endif // VIPEROS_LIBC_SYS_SYSCALL

@@ -1,24 +1,33 @@
+#include "unistd.h"
 #include <stdio.h>
 #include <dirent.h>
 
-int main(int argc, char **argv)
+void do_ls(char *path)
 {
-    if (argc == 1)
-    {
-        puts("no directory specified");
-        return 1;
-    }
-
-    DIR *dir = opendir(argv[1]);
+    DIR *dir = opendir(path);
     if (!dir)
     {
-        printf("cannot access '%s'", argv[1]);
-        return 1; // todo: use perror()
+        printf("cannot access '%s'\n", path); // todo: use perror()
+        _exit(1); // todo: exit()
     }
 
     struct dirent d;
     while (readdir(dir, &d) >= 0)
     {
         printf(" - %s\n", d.d_name);
+    }
+}
+
+int main(int argc, char **argv)
+{
+    if (argc == 1)
+    {
+        char buf[256];
+        getcwd(buf, 256);
+        do_ls(buf);
+    }
+    else
+    {
+        do_ls(argv[1]);
     }
 }

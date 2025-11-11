@@ -27,3 +27,12 @@ void _exit(int status)
     __builtin_unreachable();
 }
 
+char *getcwd(char buf[], size_t size)
+{
+    return (char *)syscall2(SYS_getcwd, (uint64_t)buf, size);
+}
+
+int chdir(const char *path)
+{
+    return syscall1(SYS_chdir, (uint64_t)path);
+}
