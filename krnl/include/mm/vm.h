@@ -12,6 +12,7 @@ enum pt_flags
     PT_PRESENT = 1 << 0,
     PT_WRITE   = 1 << 1,
     PT_USER    = 1 << 2,
+    PT_PWT     = 1 << 3,
 };
 
 #define NPAGES(n) ((n + 0x1000 - 1) / 0x1000)
@@ -23,11 +24,29 @@ struct vm_allocator_node
     struct vm_allocator_node *next;
 };
 
+enum vma_flags
+{
+    VMA_NO = 1 << 0, // do npt make a VMA, should only be used for kernel heap allocations
+    VMA_FILE_MAPPED = 1 << 1,
+};
+
+struct vma
+{
+    uint64_t base;
+    uint64_t npages;
+
+    uint16_t flags;
+    struct vnode *mapping;
+
+    struct vma *next;
+};
+
 struct addrspace
 {
     physaddr_t pml4;
 
     struct vm_allocator_node *fl;
+    struct vma *vma_ll;
 };
 
 struct addrspace *vm_get_kaddrspace(void);
@@ -45,6 +64,6 @@ uint64_t vm_get_phys(struct addrspace *a, uint64_t virt);
 
 
 void* vm_getpage(struct addrspace *);
-void* vm_getpages(struct addrspace *, uint32_t count);
+void* vm_getpages(struct addrspace *, uint32_t count, uint16_t flags, struct vnode *map);
 
 #endif // VIPEROS_MM_VM

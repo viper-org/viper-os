@@ -14,6 +14,7 @@ struct __attribute__((packed)) driver_header
     ssize_t (*write)(const void *, size_t, size_t);
     int (*stat)(struct stat *);
     int (*ioctl)(unsigned long, char *);
+    void (*mmap)(void *, void *, size_t);
 
     const char *name;
 };

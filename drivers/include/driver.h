@@ -17,6 +17,7 @@ typedef struct __attribute__((packed))
     ssize_t (*write)(const void* buf, size_t count, size_t seek);
     int (*stat)(struct stat *);
     int (*ioctl)(unsigned long op, void *argp);
+    void (*mmap)(void *a, void *mem, size_t size);
 
     const char* name;
 } DriverHeader;

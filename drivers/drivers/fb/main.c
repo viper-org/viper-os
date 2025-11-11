@@ -7,6 +7,7 @@ ssize_t read(void* buf, size_t* count, size_t seek);
 ssize_t write(const void* buf, size_t count, size_t seek);
 int stat(struct stat *statbuf);
 int ioctl(unsigned long op, void *argp);
+void mmap(void *, void *, size_t);
 
 struct framebuffer {
     void *address;
@@ -21,12 +22,15 @@ __attribute__((section(".driver_header"))) volatile DriverHeader header = {
     .write = write,
     .stat = stat,
     .ioctl = ioctl,
+    .mmap = mmap,
     .name = "fb"
 };
 
 KERNEL_FUNC(void, KeDebugLog, const char *);
 KERNEL_FUNC(void, KeDebugLogFmt, const char *, ...);
 KERNEL_FUNC(int, KeDrvGetFramebuffer, struct framebuffer *);
+KERNEL_FUNC(void, KeMapPages, void *, uint64_t, uint64_t, uint16_t, uint32_t);
+KERNEL_FUNC(uint64_t, KeGetPhysicalAddress, uint64_t);
 
 struct framebuffer fb;
 
@@ -35,6 +39,8 @@ void _start(void)
     GET_KERNEL_FUNC(void, KeDebugLog, const char*);
     GET_KERNEL_FUNC(void, KeDebugLogFmt, const char*, ...);
     GET_KERNEL_FUNC(int, KeDrvGetFramebuffer, struct framebuffer *);
+    GET_KERNEL_FUNC(void, KeMapPages, void *, uint64_t, uint64_t, uint16_t, uint32_t);
+    GET_KERNEL_FUNC(uint64_t, KeGetPhysicalAddress, uint64_t);
     KeDrvGetFramebuffer(&fb);
 
     KeDebugLog("Initialized framebuffer driver\n");
@@ -100,4 +106,12 @@ int ioctl(unsigned long op, void *argp)
             return -1;
     }
     return 0;
+}
+
+#define NPAGES(n) ((n + 0x1000 - 1) / 0x1000)
+
+void mmap(void *a, void *mem, size_t size)
+{
+    uint64_t phys = KeGetPhysicalAddress((uint64_t)fb.address);
+    KeMapPages(a, phys, (uint64_t)mem, 15, NPAGES(size)); // present, write, user
 }

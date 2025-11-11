@@ -29,12 +29,12 @@ void init_proc(struct process *proc, const char *wd)
 
     struct thread *t = &proc->main_thread;
     t->owner = proc;
-    void *kstack_base = vm_getpages(NULL, 8);
+    void *kstack_base = vm_getpages(NULL, 8, 0, NULL);
     t->krnl_stack = (struct stack) {
         .top = (uint64_t)kstack_base + 8 * 0x1000,
         8 * 0x1000
     };
-    void *ustack_base = vm_getpages(&proc->addr_space, 8);
+    void *ustack_base = vm_getpages(&proc->addr_space, 8, 0, NULL);
     t->usr_stack = (struct stack) {
         .top = (uint64_t)ustack_base + 8 * 0x1000,
         8 * 0x1000

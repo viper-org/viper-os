@@ -16,6 +16,10 @@ void *memset(void *d, int ch, size_t sz)
 
 void *memcpy(void *d, const void *s, size_t sz)
 {
+    if (!d)
+    {
+        int a = 3;
+    }
     char *a = d;
     const char *b = s;
     for (size_t i = 0; i < sz; ++i)
@@ -59,10 +63,6 @@ void *memmove(void *d, const void *s, size_t sz)
 
 size_t strlen(const char *s)
 {
-    if (!s)
-    {
-        int a = 1;
-    }
     size_t i = 0;
     while (s[i]) ++i;
     return i;
@@ -117,7 +117,7 @@ char *strrchr(const char *s, int ch)
     int sz = strlen(s);
     for (int i = sz; i >= 0; --i)
     {
-        if (s[i] == ch) return &s[i];
+        if (s[i] == ch) return (char *)&s[i];
     }
     return 0;
 }

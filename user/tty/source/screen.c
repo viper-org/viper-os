@@ -17,7 +17,8 @@ void screen_init(void)
     close(framebuffer_fd);
     framebuffer_fd = newfd;
 
-    back_buffer = mmap(0, get_vert() * get_pitch(), 0, 0, 0, 0);
+    //back_buffer = mmap(0, get_vert() * get_pitch(), 0, 0, 0, 0);
+    back_buffer = mmap(0, get_vert() * get_pitch(), 0, 0, framebuffer_fd, 0);
     
     clear_screen();
     flush();
@@ -63,7 +64,7 @@ void clear_screen(void)
 
 void flush(void)
 {
-    write(framebuffer_fd, back_buffer, get_vert() * get_pitch());
+    //write(framebuffer_fd, back_buffer, get_vert() * get_pitch());
 }
 
 

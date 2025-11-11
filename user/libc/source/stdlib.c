@@ -19,7 +19,7 @@ static inline void fl_remove(struct heap_header *curr, struct heap_header *prev)
 
 static inline void get_more_pages(void)
 {
-    void* pages = mmap(NULL, 32 * 0x1000, 0, 0, 0, 0);
+    void* pages = mmap(NULL, 32 * 0x1000, 0, MAP_ANONYMOUS, 0, 0);
     struct heap_header *hdr = pages;
     hdr->next = fl;
     fl = hdr;

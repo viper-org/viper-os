@@ -37,7 +37,7 @@ struct driver_header *kb_get_driver(void)
 
 void kb_init(void)
 {
-    kb_buf = vm_getpages(NULL, 2);
+    kb_buf = vm_getpages(NULL, 2, 0, NULL);
     kb_buf_ptr = kb_buf;
 
     devfs_add_drv((struct driver) {&hdr, NULL});

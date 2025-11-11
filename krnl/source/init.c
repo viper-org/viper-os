@@ -63,7 +63,7 @@ void _start(void)
     struct addrspace *prev = vm_get_addrspace();
     vm_switch_to(&proc->addr_space);
 
-    void *mem = vm_getpages(NULL, 16);
+    void *mem = vm_getpages(NULL, 16, 0, NULL);
     tmp = lookuppn("/bin/tty");
     struct stat b;
     tmp->fs->stat(tmp, &b);

@@ -21,7 +21,7 @@ int sys_spawn(const char *path, int argc, char **argv)
     struct stat b;
     node->fs->stat(node, &b);
 
-    char *buf = vm_getpages(NULL, NPAGES(b.st_size));
+    char *buf = vm_getpages(NULL, NPAGES(b.st_size), 0, NULL);
     size_t _;
     node->fs->read(node, buf, &_, 0);
 

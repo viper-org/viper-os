@@ -44,7 +44,7 @@ static inline void fl_remove(struct heap_header *curr, struct heap_header *prev)
 
 static inline void get_more_pages(void)
 {
-    void* pages = vm_getpages(NULL, 32);
+    void* pages = vm_getpages(NULL, 32, VMA_NO, NULL);
     struct heap_header *hdr = pages;
     hdr->next = fl;
     fl = hdr;

@@ -53,7 +53,7 @@ struct driver ldr_load(void *addr)
         size += phdr->p_memsz;
     }
     size = NPAGES(size);
-    void *vaddr_base = vm_getpages(NULL, size);
+    void *vaddr_base = vm_getpages(NULL, size, 0, NULL);
 
     phdr = (Elf64_Phdr *)(file + ehdr->e_phoff);
     for (uint32_t i = 0; i < ehdr->e_phnum; ++i, ++phdr)
@@ -81,6 +81,7 @@ struct driver ldr_load(void *addr)
     header->write = (ssize_t (*)(const void *,size_t,size_t))((uint64_t)header->write + (uint64_t)vaddr_base);
     header->stat  = (int (*)(struct stat *))((uint64_t)header->stat + (uint64_t)vaddr_base);
     header->ioctl = (int (*)(unsigned long, char *))((uint64_t)header->ioctl + (uint64_t)vaddr_base);
+    header->mmap = (void (*)(void *, void *, size_t))((uint64_t)header->mmap + (uint64_t)vaddr_base);
 
     return (struct driver) {
         .header = header,

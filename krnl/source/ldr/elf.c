@@ -134,7 +134,7 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
         else if (phdr->p_type == PT_PHDR) phdr_phdr = phdr;
     }
 
-    void *vaddr_base = vm_getpages(a, NPAGES(v_end - v_start));
+    void *vaddr_base = vm_getpages(a, NPAGES(v_end - v_start), 0, NULL);
 
     phdr = (struct Elf64_Phdr *)(file + ehdr->e_phoff);
     for (uint32_t i = 0; i < ehdr->e_phnum; ++i, ++phdr)
@@ -204,7 +204,7 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
     uint64_t at_phnum = 0;
     if (phdr_phdr)
     {
-        at_phdr = vm_getpages(a, NPAGES(phdr_phdr->p_memsz));
+        at_phdr = vm_getpages(a, NPAGES(phdr_phdr->p_memsz), 0, NULL);
         memcpy(at_phdr, file + phdr_phdr->p_offset, phdr_phdr->p_memsz);
         at_phnum = phdr_phdr->p_memsz / sizeof(struct Elf64_Phdr);
     }
@@ -216,7 +216,7 @@ struct elf_exec load_dyn(char *file, struct addrspace *a)
 
         struct stat b;
         node->fs->stat(node, &b);
-        char *buf = vm_getpages(NULL, NPAGES(b.st_size));
+        char *buf = vm_getpages(NULL, NPAGES(b.st_size), 0, NULL);
         size_t _;
         node->fs->read(node, buf, &_, 0);
 

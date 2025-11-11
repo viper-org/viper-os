@@ -17,6 +17,7 @@ static enum vfs_error devfs_lookup(struct vnode *, char *, struct vnode **);
 static enum vfs_error devfs_create(struct vnode *, char *, struct vnode **);
 static enum vfs_error devfs_mkdir(struct vnode *, char *, struct vnode **);
 static enum vfs_error devfs_ioctl(struct vnode *, unsigned long, void *);
+static enum vfs_error devfs_mmap(struct vnode *, struct addrspace *, void *, size_t);
 
 static int devfs_fs_root(struct vnode **);
 static int devfs_fs_mount(char *);
@@ -32,6 +33,7 @@ static struct vnode *devfs_mkroot(void)
     node->mounted = NULL;
     node->type = VNODE_DIR;
     node->next = NULL;
+    node->flags = 0;
 
     return node;
 }
@@ -53,6 +55,7 @@ void devfs_init(void)
     vfs.create = devfs_create;
     vfs.mkdir = devfs_mkdir;
     vfs.ioctl = devfs_ioctl;
+    vfs.mmap = devfs_mmap;
 
     pushvfs(&vfs);
 }
@@ -154,7 +157,17 @@ static enum vfs_error devfs_ioctl(struct vnode *node, unsigned long op, void *ar
     struct devfs_file *file = node->impl;
     file->drvr.header->ioctl(op, argp);
 
-    return VFS_SUCCESS; // TODO: output ssize_t
+    return VFS_SUCCESS;
+}
+
+static enum vfs_error devfs_mmap(struct vnode *node, struct addrspace *a, void *mem, size_t size)
+{
+    if (node->type == VNODE_DIR) return VFS_IS_DIR;
+
+    struct devfs_file *file = node->impl;
+    file->drvr.header->mmap(a, mem, size);
+
+    return VFS_SUCCESS;
 }
 
 

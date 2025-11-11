@@ -2,6 +2,8 @@
 #include "mm/pm.h"
 #include "mm/kheap.h"
 
+#include "sched/procfd.h"
+
 #include <limine.h>
 
 #include <string.h>
@@ -129,11 +131,15 @@ static inline void map_hhdm(void)
     {
         struct limine_memmap_entry *entry = pm_get_memmap()->entries[i];
 
+        uint16_t flags = PT_PRESENT | PT_WRITE;
+        if (entry->type == LIMINE_MEMMAP_FRAMEBUFFER)
+            flags |= PT_PWT;
+
         vm_map_pages(
             &k_addrspace,
             entry->base,
             entry->base + hhdmBase,
-            PT_PRESENT | PT_WRITE,
+            flags,
             NPAGES(entry->length)
         );
 
@@ -241,7 +247,7 @@ uint64_t vm_get_phys(struct addrspace *a, uint64_t virt)
 
 void *vm_getpage(struct addrspace *a)
 {
-    return vm_getpages(a, 1);
+    return vm_getpages(a, 1, 0, NULL);
 }
 
 static inline void fl_remove(struct addrspace *a, struct vm_allocator_node *curr, struct vm_allocator_node *prev)
@@ -252,7 +258,7 @@ static inline void fl_remove(struct addrspace *a, struct vm_allocator_node *curr
     curr->next = NULL;
 }
 
-void *vm_getpages(struct addrspace *a, uint32_t count)
+void *vm_getpages(struct addrspace *a, uint32_t count, uint16_t vma_flags, struct vnode *map)
 {
     if (!count) return NULL;
     if (!a) a = &k_addrspace;
@@ -279,16 +285,40 @@ void *vm_getpages(struct addrspace *a, uint32_t count)
     }
 
     // todo: lazy mapping
-    for (uint32_t i = 0; i < count * 0x1000; i += 0x1000)
+    if (!map || (map && map->flags & VMA_FILE_MAPPED)) // device files and such won't want backing
     {
-        vm_map_page(
-            a,
-            pm_getpage(),
-            base + i,
-            flags
-        );
+        for (uint32_t i = 0; i < count * 0x1000; i += 0x1000)
+        {
+            vm_map_page(
+                a,
+                pm_getpage(),
+                base + i,
+                flags
+            );
+        }
     }
 
-    // todo: add allocation to list of active VMAs
+    if (!(vma_flags & VMA_NO))
+    {
+        struct vma *v = kheap_alloc(sizeof (struct vma));
+        v->base = base;
+        v->npages = count;
+        v->mapping = map;
+        if (map) v->flags |= VMA_FILE_MAPPED;
+
+        v->next = a->vma_ll;
+        a->vma_ll = v;
+    }
     return (void *)base;
+}
+
+
+uint64_t KeGetPhysicalAddress(uint64_t virt)
+{
+    return virt - hhdm_request.response->offset;
+}
+
+void KeMapPages(void *a, uint64_t phys, uint64_t virt, uint16_t flags, uint32_t count)
+{
+    vm_map_pages(a, phys, virt, flags, count);
 }

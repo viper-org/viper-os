@@ -88,9 +88,8 @@ void init_library(const char *path)
 {
     struct stat b;
     stat(path, &b);
-    void *mem = mmap(b.st_size);
     int fd = open(path, 3);
-    read(fd, mem, b.st_size);
+    void *mem = mmap(0, b.st_size, 0, 0, fd);
 
     int lib_idx = lib_ptr++;
 
@@ -252,8 +251,8 @@ void ld_start_main(void)
 {
     printp((void*)getauxval(0));
 
-    libs = mmap(0x100 * sizeof(struct shared_library));
-    copies = mmap(0x100 * sizeof(struct copy_relocation));
+    libs = mmap(0, 0x100 * sizeof(struct shared_library), 0, 1, 0);
+    copies = mmap(0, 0x100 * sizeof(struct copy_relocation), 0, 1, 0);
 
     struct Elf64_Phdr *phdrs = (struct Elf64_Phdr *)getauxval(AT_PHDR);
     struct Elf64_Phdr *dynamic = NULL;

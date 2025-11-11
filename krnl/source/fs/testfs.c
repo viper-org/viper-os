@@ -4,6 +4,7 @@
 #include "driver/dbg.h"
 
 #include "mm/kheap.h"
+#include "mm/vm.h"
 
 #include "syscall/stat.h"
 
@@ -19,6 +20,7 @@ static enum vfs_error testfs_lookup(struct vnode *, char *, struct vnode **);
 static enum vfs_error testfs_create(struct vnode *, char *, struct vnode **);
 static enum vfs_error testfs_mkdir(struct vnode *, char *, struct vnode **);
 static enum vfs_error testfs_ioctl(struct vnode *, unsigned long, void *);
+static enum vfs_error testfs_mmap(struct vnode *, struct addrspace *, void *, size_t);
 
 static int testfs_fs_root(struct vnode **);
 static int testfs_fs_mount(char *);
@@ -34,6 +36,7 @@ static struct vnode *testfs_create_dir(char *name)
     node->mounted = NULL;
     node->fs = &vfs;
     node->type = VNODE_DIR;
+    node->flags = VNODE_MMAP_BACK;
     
     return node;
 }
@@ -50,6 +53,7 @@ static struct vnode *testfs_create_file(char *name)
     node->mounted = NULL;
     node->fs = &vfs;
     node->type = VNODE_FILE;
+    node->flags = VNODE_MMAP_BACK;
     
     return node;
 }
@@ -72,6 +76,7 @@ void testfs_init(void)
     vfs.create = testfs_create;
     vfs.mkdir = testfs_mkdir;
     vfs.ioctl = testfs_ioctl;
+    vfs.mmap = testfs_mmap;
 
     pushvfs(&vfs);
     setrootfs(&vfs);
@@ -220,6 +225,20 @@ static enum vfs_error testfs_mkdir(struct vnode *node, char *name, struct vnode 
 static enum vfs_error testfs_ioctl(struct vnode *n, unsigned long op, void *argp)
 {
     return VFS_NOTTY;
+}
+
+static enum vfs_error testfs_mmap(struct vnode *node, struct addrspace *a, void *mem, size_t size)
+{
+    (void)a;
+    if (node->type == VNODE_DIR) return VFS_IS_DIR;
+
+    struct testfs_file *file = node->impl;
+    if (file->length < size)
+    {
+        size = file->length;
+    }
+    memcpy(mem, file->data, size);
+    return VFS_SUCCESS;
 }
 
 

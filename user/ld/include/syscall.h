@@ -13,10 +13,10 @@ static inline int stat(const char *path, struct stat *statbuf)
     return ret;
 }
 
-static inline void *mmap(unsigned long len)
+void *mmap(void *addr, unsigned long length, int prot, int flags, int fd)
 {
     void *ret;
-    __asm__ volatile("syscall" : "=a"(ret) : "a"(9), "S"(len) : "rcx", "r11");
+    __asm__ volatile("mov %1, %%r10d; mov %2, %%r8d; syscall" : "=a"(ret) : "g"(flags), "g"(fd), "a"(9), "D"(addr), "S"(length), "d"(prot) : "rcx", "r11");
     return ret;
 }
 

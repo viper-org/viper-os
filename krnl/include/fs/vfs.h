@@ -33,6 +33,7 @@ enum dirent_type
 
 struct vnode;
 struct stat;
+struct addrspace;
 
 struct vfilesystem
 {
@@ -53,6 +54,12 @@ struct vfilesystem
     enum vfs_error (*create)(struct vnode *,char *name, struct vnode **);
     enum vfs_error (*mkdir)(struct vnode *,char *name, struct vnode **);
     enum vfs_error (*ioctl)(struct vnode *, unsigned long op, void *argp);
+    enum vfs_error (*mmap)(struct vnode *, struct addrspace *a, void *addr, size_t length); // todo: offset
+};
+
+enum vnode_flags
+{
+    VNODE_MMAP_BACK = 1 << 1,
 };
 
 struct vnode
@@ -62,6 +69,7 @@ struct vnode
     struct vfilesystem *fs;
     struct vfilesystem *mounted;
     enum vnode_type type;
+    uint16_t flags;
 
     struct vnode *next;
 };
