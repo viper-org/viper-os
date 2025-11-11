@@ -32,7 +32,11 @@ void cd(int argc, char **argv)
     }
     if (argc == 1) return; // todo: cd to ~/
 
-    chdir(argv[1]);
+    if (chdir(argv[1]) < 0)
+    {
+        fprintf(stderr, "cd: could not open '%s'\n", argv[1]);
+        return;
+    }
     getcwd(PWD, 256); // better to call getcwd since the kernel does a lot of modifications
     set_prompt();
 }

@@ -1,4 +1,5 @@
 #include "screen.h"
+#include "sys/syscall.h"
 
 #include <unistd.h>
 #include <poll.h>
@@ -6,8 +7,17 @@
 size_t x = 0;
 size_t y = 0;
 
+int doing_escape = 0;
+
 void putchar(char c, uint32_t fg)
 {
+    if (doing_escape)
+    {
+        if (c == 'f') flush();
+        doing_escape = 0;
+        return;
+    }
+
     switch(c)
     {
         case '\0': break;
@@ -15,6 +25,7 @@ void putchar(char c, uint32_t fg)
         {
             x = 0;
             ++y;
+            flush();
             break;
         }
         case '\b':
@@ -22,6 +33,11 @@ void putchar(char c, uint32_t fg)
             --x;
             if (x < 0) --y, x = get_horiz() / 8;
             plot_char(' ', x, y, fg, 0);
+            break;
+        }
+        case '\x1b':
+        {
+            doing_escape = 1;
             break;
         }
         default:
@@ -35,11 +51,16 @@ void putchar(char c, uint32_t fg)
             break;
         }
     }
-    flush();
     // TODO: scrolling
 }
 
-void puts(const char* str, uint32_t fg)
+void putstrn(const char *str, int n, uint32_t fg)
+{
+    while (n--)
+        putchar(*str++, fg);
+}
+
+void putstr(const char* str, uint32_t fg)
 {
     while(*str)
         putchar(*str++, fg);
@@ -84,8 +105,8 @@ static uint32_t scancode_map[128] = {
 
 void mainloop(int stdoutfds[2], int stdinfds[2])
 {
-    struct keyboard_event buf;
-    char c;
+    struct keyboard_event kbuf[32];
+    char cbuf[32];
     int kbd = open("/dev/kb", O_RDONLY);
     int pollfds[2] = {kbd,stdoutfds[0]};
     while(1)
@@ -93,21 +114,29 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
         int readfd = poll(pollfds, 2);
         if (readfd == kbd)
         {
-            while(read(readfd, &buf, sizeof (struct keyboard_event)))
+            int sz = 0;
+            while((sz = read(readfd, kbuf, 32 * sizeof (struct keyboard_event))))
             {
-                uint32_t ch = scancode_map[buf.scancode];
-                if (buf.mode & 0x80)
+                syscall1(67, (uint64_t)"TEST\n\n\n");
+                syscall1(68, sz);
+                for (int i = 0; i < sz / sizeof (struct keyboard_event); ++i)
                 {
-                    char c = ch;
-                    write(stdinfds[1], &c, 1);
-                    //putchar(c, 0xffffffff);
+                    uint32_t ch = scancode_map[kbuf[i].scancode];
+                    if (kbuf[i].mode & 0x80)
+                    {
+                        char c = ch;
+                        write(stdinfds[1], &c, 1);
+                    }
                 }
             }
         }
         else if (readfd == stdoutfds[0])
         {
-            while(read(readfd, &c, 1))
-                putchar(c, 0xffffff);
+            int sz = 0;
+            while((sz = read(readfd, cbuf, 32)))
+            {
+                putstrn(cbuf, sz, 0xfffffff);
+            }
         }
     }
 }

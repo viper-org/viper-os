@@ -8,35 +8,38 @@ char *readline(char *buf, char *prompt)
 {
     int sz = 0;
     if (prompt)
+    {
         write(1, prompt, strlen(prompt));
+        write(1, "\x1b""f", 3); // flush
+    }
 
-    char c;
+    char c[3] = {0, '\x1b', 'f'}; // flush
     int done = 0;
     while (1)
     {
-        poll1(0);
-        while (read(0, &c, 1))
+        while (read(0, &c, 1) > 0)
         {
-            if (c == '\b')
+            if (c[0] == '\b')
             {
                 if (sz)
                 {
-                    write(1, &c, 1);
+                    write(1, &c, 3);
                     buf[--sz] = '\0';
                 }
             }
             else
             {
-                write(1, &c, 1);
-                if (c == '\n')
+                write(1, &c, 3);
+                if (c[0] == '\n')
                 {
                     done = 1;
                     break;
                 }
-                buf[sz++] = c;
+                buf[sz++] = c[0];
             }
         }
         if (done) break;
+        poll1(0);
     }
     buf[sz] = 0;
     return buf;
