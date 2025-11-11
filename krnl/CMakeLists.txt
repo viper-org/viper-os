@@ -30,6 +30,7 @@ set(SOURCES
     "source/syscall/file/pipe.c"
     "source/syscall/file/ioctl.c"
     "source/syscall/file/dup.c"
+    "source/syscall/file/mkdir.c"
     "source/syscall/mem/mmap.c"
     "source/syscall/proc/getcwd.c"
     "source/syscall/proc/chdir.c"

@@ -40,3 +40,8 @@ int dup2(int oldfd, int newfd)
 {
     return syscall2(SYS_dup2, oldfd, newfd);
 }
+
+int mkdir(const char *path)
+{
+    return syscall1(SYS_mkdir, (uint64_t)path);
+}

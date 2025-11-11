@@ -22,6 +22,7 @@ int sys_dup2(int old, int new);
 
 char *sys_getcwd(char buf[], size_t size);
 int sys_chdir(char *path);
+int sys_mkdir(const char *path); // todo: mode?
 
 
 void *sys_mmap(void *addr, size_t len, int prot, int flags, int fd, long offset);

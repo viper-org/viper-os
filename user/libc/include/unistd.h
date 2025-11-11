@@ -60,6 +60,7 @@ void loadlib(const char *path, struct elf_exec *out);
 __attribute__((noreturn)) void _exit(int status);
 char *getcwd(char buf[], size_t size);
 int chdir(const char *path);
+int mkdir(const char *path);
 
 
 #ifdef __cplusplus

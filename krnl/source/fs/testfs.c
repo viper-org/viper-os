@@ -86,6 +86,11 @@ static enum vfs_error testfs_read(struct vnode *node, void *data, size_t* sz, si
         struct dirent *d = data;
         struct testfs_dir *dir = node->impl;
         struct vnode *n = dir->contained;
+        if (!n)
+        {
+            *sz = -1;
+            return VFS_SUCCESS;
+        }
         for (size_t i = 0; i < seek / sizeof (struct dirent); ++i)
         {
             n = n->next;

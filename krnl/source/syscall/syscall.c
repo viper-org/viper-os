@@ -136,6 +136,10 @@ void syscall_dispatcher(struct syscall_frame *frame)
         case 80:
             frame->rax = sys_chdir((char *)frame->rdi);
             break;
+
+        case 83:
+            frame->rax = sys_mkdir((const char *)frame->rdi);
+            break;
         
         default:
             dbg_printf("syscall rax=%d", frame->rax);

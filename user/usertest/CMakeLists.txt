@@ -39,6 +39,7 @@ set(PROGRAMS
     "ls"
     "echo"
     "hello"
+    "mkdir"
     "pwd"
 )
 
