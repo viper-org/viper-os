@@ -7,6 +7,13 @@ void do_ls(char *path)
     DIR *dir = opendir(path);
     if (!dir)
     {
+        int fd = open(path, 0); // should probably check errno once it exists
+        if (fd)
+        {
+            close(fd);
+            printf(" - %s\n", path);
+            return;
+        }
         printf("cannot access '%s'\n", path); // todo: use perror()
         _exit(1); // todo: exit()
     }
@@ -14,7 +21,10 @@ void do_ls(char *path)
     struct dirent d;
     while (readdir(dir, &d) >= 0)
     {
-        printf(" - %s\n", d.d_name);
+        if (d.d_type == DT_DIR)
+            printf(" - %s/\n", d.d_name);
+        else
+            printf(" - %s\n", d.d_name);
     }
 }
 

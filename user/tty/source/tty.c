@@ -1,5 +1,4 @@
 #include "screen.h"
-#include "sys/syscall.h"
 
 #include <unistd.h>
 #include <poll.h>
@@ -117,8 +116,6 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
             int sz = 0;
             while((sz = read(readfd, kbuf, 32 * sizeof (struct keyboard_event))))
             {
-                syscall1(67, (uint64_t)"TEST\n\n\n");
-                syscall1(68, sz);
                 for (int i = 0; i < sz / sizeof (struct keyboard_event); ++i)
                 {
                     uint32_t ch = scancode_map[kbuf[i].scancode];

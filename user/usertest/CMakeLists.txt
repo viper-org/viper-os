@@ -41,6 +41,7 @@ set(PROGRAMS
     "hello"
     "mkdir"
     "pwd"
+    "touch"
 )
 
 foreach (PROG IN LISTS PROGRAMS)

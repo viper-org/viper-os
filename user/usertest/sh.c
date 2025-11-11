@@ -1,4 +1,3 @@
-#include "sys/syscall.h"
 #include <poll.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -41,7 +40,7 @@ void cd(int argc, char **argv)
     set_prompt();
 }
 
-int main()
+int main(void)
 {
     getcwd(PWD, 256);
     set_prompt();

@@ -12,7 +12,8 @@ int sys_chdir(char *path)
     struct process *curr = sched_curr()->owner;
 
     char *new = get_relpath(path, curr->cwd);
-    if (!lookuppn(new))
+    struct vnode *node = lookuppn(new);
+    if (!node || node->type != VNODE_DIR)
     {
         kheap_free(new);
         return -1;
