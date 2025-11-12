@@ -1,6 +1,5 @@
 #include "screen.h"
 #include "escape.h"
-#include "sys/syscall.h"
 
 #include <ctype.h>
 #include <stdlib.h>
@@ -31,7 +30,6 @@ void end_escape(void)
 
 void putchar(char c, uint32_t fg)
 {
-    syscall1(68, c);
     if (doing_escape)
     {
         escapebuf[escapebufp++] = c;
@@ -233,7 +231,6 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
                 for (int i = 0; i < sz / sizeof (struct keyboard_event); ++i)
                 {
                     int ch = scancode_map[kbuf[i].scancode];
-                    syscall1(68, doing_escape);
                     switch (mode)
                     {
                         case TTY_RAW:
@@ -241,8 +238,9 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
                             if (ch < 0)
                             {
                                 char c = -ch;
-                                if (mode & 0x80) c |= 0x80;
-                                write(stdinfds[1], &c, 1);
+                                char mode = kbuf[i].mode & 0x80 ? 'U' : 'P';
+                                char buf[] = {'\x1b', mode, c};
+                                write(stdinfds[1], buf, 3);
                             }
                             else
                             {
