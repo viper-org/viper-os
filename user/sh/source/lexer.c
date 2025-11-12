@@ -56,7 +56,14 @@ struct token lexer_next(struct lexer *l)
     switch (lexer_current(l))
     {
         case '>':
-            // todo: >>
+            if (lexer_peek(l, 1) == '>')
+            {
+                lexer_consume(l);
+                return (struct token) {
+                    .type = TOK_PIPER2,
+                    .text = NULL
+                };
+            }
             return (struct token) {
                 .type = TOK_PIPER,
                 .text = NULL

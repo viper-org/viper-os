@@ -75,16 +75,18 @@ int main(void)
         for (int i = 0; i < l.ntok; ++i)
         {
             if (l.toks[i].type == TOK_STR) ++argc;
-            if (l.toks[i].type == TOK_PIPER)
+            else if (l.toks[i].type == TOK_PIPER || l.toks[i].type == TOK_PIPER2)
             {
+                int flags = O_WRONLY | O_CREAT;
+                if (l.toks[i].type == TOK_PIPER2) flags |= O_APPEND;
                 ++i;
                 if (l.toks[i].type != TOK_STR)
                 {
-                    fputs("sh: expected a file after '>'\n", stderr);
+                    fprintf(stderr, "sh: expected a file before `newline'\n");
                     lexer_cleanup(&l);
                     continue;
                 }
-                stdoutfd = open(l.toks[i++].text, O_WRONLY | O_CREAT);
+                stdoutfd = open(l.toks[i++].text, flags);
             }
         }
         char **argv = malloc(sizeof (char *) * (argc + 1));
