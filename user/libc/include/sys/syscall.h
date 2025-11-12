@@ -20,6 +20,7 @@ uint64_t syscall6(uint64_t n, uint64_t arg0, uint64_t arg1, uint64_t arg2, uint6
 #define SYS_poll1 7
 #define SYS_lseek 8
 #define SYS_mmap 9
+#define SYS_munmap 11
 #define SYS_waitpid 12
 #define SYS_getpid 13
 #define SYS_getppid 13

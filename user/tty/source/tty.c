@@ -1,4 +1,5 @@
 #include "screen.h"
+#include "escape.h"
 
 #include <unistd.h>
 #include <poll.h>
@@ -7,6 +8,7 @@ size_t x = 0;
 size_t y = 0;
 
 int doing_escape = 0;
+enum tty_mode mode = TTY_COOKED;
 
 void putchar(char c, uint32_t fg)
 {
@@ -95,11 +97,12 @@ struct keyboard_event
 };
 
 static uint32_t scancode_map[128] = {
-    0, -1, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',
-    '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', -2,
+    0, -ESC_ESC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',
+    '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', -ESC_CTRL,
     'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`',
-    -3, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', -4,
-    '*', -5, ' '
+    -ESC_SHIFT, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', -ESC_SHIFT,
+    '*', 0, ' ', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    -ESC_UP, 0, '-', -ESC_LEFT, 0, -ESC_RIGHT, '+', 0, -ESC_DOWN
 };
 
 void mainloop(int stdoutfds[2], int stdinfds[2])
@@ -118,11 +121,28 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
             {
                 for (int i = 0; i < sz / sizeof (struct keyboard_event); ++i)
                 {
-                    uint32_t ch = scancode_map[kbuf[i].scancode];
-                    if (kbuf[i].mode & 0x80)
+                    int ch = scancode_map[kbuf[i].scancode];
+                    switch (mode)
                     {
-                        char c = ch;
-                        write(stdinfds[1], &c, 1);
+                        case TTY_RAW:
+                        {
+                            if (ch < 0)
+                            {
+                                char c = -ch;
+                                if (mode & 0x80) c |= 0x80;
+                                write(stdinfds[1], &c, 1);
+                                break;
+                            }
+                        }
+                        case TTY_COOKED:
+                        {
+                            if (!(kbuf[i].mode & 0x80))
+                            {
+                                char c = ch;
+                                write(stdinfds[1], &c, 1);
+                            }
+                            break;
+                        }
                     }
                 }
             }

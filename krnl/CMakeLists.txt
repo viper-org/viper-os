@@ -32,6 +32,7 @@ set(SOURCES
     "source/syscall/file/dup.c"
     "source/syscall/file/mkdir.c"
     "source/syscall/mem/mmap.c"
+    "source/syscall/mem/munmap.c"
     "source/syscall/proc/getcwd.c"
     "source/syscall/proc/chdir.c"
     "source/syscall/sched/yield.c"

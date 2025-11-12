@@ -131,7 +131,7 @@ void init_library(const char *path)
     *((uint64_t *)libs[lib_idx].got + 2) = (uint64_t)resolve_sym_i;
 
     close(fd);
-    // munmap(mem)
+    munmap(mem, b.st_size);
 }
 
 uint32_t gnu_hash(const char *s)

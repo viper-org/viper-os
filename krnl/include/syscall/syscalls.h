@@ -26,6 +26,7 @@ int sys_mkdir(const char *path); // todo: mode?
 
 
 void *sys_mmap(void *addr, size_t len, int prot, int flags, int fd, long offset);
+int sys_munmap(void *addr, size_t len);
 
 
 void sys_yield(void);

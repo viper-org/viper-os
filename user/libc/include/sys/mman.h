@@ -10,5 +10,6 @@ enum mmap_flags
 };
 
 void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
+int munmap(void *addr, size_t length);
 
 #endif // VIPEROS_LIBC_SYS_MMAN

@@ -20,6 +20,11 @@ void *mmap(void *addr, unsigned long length, int prot, int flags, int fd)
     return ret;
 }
 
+void munmap(void *addr, unsigned long length)
+{
+    __asm__ volatile("syscall" :: "a"(11), "D"(addr), "S"(length) : "r11", "rcx");
+}
+
 static inline int open(const char *path, unsigned short mode)
 {
     int ret;

@@ -66,4 +66,6 @@ uint64_t vm_get_phys(struct addrspace *a, uint64_t virt);
 void* vm_getpage(struct addrspace *);
 void* vm_getpages(struct addrspace *, uint32_t count, uint16_t flags, struct vnode *map);
 
+void vm_freepages(struct addrspace *, void *pages, uint32_t count);
+
 #endif // VIPEROS_MM_VM

@@ -312,6 +312,34 @@ void *vm_getpages(struct addrspace *a, uint32_t count, uint16_t vma_flags, struc
     return (void *)base;
 }
 
+void vm_freepages(struct addrspace *a, void *pages, uint32_t count)
+{
+    (void)count;
+    if (!a) a = &k_addrspace;
+
+    /*struct vm_allocator_node *node = kheap_alloc(sizeof (struct vm_allocator_node));
+    node->base = (uint64_t)pages;
+    node->nPages = count;
+    node->next = a->fl;
+    a->fl = node;*/
+    // todo: free backed pages and address space structures in kernel worker thread
+
+    struct vma *vma = a->vma_ll;
+    struct vma *prev = NULL;
+    while (vma)
+    {
+        if (vma->base == (uint64_t)pages)
+        {
+            if (prev) prev->next = vma->next;
+            else a->vma_ll = vma->next;
+
+            vma->next = NULL;
+        }
+        prev = vma;
+        vma = vma->next;
+    }
+}
+
 
 uint64_t KeGetPhysicalAddress(uint64_t virt)
 {

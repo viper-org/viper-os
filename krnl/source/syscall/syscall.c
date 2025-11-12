@@ -68,6 +68,10 @@ void syscall_dispatcher(struct syscall_frame *frame)
             frame->rax = (uint64_t)sys_mmap((void *)frame->rdi, frame->rsi, frame->rdx, frame->r10, frame->r8, frame->r9);
             break;
 
+        case 11:
+            frame->rax = sys_munmap((void *)frame->rdi, frame->rsi);
+            break;
+
         case 12:
             frame->rax = sys_waitpid(frame->rdi, (int *)frame->rsi, frame->rdx);
             break;
