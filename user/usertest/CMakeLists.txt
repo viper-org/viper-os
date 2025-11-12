@@ -42,6 +42,7 @@ set(PROGRAMS
     "mkdir"
     "pwd"
     "touch"
+    "cat"
 )
 
 foreach (PROG IN LISTS PROGRAMS)
