@@ -62,6 +62,7 @@ set(HEADERS
     "include/string.h"
     "include/stdio.h"
     "include/stdlib.h"
+    "include/stdint.h"
 )
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../sysroot/lib)
