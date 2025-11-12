@@ -11,12 +11,16 @@
 size_t x = 0;
 size_t y = 0;
 
+void scroll(void);
+
 int doing_escape = 0;
 char escapebuf[16];
 int escapebufp = 0;
 enum tty_mode mode = TTY_COOKED;
 char *linebuf;
 int linebufp;
+
+char *charbuf;
 
 void end_escape(void)
 {
@@ -89,6 +93,11 @@ void putchar(char c, uint32_t fg)
         return;
     }
 
+    if (y >= get_vert() / 8)
+    {
+        scroll();
+    }
+
     switch(c)
     {
         case '\0': break;
@@ -104,6 +113,7 @@ void putchar(char c, uint32_t fg)
             --x;
             if (x < 0) --y, x = get_horiz() / 8;
             plot_char(' ', x, y, fg, 0);
+            charbuf[x + y * get_horiz() / 8] = 0;
             break;
         }
         case '\x1b':
@@ -114,6 +124,7 @@ void putchar(char c, uint32_t fg)
         default:
         {
             plot_char(c, x, y, fg, 0);
+            charbuf[x + y * get_horiz() / 8] = c;
             if (++x >= get_horiz() / 8)
             {
                 x = 0;
@@ -135,6 +146,25 @@ void putstr(const char* str, uint32_t fg)
 {
     while(*str)
         putchar(*str++, fg);
+}
+
+void scroll(void)
+{
+    clear_screen();
+
+
+    for (int x = 0; x < get_horiz() / 8; ++x)
+    {
+        for (int y = 0; y < get_vert() / 8 - 1; ++y)
+        {
+            charbuf[x + y * get_horiz() / 8] = charbuf[x + (y + 1) * get_horiz() / 8];
+            plot_char(charbuf[x + y * get_horiz() / 8], x, y, 0xfffffff, 0);
+        }
+    }
+    int last_y = get_vert() / 8 - 1;
+    memset(charbuf + last_y * get_horiz() / 8, 0, get_horiz() / 8);
+
+    --y;
 }
 
 void setup_pipes(int stdoutfds[2], int stdinfds[2])
@@ -272,6 +302,7 @@ int main()
 
     linebuf = malloc(512);
     linebufp = 0;
+    charbuf = malloc((get_vert() * get_horiz()) / 64);
 
     int stdoutfds[2];
     int stdinfds[2];
