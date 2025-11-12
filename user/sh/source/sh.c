@@ -1,3 +1,5 @@
+#include "lexer.h"
+
 #include <poll.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -65,51 +67,30 @@ int main(void)
             }
         }
 
-        int len = strlen(buf);
-        int brks = 1;
-        for (int i = 0; i < len; ++i)
+        struct lexer l;
+        l.l = buf;
+        lex(&l);
+        char **argv = malloc(sizeof (char *) * (l.ntok + 1));
+        for (int i = 0; i < l.ntok; ++i)
         {
-            if (buf[i] == ' ')
-            {
-                buf[i++] = 0;
-                ++brks;
-                while (buf[i] == ' ') buf[i++] = 0;
-                if (i >= len) --brks; // reached end of string, so there isnt an arg here
-            }
+            argv[i] = l.toks[i].text;
         }
-        char **argv = malloc((brks + 1) * sizeof(char *));
-        char **argvp = argv;
+        argv[l.ntok] = NULL;
 
-        *(argvp++) = buf;
-        for (int i = 0; i < len-1; ++i)
-        {
-            if (buf[i] == 0)
-            {
-                while (buf[i] == 0) ++i;
-                if (i >= len) break; // trailing spaces
-                *(argvp++) = &buf[i];
-            }
-        }
-        *argvp = NULL;
-
-        if (!strcmp(buf+5, "cd"))
-        {
-            cd(brks, argv);
-            continue;
-        }
-
-        int fd = open(buf, O_RDWR);
+        int fd = open(argv[0], O_RDWR);
         if (fd >= 0)
         {
             close(fd);
-            int pid = spawn(buf, brks, argv);
+            int pid = spawn(l.toks[0].text, l.ntok, argv);
             int _;
             waitpid(pid, &_, 0);
         }
         else
         {
-            printf("%s: command not found\n", buf+5);
+            printf("%s: command not found\n", argv[0] + 5);
         }
+        free(argv);
+        lexer_cleanup(&l);
     }
     _exit(0);
 }

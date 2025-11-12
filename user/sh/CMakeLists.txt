@@ -16,7 +16,6 @@ set(COMPILER_OPTIONS
     "-Wpedantic"
     "-O0"
     "-nostdinc"
-    "-nostdlib"
     "-fno-stack-protector"
     "-fno-stack-check"
     "-fno-lto"
@@ -29,25 +28,23 @@ set(COMPILER_OPTIONS
     "-mno-sse"
     "-mno-sse2"
     "-mno-red-zone"
-    "--sysroot=../sysroot "
+    "--sysroot=../sysroot"
+)
+
+set(SOURCES
+    "source/sh.c"
+    "source/lexer.c"
+)
+
+set(HEADERS
+    "include/lexer.h"
 )
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../sysroot/bin)
 
-set(PROGRAMS
-    "sh"
-    "ls"
-    "echo"
-    "hello"
-    "mkdir"
-    "pwd"
-    "touch"
-    "cat"
-)
+add_executable(sh ${SOURCES} ${HEADERS})
+target_link_libraries(sh PRIVATE c)
+target_include_directories(sh PRIVATE include)
 
-foreach (PROG IN LISTS PROGRAMS)
-    add_executable(${PROG} ${PROG}.c)
-    target_link_libraries(${PROG} PRIVATE c)
-    target_link_options(${PROG} PRIVATE ${LINKER_OPTIONS})
-    target_compile_options(${PROG} PRIVATE ${COMPILER_OPTIONS})
-endforeach()
+target_link_options(sh PRIVATE ${LINKER_OPTIONS})
+target_compile_options(sh PRIVATE ${COMPILER_OPTIONS})
