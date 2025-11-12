@@ -71,8 +71,10 @@ int main(void)
         {
             if (buf[i] == ' ')
             {
-                buf[i] = 0;
+                buf[i++] = 0;
                 ++brks;
+                while (buf[i] == ' ') buf[i++] = 0;
+                if (i >= len) --brks; // reached end of string, so there isnt an arg here
             }
         }
         char **argv = malloc((brks + 1) * sizeof(char *));
@@ -83,8 +85,9 @@ int main(void)
         {
             if (buf[i] == 0)
             {
-                *(argvp++) = &buf[i+1];
                 while (buf[i] == 0) ++i;
+                if (i >= len) break; // trailing spaces
+                *(argvp++) = &buf[i];
             }
         }
         *argvp = NULL;
