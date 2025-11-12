@@ -53,6 +53,38 @@ void putchar(char c, uint32_t fg)
                 end_escape();
                 return;
             }
+            else
+            {
+                int i = 1;
+                while (isdigit(escapebuf[i]) && i < escapebufp) ++i;
+                int n = atoi(escapebuf+1);
+                switch (escapebuf[i])
+                {
+                    case 'A':
+                    {
+                        y -= n;
+                        break;
+                    }
+                    case 'B':
+                    {
+                        y += n;
+                        break;
+                    }
+                    case 'C':
+                    {
+                        x += n;
+                        break;
+                    }
+                    case 'D':
+                    {
+                        x -= n;
+                        break;
+                    }
+                    default: return;
+                }
+                end_escape();
+                return;
+            }
         }
         return;
     }

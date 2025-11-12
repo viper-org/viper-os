@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -166,4 +167,18 @@ lldiv_t lldiv(long long int numer, long long int denom)
         .quot = numer / denom,
         .rem = numer % denom
     };
+}
+
+
+int atoi(const char *str)
+{
+    int ret = 0;
+    int i = 0;
+    while (isdigit(str[i]))
+    {
+        ret *= 10;
+        ret += str[i] - '0';
+        ++i;
+    }
+    return ret;
 }

@@ -34,4 +34,9 @@ div_t div(int numer, int denom);
 ldiv_t ldiv(long int numer, long int denom);
 lldiv_t lldiv(long long int numer, long long int denom);
 
+
+int atoi(const char *str);
+long atol(const char *str);
+long long atoll(const char *str);
+
 #endif // VIPEROS_LIBC_STDLIB
