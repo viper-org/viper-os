@@ -1,6 +1,7 @@
 #include "screen.h"
 #include "escape.h"
 
+#include <ctype.h>
 #include <unistd.h>
 #include <poll.h>
 
@@ -105,6 +106,17 @@ static uint32_t scancode_map[128] = {
     -ESC_UP, 0, '-', -ESC_LEFT, 0, -ESC_RIGHT, '+', 0, -ESC_DOWN
 };
 
+static uint32_t scancode_map_shift[128] = {
+    0, -ESC_ESC, '!', '"', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '\b',
+    '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', -ESC_CTRL,
+    'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ':', '@', '|',
+    -ESC_SHIFT, '|', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '<', '>', '?', -ESC_SHIFT,
+    '*', 0, ' ', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    -ESC_UP, 0, '-', -ESC_LEFT, 0, -ESC_RIGHT, '+', 0, -ESC_DOWN
+};
+
+int shift_down = 0;
+
 void mainloop(int stdoutfds[2], int stdinfds[2])
 {
     struct keyboard_event kbuf[32];
@@ -122,6 +134,12 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
                 for (int i = 0; i < sz / sizeof (struct keyboard_event); ++i)
                 {
                     int ch = scancode_map[kbuf[i].scancode];
+                    if (shift_down) ch = toupper(scancode_map_shift[kbuf[i].scancode]);
+                    if (ch == -ESC_SHIFT)
+                    {
+                        if (kbuf[i].mode & 0x80) shift_down = 0;
+                        else shift_down = 1;
+                    }
                     switch (mode)
                     {
                         case TTY_RAW:
@@ -139,7 +157,8 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
                             if (!(kbuf[i].mode & 0x80))
                             {
                                 char c = ch;
-                                write(stdinfds[1], &c, 1);
+                                if (ch > 0)
+                                    write(stdinfds[1], &c, 1);
                             }
                             break;
                         }
@@ -167,6 +186,7 @@ int main()
     int stdoutfds[2];
     int stdinfds[2];
     setup_pipes(stdoutfds, stdinfds);
-    spawn("/bin/sh", 1, argv);
+    struct spawn spawnbuf = { -1, -1, -1 };
+    spawn("/bin/sh", 1, argv, &spawnbuf);
     mainloop(stdoutfds, stdinfds);
 }

@@ -53,7 +53,22 @@ struct token lexer_next(struct lexer *l)
         lexer_consume(l);
         return lexer_next(l);
     }
-    return (struct token) {
+    switch (lexer_current(l))
+    {
+        case '>':
+            // todo: >>
+            return (struct token) {
+                .type = TOK_PIPER,
+                .text = NULL
+            };
+
+        case 0:
+            return (struct token) {
+                .type = TOK_EOF,
+                .text = NULL
+            };
+    }
+    return (struct token) { // todo: return TOK_BAD
         .type = TOK_EOF,
         .text = NULL
     };

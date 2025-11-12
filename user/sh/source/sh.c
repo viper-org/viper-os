@@ -70,10 +70,28 @@ int main(void)
         struct lexer l;
         l.l = buf;
         lex(&l);
-        char **argv = malloc(sizeof (char *) * (l.ntok + 1));
+        int argc = 0;
+        int stdoutfd = SPAWN_INHERITFD;
         for (int i = 0; i < l.ntok; ++i)
         {
-            argv[i] = l.toks[i].text;
+            if (l.toks[i].type == TOK_STR) ++argc;
+            if (l.toks[i].type == TOK_PIPER)
+            {
+                ++i;
+                if (l.toks[i].type != TOK_STR)
+                {
+                    fputs("sh: expected a file after '>'\n", stderr);
+                    lexer_cleanup(&l);
+                    continue;
+                }
+                stdoutfd = open(l.toks[i++].text, O_WRONLY | O_CREAT);
+            }
+        }
+        char **argv = malloc(sizeof (char *) * (argc + 1));
+        for (int i = 0; i < l.ntok; ++i)
+        {
+            if (l.toks[i].type == TOK_STR)
+                argv[i] = l.toks[i].text;
         }
         argv[l.ntok] = NULL;
 
@@ -81,7 +99,8 @@ int main(void)
         if (fd >= 0)
         {
             close(fd);
-            int pid = spawn(l.toks[0].text, l.ntok, argv);
+            struct spawn spawnbuf = { -1, stdoutfd, -1 };
+            int pid = spawn(l.toks[0].text, argc, argv, &spawnbuf);
             int _;
             waitpid(pid, &_, 0);
         }
@@ -91,6 +110,7 @@ int main(void)
         }
         free(argv);
         lexer_cleanup(&l);
+        if (stdoutfd >= 0) close(stdoutfd);
     }
     _exit(0);
 }

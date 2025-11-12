@@ -1,9 +1,9 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 
-pid_t spawn(const char *path, int argc, char **argv)
+pid_t spawn(const char *path, int argc, char **argv, struct spawn *spawnbuf)
 {
-    return syscall3(SYS_spawn, (uint64_t)path, argc, (uint64_t)argv);
+    return syscall4(SYS_spawn, (uint64_t)path, argc, (uint64_t)argv, (uint64_t)spawnbuf);
 }
 
 pid_t getpid(void)

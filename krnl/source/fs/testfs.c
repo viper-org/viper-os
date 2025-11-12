@@ -138,14 +138,15 @@ static enum vfs_error testfs_read(struct vnode *node, void *data, size_t* sz, si
 static enum vfs_error testfs_write(struct vnode *node, const void *data, size_t sz, size_t seek)
 {
     if (node->type == VNODE_DIR) return VFS_IS_DIR;
+    if (!sz) return VFS_SUCCESS;
 
     struct testfs_file *file = node->impl;
     char *olddata = file->data;
     
-    file->data = kheap_alloc(sz);
+    file->data = kheap_alloc(sz + seek);
     memcpy(file->data, olddata, seek);
     memcpy(file->data + seek, data, sz);
-    file->length = sz;
+    file->length = sz + seek;
 
     kheap_free(olddata);
     return VFS_SUCCESS;

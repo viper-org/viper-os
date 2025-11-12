@@ -13,7 +13,7 @@
 
 #include <string.h>
 
-int sys_spawn(const char *path, int argc, char **argv)
+int sys_spawn(const char *path, int argc, char **argv, struct spawn *spawnbuf)
 {
     struct process *parent = sched_curr()->owner;
 
@@ -58,6 +58,13 @@ int sys_spawn(const char *path, int argc, char **argv)
     kheap_free(argv_copy);
 
     memcpy(proc->fds, parent->fds, sizeof proc->fds);
+
+    if (spawnbuf->infd >= 0)
+        proc->fds[0] = parent->fds[spawnbuf->infd];
+    if (spawnbuf->outfd >= 0)
+        proc->fds[1] = parent->fds[spawnbuf->outfd];
+    if (spawnbuf->errfd >= 0)
+        proc->fds[2] = parent->fds[spawnbuf->errfd];
 
     return proc->pid;
 }

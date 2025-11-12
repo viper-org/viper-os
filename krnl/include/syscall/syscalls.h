@@ -5,6 +5,13 @@
 
 #include <stdint.h>
 
+struct spawn
+{
+    int infd; // a value of -1 for these inherits from the parent
+    int outfd;
+    int errfd;
+};
+
 ssize_t sys_read(int fd, void *buf, size_t count);
 ssize_t sys_write(int fd, const void *buf, size_t count);
 int sys_open(const char *path, uint16_t openmode);
@@ -34,6 +41,6 @@ void sys_exit(int code);
 int sys_waitpid(int pid, int *status, int options);
 int sys_getpid(void);
 int sys_getppid(void);
-int sys_spawn(const char *path, int argc, char **argv); // todo: argc, argv, envp
+int sys_spawn(const char *path, int argc, char **argv, struct spawn *spawnbuf);
 
 #endif // VIPEROS_SYSCALL_SYSCALLS

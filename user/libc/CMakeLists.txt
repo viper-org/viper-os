@@ -32,6 +32,7 @@ set(SOURCES
     "source/sys/mman.c"
     "source/sys/ioctl.c"
     "source/sys/wait.c"
+    "source/sys/stat.c"
     "source/sys/syscall.s"
 
     "source/unistd/file.c"
@@ -52,6 +53,7 @@ set(HEADERS
     "include/sys/mman.h"
     "include/sys/ioctl.h"
     "include/sys/wait.h"
+    "include/sys/stat.h"
     "include/sys/syscall.h"
 
     "include/poll.h"

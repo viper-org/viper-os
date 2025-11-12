@@ -16,6 +16,10 @@ void *memset(void *d, int ch, size_t sz)
 
 void *memcpy(void *d, const void *s, size_t sz)
 {
+    if (!s && sz)
+    {
+        int a = 3;
+    }
     char *a = d;
     const char *b = s;
     for (size_t i = 0; i < sz; ++i)

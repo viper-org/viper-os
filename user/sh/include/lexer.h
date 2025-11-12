@@ -8,6 +8,7 @@
 enum token_type
 {
     TOK_STR,
+    TOK_PIPER,
     TOK_EOF
 };
 

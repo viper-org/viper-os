@@ -28,9 +28,12 @@ enum
 #define SEEK_CUR 1
 #define SEEK_END 2
 
-struct stat
+#define SPAWN_INHERITFD -1
+struct spawn
 {
-    size_t st_size;
+    int infd; // a value of SPAWN_INHERITFD for these inherits from the parent
+    int outfd;
+    int errfd;
 };
 
 struct elf_exec
@@ -50,7 +53,7 @@ int open(const char *path, int flags);
 int close(int fd);
 off_t lseek(int fd, off_t offset, int whence);
 int pipe(int pipefd[2]);
-pid_t spawn(const char *path, int argc, char **argv);
+pid_t spawn(const char *path, int argc, char **argv, struct spawn *spawnbuf);
 int dup(int fd);
 int dup2(int oldfd, int newfd);
 pid_t getpid(void);
