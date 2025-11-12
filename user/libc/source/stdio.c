@@ -8,6 +8,7 @@ struct FILE_internal
 {
     int fd;
     fpos_t pos;
+    int eof;
 };
 
 struct FILE_internal stdin_internal;
@@ -61,9 +62,9 @@ static inline char *itoa(unsigned long n, char *buf, int r)
 
 void libc_stdio_init(void)
 {
-    stdin_internal =  (FILE){.fd = 0, .pos = 0};
-    stdout_internal = (FILE){.fd = 1, .pos = 0};
-    stderr_internal = (FILE){.fd = 1, .pos = 0}; // todo: add proper stderr
+    stdin_internal =  (FILE){.fd = 0, .pos = 0, .eof = 0};
+    stdout_internal = (FILE){.fd = 1, .pos = 0, .eof = 0};
+    stderr_internal = (FILE){.fd = 1, .pos = 0, .eof = 0}; // todo: add proper stderr
 }
 
 
@@ -137,7 +138,13 @@ int fclose(FILE *stream)
 
 int fputs(const char *restrict str, FILE *restrict stream)
 {
-    return write(stream->fd, str, strlen(str));
+    int ret = write(stream->fd, str, strlen(str));
+    if (ret < 0)
+    {
+        stream->eof = 1;
+        return EOF;
+    }
+    return ret;
     // todo: set error
 }
 
@@ -145,7 +152,12 @@ int fputc(int ch, FILE *stream)
 {
     unsigned char c = ch;
     int ret = write(stream->fd, &c, 1);
-    if (ret < 0) return EOF;
+    if (ret < 0)
+    {
+        stream->eof = 1;
+        return EOF;
+    }
+    stream->eof = 0;
     return ch;
 }
 
@@ -159,7 +171,12 @@ int fgetc(FILE *stream)
 {
     char c;
     int res = read(stream->fd, &c, 1);
-    if (res <= 0) return EOF;
+    if (res <= 0)
+    {
+        stream->eof = 1;
+        return EOF;
+    }
+    stream->eof = 0;
     return c;
 }
 
@@ -172,14 +189,24 @@ int getc(FILE *stream)
 size_t fwrite(const void *restrict buffer, size_t size, size_t count, FILE *restrict stream)
 {
     int ret = write(stream->fd, buffer, size * count);
-    if (ret < 0) return 0;
+    if (ret < 0)
+    {
+        stream->eof = 1;
+        return 0;
+    }
+    stream->eof = 0;
     return ret / size;
 }
 
 size_t fread(void *restrict buffer, size_t size, size_t count, FILE *restrict stream)
 {
     int ret = read(stream->fd, buffer, size * count);
-    if (ret < 0) return 0;
+    if (ret < 0)
+    {
+        stream->eof = 1;
+        return 0;
+    }
+    stream->eof = 0;
     return ret / size;
 }
 
@@ -189,6 +216,12 @@ int puts(const char *str)
     int count = fputs(str, stdout);
     count += fputc('\n', stdout);
     return count;
+}
+
+
+int feof(FILE *stream)
+{
+    return stream->eof;
 }
 
 

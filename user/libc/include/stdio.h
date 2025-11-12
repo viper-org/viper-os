@@ -40,6 +40,9 @@ size_t fread(void *restrict buffer, size_t size, size_t count, FILE *restrict st
 int puts(const char *str);
 
 
+int feof(FILE *stream);
+
+
 int printf(const char *restrict format, ...);
 int fprintf(FILE *restrict stream, const char *restrict format, ...);
 int vprintf(const char *restrict format, va_list arg);
