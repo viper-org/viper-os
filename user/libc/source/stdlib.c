@@ -1,6 +1,8 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "sys/mman.h"
+#include "unistd.h"
 
 struct heap_header
 {
@@ -77,8 +79,91 @@ void *malloc(size_t size)
     return libc_allocate(size);
 }
 
+void *calloc(size_t nmemb, size_t size)
+{
+    void *mem = libc_allocate(nmemb * size);
+    memset(mem, 0, nmemb * size);
+    return mem;
+}
+
+void *realloc(void *ptr, size_t size)
+{
+    // todo: check if there is a block immediately after to combine
+    void *new = libc_allocate(size);
+    size_t min = size;
+    struct heap_header *old = (struct heap_header *)(ptr) - 1;
+    if (old->size < min) min = old->size;
+
+    memcpy(new, ptr, min);
+    free(ptr);
+    return new;
+}
 
 void free(void *ptr)
 {
     libc_free(ptr);
+}
+
+
+void abort(void)
+{
+    _exit(1); // TODO: kill(SIGABRT)
+}
+
+// todo: cleanup and call atexits
+void exit(int exit_code)
+{
+    _exit(exit_code);
+}
+
+void quick_exit(int exit_code)
+{
+    _exit(exit_code);
+}
+
+void _Exit(int exit_code)
+{
+    _exit(exit_code);
+}
+
+
+
+int abs(int j)
+{
+    return (j < 0) ? -j : j;
+}
+
+long int labs(long int j)
+{
+    return (j < 0) ? -j : j;
+}
+
+long long int llabs(long long int j)
+{
+    return (j < 0) ? -j : j;
+}
+
+
+div_t div(int numer, int denom)
+{
+    return (div_t) {
+        .quot = numer / denom,
+        .rem = numer % denom
+    };
+}
+
+ldiv_t ldiv(long int numer, long int denom)
+{
+    return (ldiv_t) {
+        .quot = numer / denom,
+        .rem = numer % denom
+    };
+}
+
+lldiv_t lldiv(long long int numer, long long int denom)
+{
+    return (lldiv_t) {
+        .quot = numer / denom,
+        .rem = numer % denom
+    };
 }
