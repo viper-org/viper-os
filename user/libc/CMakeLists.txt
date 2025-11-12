@@ -45,6 +45,7 @@ set(SOURCES
     "source/string.c"
     "source/stdio.c"
     "source/stdlib.c"
+    "source/ctype.c"
 )
 
 set(HEADERS
@@ -63,6 +64,7 @@ set(HEADERS
     "include/stdio.h"
     "include/stdlib.h"
     "include/stdint.h"
+    "include/ctype.h"
 )
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../sysroot/lib)
