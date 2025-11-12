@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 
@@ -66,6 +67,74 @@ void libc_stdio_init(void)
 }
 
 
+static inline int get_flags(const char *mode)
+{
+    int flags = 0;
+    if (!strcmp(mode, "r"))
+    {
+        flags = O_RDONLY;
+    }
+    else if (!strcmp(mode, "w"))
+    {
+        flags = O_WRONLY | O_CREAT;
+    }
+    else if (!strcmp(mode, "a"))
+    {
+        flags = O_WRONLY | O_APPEND | O_CREAT;
+    }
+    else if (!strcmp(mode, "r+"))
+    {
+        flags = O_RDWR;
+    }
+    else if (!strcmp(mode, "w+"))
+    {
+        flags = O_RDWR | O_CREAT;
+    }
+    else if (!strcmp(mode, "a+"))
+    {
+        flags = O_RDWR | O_APPEND | O_CREAT;
+    }
+    return flags;
+}
+
+FILE *fopen(const char *restrict filename, const char *restrict mode)
+{
+    int flags = get_flags(mode);
+    int fd = open(filename, flags);
+    if (fd < 0) return NULL;
+
+    FILE *f = malloc(sizeof (struct FILE_internal));
+    f->fd = fd;
+    f->pos = 0;
+
+    return f;
+}
+
+FILE *freopen(const char *restrict filename, const char *restrict mode, FILE *restrict stream)
+{
+    close(stream->fd);
+
+    int flags = get_flags(mode);
+    int fd = open(filename, flags);
+    if (fd < 0)
+    {
+        free(stream);
+        return NULL;
+    }
+
+    stream->fd = fd;
+    stream->pos = 0;
+    return stream;
+}
+
+int fclose(FILE *stream)
+{
+    int ret = close(stream->fd);
+    free(stream);
+    return ret;
+}
+
+
 int fputs(const char *restrict str, FILE *restrict stream)
 {
     return write(stream->fd, str, strlen(str));
@@ -86,9 +155,30 @@ int putc(int ch, FILE *stream)
 }
 
 
-size_t fwrite(const void *restrict buffer, unsigned long size, unsigned long count, FILE *restrict stream)
+int fgetc(FILE *stream)
+{
+    char c;
+    int res = read(stream->fd, &c, 1);
+    if (res <= 0) return EOF;
+    return c;
+}
+
+int getc(FILE *stream)
+{
+    return fgetc(stream);
+}
+
+
+size_t fwrite(const void *restrict buffer, size_t size, size_t count, FILE *restrict stream)
 {
     int ret = write(stream->fd, buffer, size * count);
+    if (ret < 0) return 0;
+    return ret / size;
+}
+
+size_t fread(void *restrict buffer, size_t size, size_t count, FILE *restrict stream)
+{
+    int ret = read(stream->fd, buffer, size * count);
     if (ret < 0) return 0;
     return ret / size;
 }

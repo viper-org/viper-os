@@ -17,12 +17,24 @@ extern struct FILE_internal stderr_internal;
 #define stdout (&stdout_internal)
 #define stderr (&stderr_internal)
 
+FILE *fopen(const char *restrict filename, const char *restrict mode);
+FILE *freopen(const char *restrict filename, const char *restrict mode, FILE *restrict stream);
+
+int fclose(FILE *stream);
+
+
 int fputs(const char *restrict str, FILE *restrict stream);
 int fputc(int ch, FILE *stream);
 int putc(int ch, FILE *stream);
 
 
+int fgetc(FILE *stream);
+int getc(FILE *stream);
+
+
 size_t fwrite(const void *restrict buffer, size_t size, size_t count, FILE *restrict stream);
+
+size_t fread(void *restrict buffer, size_t size, size_t count, FILE *restrict stream);
 
 
 int puts(const char *str);
