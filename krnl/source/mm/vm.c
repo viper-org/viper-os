@@ -2,7 +2,7 @@
 #include "mm/pm.h"
 #include "mm/kheap.h"
 
-#include "sched/procfd.h"
+#include "fs/vfs.h"
 
 #include <limine.h>
 
@@ -76,7 +76,57 @@ struct addrspace make_addrspace(void)
     ret.fl->nPages = NPAGES(0x00007FFFFFFFE000 - 0x1000);
     ret.fl->next = NULL;
 
+    ret.vma_ll = NULL;
+
     return ret;
+}
+
+static inline void pt_free_layer(uint64_t *pt, int n)
+{
+    int max = (n == 4) ? 256 : 512;
+    for (int i = 0; i < max; ++i)
+    {
+        if (pt[i] & PT_PRESENT)
+        {
+            if (n > 1)
+            {
+                uint64_t *ptl = vm_phystovirt(get_pt_address(pt[i]));
+                pt_free_layer(ptl, n-1);
+            }
+            pm_freepage(pt[i]);
+        }
+    }
+}
+
+void free_addrspace(struct addrspace *a)
+{
+    struct vma *vma = a->vma_ll;
+    while (vma)
+    {
+        struct vma *next = vma->next;
+
+        for (size_t i = 0; i < vma->npages; ++i)
+        {
+            physaddr_t phys = vm_get_phys(a, vma->base + i * 0x1000);
+            pm_freepage(phys);
+            // might be better to free the pagetables here as well?
+        }
+
+        kheap_free(vma);
+        vma = next;
+    }
+
+    struct vm_allocator_node *node = a->fl;
+    while (node)
+    {
+        struct vm_allocator_node *next = node->next;
+        kheap_free(node);
+        node = next;
+    }
+
+    uint64_t *pt = vm_phystovirt(a->pml4);
+    pt_free_layer(pt, 4);
+    pm_freepage(a->pml4);
 }
 
 static inline physaddr_t get_page_level(void)

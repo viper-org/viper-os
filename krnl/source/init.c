@@ -24,6 +24,7 @@
 #include "sched/proc.h"
 #include "sched/sched.h"
 #include "syscall/stat.h"
+#include "thread/proc.h"
 
 #include <string.h>
 
@@ -77,6 +78,8 @@ void _start(void)
     sched_addproc(proc);
 
     vm_switch_to(prev);
+
+    kthread_proc_init();
     
     sched_start();
     

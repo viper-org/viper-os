@@ -13,8 +13,7 @@ void start_idle_proc(void);
 
 void sched_start(void)
 {
-    init_proc(&idle_proc, "/");
-    idle_proc.main_thread.ctx->rip = (uint64_t)start_idle_proc;
+    init_kproc(&idle_proc, (uint64_t)start_idle_proc);
 
     head->timeslice = 3;
     struct thread_context *old;

@@ -54,6 +54,7 @@ struct addrspace *vm_get_addrspace(void);
 void vm_switch_to(struct addrspace *a);
 void vm_set_curr(struct addrspace *a); // set vm_get_addrspace() but don't switch cr3
 struct addrspace make_addrspace(void);
+void free_addrspace(struct addrspace *a);
 
 void vm_init(void);
 void vm_allocator_init(void);

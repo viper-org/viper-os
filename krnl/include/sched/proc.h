@@ -46,20 +46,25 @@ struct process
     int ppid;
     struct thread main_thread;
     struct addrspace addr_space;
+    int has_addrspace;
 
     struct proc_fd fds[NFD];
     char *cwd;
 
-    struct process *next; // linked list
+    struct process *next;
+    struct process *prev;
 };
 
 void init_proc(struct process *proc, const char *wd);
+void init_kproc(struct process *proc, uint64_t entry);
 struct process *alloc_proc(int ppid, const char *wd);
 
 int proc_addfd(struct process *proc, struct vnode *node, enum openmode mode);
 int proc_add_pipefd(struct process *proc, struct pipe *pipe);
 int proc_get_freefd(struct process *proc);
+
 struct process *find_proc(int pid);
+struct process **proc_get_done(void);
 
 void thread_kill(struct thread *t, int code);
 
