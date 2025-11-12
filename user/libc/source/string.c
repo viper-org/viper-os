@@ -24,6 +24,19 @@ void *memset(void *d, int ch, size_t size)
     return d;
 }
 
+int memcmp(const void *a, const void *b, size_t sz)
+{
+    const char *x = a;
+    const char *y = b;
+    while (*x == *y && sz)
+    {
+        ++x;
+        ++y;
+        --sz;
+    }
+    return *x - *y;
+}
+
 
 int strcmp(const char *s1, const char *s2)
 {

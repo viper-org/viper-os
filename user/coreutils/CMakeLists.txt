@@ -42,6 +42,7 @@ set(PROGRAMS
     "pwd"
     "touch"
     "cat"
+    "clear"
 )
 
 foreach (PROG IN LISTS PROGRAMS)

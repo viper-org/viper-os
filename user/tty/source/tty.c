@@ -1,7 +1,10 @@
 #include "screen.h"
 #include "escape.h"
+#include "sys/syscall.h"
 
 #include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <poll.h>
 
@@ -9,14 +12,48 @@ size_t x = 0;
 size_t y = 0;
 
 int doing_escape = 0;
+char escapebuf[16];
+int escapebufp = 0;
 enum tty_mode mode = TTY_COOKED;
+char *linebuf;
+int linebufp;
+
+void end_escape(void)
+{
+    doing_escape = 0;
+    memset(escapebuf, 0, escapebufp);
+    escapebufp = 0;
+}
 
 void putchar(char c, uint32_t fg)
 {
+    syscall1(68, c);
     if (doing_escape)
     {
-        if (c == 'f') flush();
-        doing_escape = 0;
+        escapebuf[escapebufp++] = c;
+
+        if (escapebuf[0] == 'M' && escapebufp >= 2)
+        {
+            if (escapebuf[1] == 'r') mode = TTY_RAW;
+            else mode = TTY_COOKED;
+            end_escape();
+            return;
+        }
+        else if (escapebuf[0] == '[')
+        {
+            if (!memcmp(escapebuf, "[2J", 3))
+            {
+                clear_screen();
+                end_escape();
+                return;
+            }
+            else if (escapebuf[1] == 'H')
+            {
+                x = y = 0;
+                end_escape();
+                return;
+            }
+        }
         return;
     }
 
@@ -134,12 +171,7 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
                 for (int i = 0; i < sz / sizeof (struct keyboard_event); ++i)
                 {
                     int ch = scancode_map[kbuf[i].scancode];
-                    if (shift_down) ch = toupper(scancode_map_shift[kbuf[i].scancode]);
-                    if (ch == -ESC_SHIFT)
-                    {
-                        if (kbuf[i].mode & 0x80) shift_down = 0;
-                        else shift_down = 1;
-                    }
+                    syscall1(68, doing_escape);
                     switch (mode)
                     {
                         case TTY_RAW:
@@ -149,16 +181,39 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
                                 char c = -ch;
                                 if (mode & 0x80) c |= 0x80;
                                 write(stdinfds[1], &c, 1);
-                                break;
                             }
+                            else
+                            {
+                                if (!(kbuf[i].mode & 0x80))
+                                {
+                                    char c = ch;
+                                    write(stdinfds[1], &c, 1);
+                                }
+                            }
+                            break;
                         }
                         case TTY_COOKED:
                         {
+                            if (shift_down) ch = toupper(scancode_map_shift[kbuf[i].scancode]);
+                            if (ch == -ESC_SHIFT)
+                            {
+                                if (kbuf[i].mode & 0x80) shift_down = 0;
+                                else shift_down = 1;
+                            }
                             if (!(kbuf[i].mode & 0x80))
                             {
                                 char c = ch;
                                 if (ch > 0)
-                                    write(stdinfds[1], &c, 1);
+                                {
+                                    linebuf[linebufp++] = c;
+                                    putchar(c, 0xffffffff);
+                                    if (c == '\n')
+                                    {
+                                        linebuf[linebufp++] = 0;
+                                        write(stdinfds[1], linebuf, linebufp);
+                                        linebufp = 0;
+                                    }
+                                }
                             }
                             break;
                         }
@@ -182,6 +237,9 @@ char *argv[] = { "/bin/sh", 0 };
 int main()
 {
     screen_init();
+
+    linebuf = malloc(512);
+    linebufp = 0;
 
     int stdoutfds[2];
     int stdinfds[2];
