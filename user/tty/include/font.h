@@ -4,6 +4,6 @@
 typedef unsigned long size_t;
 
 void font_init(void);
-void read_font(unsigned char c, char data[8]);
+void read_font(unsigned char c, char data[16]);
 
 #endif // VIPEROS_TTY_FONT

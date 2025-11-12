@@ -91,7 +91,7 @@ void putchar(char c, uint32_t fg)
         return;
     }
 
-    if (y >= get_vert() / 8)
+    if (y >= get_vert() / 16)
     {
         scroll();
     }
@@ -153,13 +153,13 @@ void scroll(void)
 
     for (int x = 0; x < get_horiz() / 8; ++x)
     {
-        for (int y = 0; y < get_vert() / 8 - 1; ++y)
+        for (int y = 0; y < get_vert() / 16 - 1; ++y)
         {
             charbuf[x + y * get_horiz() / 8] = charbuf[x + (y + 1) * get_horiz() / 8];
             plot_char(charbuf[x + y * get_horiz() / 8], x, y, 0xfffffff, 0);
         }
     }
-    int last_y = get_vert() / 8 - 1;
+    int last_y = get_vert() / 16 - 1;
     memset(charbuf + last_y * get_horiz() / 8, 0, get_horiz() / 8);
 
     --y;
@@ -300,7 +300,7 @@ int main()
 
     linebuf = malloc(512);
     linebufp = 0;
-    charbuf = malloc((get_vert() * get_horiz()) / 64);
+    charbuf = malloc((get_vert() * get_horiz()) / 128);
 
     int stdoutfds[2];
     int stdinfds[2];

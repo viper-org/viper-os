@@ -75,7 +75,7 @@ void draw_bitmap(void* bitmap, uint32_t x, uint32_t y, uint32_t fg, uint32_t bg)
 
     uint8_t* bitmap_data = bitmap;
 
-    for (uint32_t i = 0; i < 8; ++i)
+    for (uint32_t i = 0; i < 16; ++i)
     {
         uint8_t row = bitmap_data[i];
 
@@ -97,7 +97,7 @@ void draw_bitmap(void* bitmap, uint32_t x, uint32_t y, uint32_t fg, uint32_t bg)
 
 void plot_char(unsigned char c, int x, int y, uint32_t fg, uint32_t bg)
 {
-    char font[8];
+    char font[16];
     read_font(c, font);
-    draw_bitmap(font, x * 8, y * 8, fg, bg);
+    draw_bitmap(font, x * 8, y * 16, fg, bg);
 }
