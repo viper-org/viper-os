@@ -64,9 +64,8 @@ void kb_handler(void)
                 struct devfs_file *file = poll->desc->vnode->impl;
                 if (file->drvr.header == &hdr)
                 {
+                    signal_poll_event(poll);
                     poll->out = curr;
-                    ready_event(&poll->obj);
-                    // todo: free event
                     break;
                 }
             }

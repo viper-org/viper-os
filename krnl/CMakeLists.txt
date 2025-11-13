@@ -33,6 +33,7 @@ set(SOURCES
     "source/syscall/file/mkdir.c"
     "source/syscall/mem/mmap.c"
     "source/syscall/mem/munmap.c"
+    "source/syscall/signal/sigaction.c"
     "source/syscall/proc/getcwd.c"
     "source/syscall/proc/chdir.c"
     "source/syscall/sched/yield.c"
@@ -63,6 +64,9 @@ set(SOURCES
     "source/sched/swtch.s"
     "source/sched/idle.s"
     "source/sched/user.s"
+
+    "source/signal/signal.c"
+    "source/signal/signal.s"
 
     "source/thread/proc.c"
 
@@ -108,6 +112,8 @@ set(HEADERS
     "include/sched/procfd.h"
     "include/sched/sched.h"
     "include/sched/pipe.h"
+
+    "include/signal/signal.h"
     
     "include/thread/proc.h"
 

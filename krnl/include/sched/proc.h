@@ -18,12 +18,17 @@ struct stack
 struct process;
 struct pipe;
 struct exit_event_object;
+struct pending_signal;
 
 struct thread
 {
     struct process *owner;
     struct stack usr_stack;
     struct stack krnl_stack;
+
+    struct stack signal_stack;
+    struct pending_signal *signals;
+    void (*signal_handlers[32])(int);
 
     int timeslice;
 

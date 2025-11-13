@@ -43,6 +43,7 @@ set(PROGRAMS
     "touch"
     "cat"
     "clear"
+    "fault"
 )
 
 foreach (PROG IN LISTS PROGRAMS)

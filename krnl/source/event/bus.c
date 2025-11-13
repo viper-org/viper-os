@@ -36,6 +36,25 @@ struct poll_event_object *create_poll_event(struct proc_fd *desc)
     return event;
 }
 
+void signal_poll_event(struct poll_event_object *e)
+{
+    struct poll_event_object *prev = NULL;
+    struct poll_event_object *curr = bus.poll_events;
+    while (curr)
+    {
+        if (curr == e)
+        {
+            if (prev) prev->next = curr->next;
+            else bus.poll_events = curr->next;
+            e->next = bus.done_poll_events;
+            bus.done_poll_events = e;
+            ready_event(&e->obj);
+            return;
+        }
+        curr = curr->next;
+    }
+}
+
 struct poll_event_object *find_poll_event(struct proc_fd *desc)
 {
     struct poll_event_object *curr = bus.poll_events;

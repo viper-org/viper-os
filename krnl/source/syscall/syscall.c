@@ -1,8 +1,14 @@
-#include "ldr/elf.h"
-#include "mm/vm.h"
 #include "syscall/syscalls.h"
 
+#include "ldr/elf.h"
+
+#include "mm/vm.h"
+
+#include "signal/signal.h"
+
 #include "driver/dbg.h"
+
+#include "cpu/cpu.h"
 
 #include <stdint.h>
 
@@ -92,6 +98,10 @@ void syscall_dispatcher(struct syscall_frame *frame)
             frame->rax = sys_poll((int *)frame->rdi, frame->rsi);
             break;
 
+        case 18:
+            frame->rax = sys_sigaction(frame->rdi, (void(*)(int))frame->rsi);
+            break;
+
         case 22:
             frame->rax = sys_pipe((int *)frame->rdi);
             break;
@@ -148,5 +158,21 @@ void syscall_dispatcher(struct syscall_frame *frame)
         default:
             dbg_printf("syscall rax=%d", frame->rax);
             break;
+    }
+
+    struct pending_signal *sig;
+    if ((sig = check_incoming()))
+    {
+        struct saved_user_ctx ctx = {
+            frame->rip, get_core()->ustack, frame->rbp, frame->rflags,
+            frame->rax, frame->rbx, 0,          frame->rdi,
+            frame->rsi, frame->rdi, frame->r8, frame->r9,
+            frame->r10, 0,          frame->r12, frame->r13,
+            frame->r14, frame->r15
+        };
+        void (*handler)(int) = sig_gethandler(sig);
+        int oldtype = sig->type;
+        sig->type = SIGNONE;
+        signal_handler(&ctx, handler, signal_return_to(oldtype));
     }
 }

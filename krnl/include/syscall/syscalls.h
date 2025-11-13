@@ -36,6 +36,9 @@ void *sys_mmap(void *addr, size_t len, int prot, int flags, int fd, long offset)
 int sys_munmap(void *addr, size_t len);
 
 
+int sys_sigaction(int signum, void (*handler)(int));
+
+
 void sys_yield(void);
 void sys_exit(int code);
 int sys_waitpid(int pid, int *status, int options);

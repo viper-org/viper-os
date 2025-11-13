@@ -43,6 +43,11 @@ void init_proc(struct process *proc, const char *wd)
         .top = (uint64_t)ustack_base + 8 * 0x1000,
         8 * 0x1000
     };
+    void *sstack_base = vm_getpages(&proc->addr_space, 8, 0, NULL);
+    t->signal_stack = (struct stack) {
+        .top = (uint64_t)sstack_base + 8 * 0x1000,
+        8 * 0x1000
+    };
     t->exit_event = NULL;
 
     prepare_thread((uint64_t)usermode_setup, &t->ctx, t->krnl_stack.top, t, t->owner->addr_space.pml4);

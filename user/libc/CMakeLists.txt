@@ -46,6 +46,7 @@ set(SOURCES
     "source/string.c"
     "source/stdio.c"
     "source/stdlib.c"
+    "source/signal.c"
     "source/ctype.c"
 )
 
@@ -65,6 +66,7 @@ set(HEADERS
     "include/string.h"
     "include/stdio.h"
     "include/stdlib.h"
+    "include/signal.h"
     "include/stdint.h"
     "include/stddef.h"
     "include/ctype.h"
