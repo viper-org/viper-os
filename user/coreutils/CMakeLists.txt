@@ -43,6 +43,7 @@ set(PROGRAMS
     "touch"
     "cat"
     "clear"
+    "uname"
     "fault"
     "fault2"
 )

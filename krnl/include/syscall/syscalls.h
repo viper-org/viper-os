@@ -12,6 +12,16 @@ struct spawn
     int errfd;
 };
 
+struct utsname
+{
+    char sysname[32];
+    char nodename[64];
+    char release[32];
+    char version[128];
+    char machine[32];
+    char domainname[1];
+};
+
 ssize_t sys_read(int fd, void *buf, size_t count);
 ssize_t sys_write(int fd, const void *buf, size_t count);
 int sys_open(const char *path, uint16_t openmode);
@@ -47,5 +57,8 @@ int sys_waitpid(int pid, int *status, int options);
 int sys_getpid(void);
 int sys_getppid(void);
 int sys_spawn(const char *path, int argc, char **argv, struct spawn *spawnbuf);
+
+
+int sys_uname(struct utsname *buf);
 
 #endif // VIPEROS_SYSCALL_SYSCALLS

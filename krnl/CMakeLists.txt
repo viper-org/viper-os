@@ -43,6 +43,7 @@ set(SOURCES
     "source/syscall/sched/wait.c"
     "source/syscall/sched/getpid.c"
     "source/syscall/sched/spawn.c"
+    "source/syscall/info/uname.c"
 
     "source/driver/dbg.c"
     "source/driver/keyboard.c"

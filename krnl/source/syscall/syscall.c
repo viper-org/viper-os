@@ -142,6 +142,10 @@ void syscall_dispatcher(struct syscall_frame *frame)
             sys_exit(frame->rdi);
             break; // shouldn't return but avoid warnings by breaking
 
+        case 63:
+            frame->rax = sys_uname((struct utsname *)frame->rdi);
+            break;
+
         case 67: // debug log
             dbg_print((const char *)frame->rdi);
             frame->rax = 0;
