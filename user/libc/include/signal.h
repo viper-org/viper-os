@@ -1,6 +1,8 @@
 #ifndef VIPEROS_LIBC_SIGNAL
 #define VIPEROS_LIBC_SIGNAL 1
 
+typedef int pid_t;
+
 enum signal_type
 {
     SIGNONE=-1,
@@ -40,5 +42,8 @@ enum signal_type
 };
 
 int sigaction(int signum, void (*handler)(int));
+
+int raise(int sig);
+int kill(pid_t pid, int sig);
 
 #endif // VIPEROS_LIBC_SIGNAL

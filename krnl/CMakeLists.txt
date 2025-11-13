@@ -34,6 +34,8 @@ set(SOURCES
     "source/syscall/mem/mmap.c"
     "source/syscall/mem/munmap.c"
     "source/syscall/signal/sigaction.c"
+    "source/syscall/signal/kill.c"
+    "source/syscall/signal/raise.c"
     "source/syscall/proc/getcwd.c"
     "source/syscall/proc/chdir.c"
     "source/syscall/sched/yield.c"

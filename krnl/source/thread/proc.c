@@ -5,6 +5,7 @@
 #include "mm/kheap.h"
 
 static struct process proc;
+static int awake = 0;
 
 void kthread_proc_cleaner(void)
 {
@@ -26,7 +27,8 @@ void kthread_proc_cleaner(void)
             kheap_free(curr);
             curr = next;
         }
-
+        
+        awake = 0;
         sched_blockcurr(); // nothing to do
     }
 }
@@ -40,5 +42,9 @@ void kthread_proc_init(void)
 
 void kthread_proc_awake(void)
 {
-    sched_readdthread(&proc.main_thread);
+    if (!awake)
+    {
+        awake = 1;
+        sched_readdthread(&proc.main_thread);
+    }
 }

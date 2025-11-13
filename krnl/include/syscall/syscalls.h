@@ -37,6 +37,8 @@ int sys_munmap(void *addr, size_t len);
 
 
 int sys_sigaction(int signum, void (*handler)(int));
+int sys_kill(int pid, int sig);
+int sys_raise(int pid);
 
 
 void sys_yield(void);

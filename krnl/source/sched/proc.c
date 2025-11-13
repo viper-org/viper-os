@@ -137,6 +137,7 @@ struct process *find_proc(int pid)
     while (curr)
     {
         if (curr->pid == pid) return curr;
+        curr = curr->next;
     }
     return NULL;
 }

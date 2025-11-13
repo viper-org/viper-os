@@ -71,12 +71,15 @@ struct pending_signal
     struct pending_signal *next;
 };
 
+struct thread;
+
 int signal_return_to(enum signal_type type);
 
 void signal_handler(struct saved_user_ctx *ctx, void(*handler)(int), int return_to);
 void signal_return(uint64_t rsp);
 
 void deliver_to_current(enum signal_type sig);
+void deliver_to_one(struct thread *th, enum signal_type sig);
 struct pending_signal *check_incoming(void);
 
 void (*sig_gethandler(struct pending_signal *))(int);

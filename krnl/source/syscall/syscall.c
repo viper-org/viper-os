@@ -102,6 +102,14 @@ void syscall_dispatcher(struct syscall_frame *frame)
             frame->rax = sys_sigaction(frame->rdi, (void(*)(int))frame->rsi);
             break;
 
+        case 19:
+            frame->rax = sys_kill(frame->rdi, frame->rsi);
+            break;
+
+        case 20:
+            frame->rax = sys_raise(frame->rdi);
+            break;
+
         case 22:
             frame->rax = sys_pipe((int *)frame->rdi);
             break;

@@ -39,7 +39,12 @@ void signal_return(uint64_t rsp)
 void deliver_to_current(enum signal_type sig)
 {
     struct thread *current = sched_curr();
-    struct pending_signal *curr = current->signals;
+    deliver_to_one(current, sig);
+}
+
+void deliver_to_one(struct thread *th, enum signal_type sig)
+{
+    struct pending_signal *curr = th->signals;
     
     while (curr)
     {
@@ -52,8 +57,8 @@ void deliver_to_current(enum signal_type sig)
     }
     struct pending_signal *new = kheap_alloc(sizeof (struct pending_signal));
     new->type = sig;
-    new->next = current->signals;
-    current->signals = new;
+    new->next = th->signals;
+    th->signals = new;
 }
 
 struct pending_signal *check_incoming(void)

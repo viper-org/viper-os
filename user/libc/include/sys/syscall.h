@@ -23,10 +23,12 @@ uint64_t syscall6(uint64_t n, uint64_t arg0, uint64_t arg1, uint64_t arg2, uint6
 #define SYS_munmap 11
 #define SYS_waitpid 12
 #define SYS_getpid 13
-#define SYS_getppid 13
+#define SYS_getppid 14
 #define SYS_ioctl 16
 #define SYS_poll 17
 #define SYS_sigaction 18
+#define SYS_kill 19
+#define SYS_raise 20
 #define SYS_pipe 22
 #define SYS_yield 24
 #define SYS_spawn 25

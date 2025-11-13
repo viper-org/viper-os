@@ -44,6 +44,7 @@ set(PROGRAMS
     "cat"
     "clear"
     "fault"
+    "fault2"
 )
 
 foreach (PROG IN LISTS PROGRAMS)
