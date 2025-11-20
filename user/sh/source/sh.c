@@ -97,6 +97,14 @@ int main(void)
         }
         argv[l.ntok] = NULL;
 
+        if (!strcmp(argv[0], "/bin/cd"))
+        {
+            cd(argc, argv);
+            free(argv);
+            lexer_cleanup(&l);
+            continue;
+        }
+
         int fd = open(argv[0], O_RDWR);
         if (fd >= 0)
         {
