@@ -39,6 +39,7 @@ set(SOURCES
 
 set(HEADERS
     "include/font.h"
+    "include/layout.h"
     "include/screen.h"
 )
 
