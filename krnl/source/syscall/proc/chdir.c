@@ -1,11 +1,10 @@
+#include "fs/vfs.h"
 #include "syscall/syscalls.h"
 
 #include "sched/proc.h"
 #include "sched/sched.h"
 
 #include "mm/kheap.h"
-
-#include "string.h"
 
 int sys_chdir(char *path)
 {
@@ -18,7 +17,9 @@ int sys_chdir(char *path)
         kheap_free(new);
         return -1;
     }
+    char *dir = sanitize_path(new);
+    kheap_free(new);
     kheap_free(curr->cwd);
-    curr->cwd = new;
+    curr->cwd = dir;
     return 0;
 }

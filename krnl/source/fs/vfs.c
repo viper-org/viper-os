@@ -52,6 +52,18 @@ struct vnode *lookuppn(char *path)
         }
         buf[bufIdx] = 0;
 
+        if (!strcmp(buf, "."))
+        {
+            bufIdx = 0;
+            ++idx;
+            continue;
+        }
+        else if (bufIdx == 0) // Ignore consecutive slashes
+        {
+            ++idx;
+            continue;
+        }
+
         enum vfs_error err = currfs->lookup(curr, buf, &curr);
         if (err != VFS_SUCCESS)
         {
@@ -123,5 +135,31 @@ char *get_relpath(const char *path, const char *cwd)
     {
         new[len-1] = 0;
     }
+    return new;
+}
+
+char *sanitize_path(const char *path)
+{
+    char *new = strdup(path);
+    size_t len = strlen(path);
+    
+    for (size_t i = 0; i < len; ++i)
+    {
+        if (new[i] == '/' && new[i+1] == '/')
+        {
+            size_t j = i+1;
+            while (new[j] == '/') ++j;
+            memmove(new + i + 1, new + j, len - j + 1);
+        }
+        if (new[i] == '.')
+        {
+            if (new[i+1] == '/' || new[i+1] == 0)
+            {
+                memmove(new + i, new + i + 1, len - i);
+            }
+            // TODO: ..
+        }
+    }
+
     return new;
 }
