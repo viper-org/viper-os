@@ -81,5 +81,6 @@ struct vnode *lookuppn(char *path);
 struct vnode *recursive_create(const char *path, int n);
 
 char *get_relpath(const char *path, const char *cwd);
+char *sanitize_path(const char *path);
 
 #endif // VIPEROS_FS_VFS
