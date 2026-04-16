@@ -4,6 +4,7 @@ ovmf/
 limine/
 modules/
 initrd/
+build/
 
 *.cmake
 Makefile

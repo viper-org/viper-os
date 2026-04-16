@@ -139,7 +139,7 @@ set(LINKER_OPTIONS
     "-Wl,--no-dynamic-linker"
     "-ztext"
     "-zmax-page-size=0x1000"
-    "-Tlinker.ld"
+    "-T${CMAKE_CURRENT_SOURCE_DIR}/linker.ld"
 )
 
 set(COMPILER_OPTIONS
@@ -164,6 +164,8 @@ set(COMPILER_OPTIONS
     "-mcmodel=kernel"
 )
 
+message(STATUS "hello123" ${CMAKE_CURRENT_SOURCE_DIR})
+
 execute_process(COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/get_limine_header.sh ${CMAKE_CURRENT_SOURCE_DIR})
 
 source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SOURCES} ${HEADERS})
@@ -174,4 +176,6 @@ target_include_directories(viperos-amd64 PUBLIC include)
 target_link_options(viperos-amd64 PRIVATE ${LINKER_OPTIONS})
 target_compile_options(viperos-amd64 PRIVATE ${COMPILER_OPTIONS})
 
-add_custom_command(TARGET viperos-amd64 POST_BUILD COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/build_iso.sh)
+add_custom_command(TARGET viperos-amd64 POST_BUILD
+    COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/build_iso.sh ${CMAKE_CURRENT_BINARY_DIR}
+)
