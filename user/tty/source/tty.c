@@ -1,5 +1,6 @@
-#include "screen.h"
 #include "escape.h"
+#include "layout.h"
+#include "screen.h"
 
 #include <ctype.h>
 #include <stdlib.h>
@@ -194,23 +195,31 @@ struct keyboard_event
     uint8_t scancode;
 };
 
-static uint32_t scancode_map[128] = {
-    0, -ESC_ESC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',
-    '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', -ESC_CTRL,
-    'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`',
-    -ESC_SHIFT, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', -ESC_SHIFT,
-    '*', 0, ' ', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    -ESC_UP, 0, '-', -ESC_LEFT, 0, -ESC_RIGHT, '+', 0, -ESC_DOWN
-};
+struct keyboard_layout layout;
 
-static uint32_t scancode_map_shift[128] = {
-    0, -ESC_ESC, '!', '"', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '\b',
-    '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', -ESC_CTRL,
-    'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ':', '@', '|',
-    -ESC_SHIFT, '|', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '<', '>', '?', -ESC_SHIFT,
-    '*', 0, ' ', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    -ESC_UP, 0, '-', -ESC_LEFT, 0, -ESC_RIGHT, '+', 0, -ESC_DOWN
-};
+void layout_init(void)
+{
+    strcpy(layout.name, "en-gb");
+    uint32_t normal_scancode_map_en_gb[128] = {
+        0, -ESC_ESC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',
+        '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', -ESC_CTRL,
+        'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`',
+        -ESC_SHIFT, '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', -ESC_SHIFT,
+        '*', 0, ' ', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        -ESC_UP, 0, '-', -ESC_LEFT, 0, -ESC_RIGHT, '+', 0, -ESC_DOWN
+    };
+    uint32_t shifted_scancode_map_en_gb[128] = {
+        0, -ESC_ESC, '!', '"', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '\b',
+        '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', -ESC_CTRL,
+        'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ':', '@', '|',
+        -ESC_SHIFT, '|', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '<', '>', '?', -ESC_SHIFT,
+        '*', 0, ' ', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        -ESC_UP, 0, '-', -ESC_LEFT, 0, -ESC_RIGHT, '+', 0, -ESC_DOWN
+    };
+
+    memcpy(layout.normal_scancode_map, normal_scancode_map_en_gb, sizeof(normal_scancode_map_en_gb));
+    memcpy(layout.shifted_scancode_map, shifted_scancode_map_en_gb, sizeof(shifted_scancode_map_en_gb));
+}
 
 int shift_down = 0;
 
@@ -230,7 +239,7 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
             {
                 for (int i = 0; i < sz / sizeof (struct keyboard_event); ++i)
                 {
-                    int ch = scancode_map[kbuf[i].scancode];
+                    int ch = layout.normal_scancode_map[kbuf[i].scancode];
                     switch (mode)
                     {
                         case TTY_RAW:
@@ -254,7 +263,7 @@ void mainloop(int stdoutfds[2], int stdinfds[2])
                         }
                         case TTY_COOKED:
                         {
-                            if (shift_down) ch = toupper(scancode_map_shift[kbuf[i].scancode]);
+                            if (shift_down) ch = toupper(layout.shifted_scancode_map[kbuf[i].scancode]);
                             if (ch == -ESC_SHIFT)
                             {
                                 if (kbuf[i].mode & 0x80) shift_down = 0;
@@ -297,6 +306,7 @@ char *argv[] = { "/bin/sh", 0 };
 int main()
 {
     screen_init();
+    layout_init();
 
     linebuf = malloc(512);
     linebufp = 0;

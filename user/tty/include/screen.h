@@ -1,11 +1,10 @@
 #ifndef VIPEROS_TTY_SCREEN
 #define VIPEROS_TTY_SCREEN 1
 
-void screen_init(void);
+#include <stddef.h>
+#include <stdint.h>
 
-typedef unsigned long size_t;
-typedef unsigned char uint8_t;
-typedef unsigned int uint32_t;
+void screen_init(void);
 
 size_t get_horiz(void);
 size_t get_vert(void);
